@@ -1,14 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useDarkMode } from '../contexts/DarkModeContext';
+import Lanyard from './Lanyard'; // IMPORT LANYARD COMPONENT
 import { 
   IoMoonOutline, 
-  IoSunnyOutline,
-  IoLocationOutline,
-  IoSchoolOutline,
-  IoCodeSlashOutline,
-  IoLogoLinkedin,
-  IoLogoGithub,
-  IoMailOutline
+  IoSunnyOutline
 } from 'react-icons/io5';
 import reactIcon from '../assets/photo/react.png';
 import laravelIcon from '../assets/photo/laravel.png';
@@ -89,7 +84,7 @@ function Hero() {
               <h1 className={`text-5xl md:text-6xl font-extrabold ${textColor} mb-4 leading-tight font-playfair`}>
                 Hi, I'm{' '}
                 <span className="bg-gradient-to-r from-orange-500 via-red-600 to-orange-700 bg-clip-text text-transparent">
-                Jastin Lim
+                  Jastin Lim
                 </span>
               </h1>
               <div className={`${cardBg} ${neumorphInset} rounded-2xl p-5 mb-4`}>
@@ -140,77 +135,27 @@ function Hero() {
             </div>
           </div>
 
-          {/* Right Content - Profile Card */}
-          <div className="relative">
+          {/* Right Content - GANTI DENGAN LANYARD COMPONENT */}
+          <div className="relative h-[700px]">
             <div className="absolute -top-10 -right-10 w-64 h-64 bg-gradient-to-br from-orange-500/20 to-red-600/20 rounded-full blur-3xl animate-pulse" />
             <div className="absolute -bottom-10 -left-10 w-64 h-64 bg-gradient-to-br from-red-600/20 to-orange-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
             
-            <div className={`relative ${cardBg} ${neumorph} rounded-3xl p-6 transform hover:scale-105 transition-all duration-500`}>
-              <div className={`relative ${cardBg} ${neumorphInset} rounded-2xl p-3 mb-5 overflow-hidden`}>
-                <div className="aspect-[3/4] rounded-xl relative overflow-hidden">
-                  <img 
-                    src={myPhoto}
-                    alt="Jastin Lim"
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
-                  <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm rounded-full px-3 py-1.5 flex items-center gap-2">
-                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                    <span className="text-xs font-bold text-gray-900">Available</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="text-center mb-5">
-                <h3 className={`text-xl font-bold ${textColor} mb-1`}>Jastin Lim</h3>
-                <p className={`${textMuted} text-sm mb-4`}>CS Student | Web Developer</p>
-                
-                <div className="flex justify-center gap-3">
-                  {[
-                    { icon: IoLogoLinkedin, label: 'LinkedIn' },
-                    { icon: IoLogoGithub, label: 'GitHub' },
-                    { icon: IoMailOutline, label: 'Email' }
-                  ].map((social, i) => {
-                    const Icon = social.icon;
-                    return (
-                      <button
-                        key={i}
-                        className={`w-11 h-11 ${cardBg} ${neumorph} rounded-full flex items-center justify-center hover:scale-110 transition-transform duration-300`}
-                        title={social.label}
-                      >
-                        <Icon className={`w-5 h-5 ${textColor}`} />
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              <div className={`${cardBg} ${neumorphInset} rounded-xl p-4 space-y-2.5`}>
-                <div className="flex items-center justify-between">
-                  <span className={`text-xs ${textMuted} flex items-center gap-2`}>
-                    <IoLocationOutline className="w-4 h-4" />
-                    Location
-                  </span>
-                  <span className={`text-xs font-semibold ${textColor}`}>Tangerang, Indonesia</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className={`text-xs ${textMuted} flex items-center gap-2`}>
-                    <IoSchoolOutline className="w-4 h-4" />
-                    Status
-                  </span>
-                  <span className={`text-xs font-semibold ${textColor}`}>Student</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className={`text-xs ${textMuted} flex items-center gap-2`}>
-                    <IoCodeSlashOutline className="w-4 h-4" />
-                    Focus
-                  </span>
-                  <span className={`text-xs font-semibold ${textColor}`}>Full-Stack Dev</span>
-                </div>
-              </div>
-            </div>
+            {/* LANYARD COMPONENT */}
+            <Lanyard
+              name="Jastin Lim"
+              role="CS Student | Web Developer"
+              location="Tangerang, Indonesia"
+              status="Student"
+              focus="Full-Stack Dev"
+              photo={myPhoto}
+              isDark={isDark}
+              cardBg={cardBg}
+              textColor={textColor}
+              textMuted={textMuted}
+              neumorph={neumorph}
+              neumorphInset={neumorphInset}
+            />
           </div>
-
         </div>
       </div>
 
