@@ -1,12 +1,21 @@
 import { useState, useEffect } from 'react';
 import { useDarkMode } from '../contexts/DarkModeContext';
+import { 
+  IoMoonOutline, 
+  IoSunnyOutline,
+  IoLocationOutline,
+  IoSchoolOutline,
+  IoCodeSlashOutline,
+  IoLogoLinkedin,
+  IoLogoGithub,
+  IoMailOutline
+} from 'react-icons/io5';
 import reactIcon from '../assets/photo/react.png';
 import laravelIcon from '../assets/photo/laravel.png';
 import tailwindIcon from '../assets/photo/tailwind.png';
 import myPhoto from '../assets/photo/FOTO_JASTIN_1.jpg';
 
 function Hero() {
-  // Gunakan Context untuk Dark Mode
   const { isDark, toggleDarkMode, bgClass, cardBg, textColor, textMuted, neumorph, neumorphInset } = useDarkMode();
   
   const [displayText, setDisplayText] = useState('');
@@ -49,14 +58,18 @@ function Hero() {
         ))}
       </div>
 
-      {/* Dark Mode Toggle - POSISI FIXED KANAN ATAS */}
+      {/* Dark Mode Toggle */}
       <button
         onClick={toggleDarkMode}
-        className={`fixed top-20 right-8 z-[999] w-14 h-14 rounded-full ${cardBg} ${neumorph} flex items-center justify-center transition-all duration-300 hover:scale-110 text-2xl shadow-2xl`}
+        className={`fixed top-20 right-8 z-[999] w-14 h-14 rounded-full ${cardBg} ${neumorph} flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-2xl`}
         aria-label="Toggle Dark Mode"
         title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
       >
-        {isDark ? '🌙' : '☀️'}
+        {isDark ? (
+          <IoMoonOutline className={`w-7 h-7 ${textColor}`} />
+        ) : (
+          <IoSunnyOutline className={`w-7 h-7 ${textColor}`} />
+        )}
       </button>
 
       {/* Main Content */}
@@ -154,32 +167,44 @@ function Hero() {
                 
                 <div className="flex justify-center gap-3">
                   {[
-                    { emoji: '💼', label: 'LinkedIn' },
-                    { emoji: '🐙', label: 'GitHub' },
-                    { emoji: '✉️', label: 'Email' }
-                  ].map((social, i) => (
-                    <button
-                      key={i}
-                      className={`w-11 h-11 ${cardBg} ${neumorph} rounded-full flex items-center justify-center hover:scale-110 transition-transform duration-300 text-xl`}
-                      title={social.label}
-                    >
-                      {social.emoji}
-                    </button>
-                  ))}
+                    { icon: IoLogoLinkedin, label: 'LinkedIn' },
+                    { icon: IoLogoGithub, label: 'GitHub' },
+                    { icon: IoMailOutline, label: 'Email' }
+                  ].map((social, i) => {
+                    const Icon = social.icon;
+                    return (
+                      <button
+                        key={i}
+                        className={`w-11 h-11 ${cardBg} ${neumorph} rounded-full flex items-center justify-center hover:scale-110 transition-transform duration-300`}
+                        title={social.label}
+                      >
+                        <Icon className={`w-5 h-5 ${textColor}`} />
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
               <div className={`${cardBg} ${neumorphInset} rounded-xl p-4 space-y-2.5`}>
                 <div className="flex items-center justify-between">
-                  <span className={`text-xs ${textMuted}`}>📍 Location</span>
-                  <span className={`text-xs font-semibold ${textColor}`}>Jakarta, Indonesia</span>
+                  <span className={`text-xs ${textMuted} flex items-center gap-2`}>
+                    <IoLocationOutline className="w-4 h-4" />
+                    Location
+                  </span>
+                  <span className={`text-xs font-semibold ${textColor}`}>Tangerang, Indonesia</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className={`text-xs ${textMuted}`}>🎓 Status</span>
+                  <span className={`text-xs ${textMuted} flex items-center gap-2`}>
+                    <IoSchoolOutline className="w-4 h-4" />
+                    Status
+                  </span>
                   <span className={`text-xs font-semibold ${textColor}`}>Student</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className={`text-xs ${textMuted}`}>💻 Focus</span>
+                  <span className={`text-xs ${textMuted} flex items-center gap-2`}>
+                    <IoCodeSlashOutline className="w-4 h-4" />
+                    Focus
+                  </span>
                   <span className={`text-xs font-semibold ${textColor}`}>Full-Stack Dev</span>
                 </div>
               </div>

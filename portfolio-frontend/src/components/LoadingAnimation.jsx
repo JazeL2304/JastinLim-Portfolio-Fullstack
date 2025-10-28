@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { BiCodeAlt } from "react-icons/bi";
 
 function LoadingAnimation() {
   const [progress, setProgress] = useState(0);
@@ -28,9 +29,9 @@ function LoadingAnimation() {
           <div className="w-24 h-24 mx-auto relative">
             <div className="absolute inset-0 border-4 border-t-orange-500 border-r-transparent border-b-red-600 border-l-transparent rounded-full animate-spin"></div>
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-20 h-20 bg-gradient-to-br from-orange-500 to-red-600 rounded-xl flex items-center justify-center text-white font-bold text-2xl shadow-2xl">
-                JL
-              </div>
+              <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-600 rounded-lg flex items-center justify-center text-white font-bold">
+                 <BiCodeAlt size={28} />
+                </div>
             </div>
           </div>
         </div>

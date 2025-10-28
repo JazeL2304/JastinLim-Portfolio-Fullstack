@@ -1,5 +1,14 @@
 import { useState } from 'react';
 import { useDarkMode } from '../contexts/DarkModeContext';
+import { 
+  IoBookOutline,
+  IoLeafOutline,
+  IoRocketOutline,
+  IoPhonePortraitOutline,
+  IoRadioButtonOnOutline,
+  IoCheckmarkCircleOutline,
+  IoTimeOutline
+} from 'react-icons/io5';
 import reactIcon from '../assets/photo/react.png';
 import laravelIcon from '../assets/photo/laravel.png';
 import mysqlIcon from '../assets/photo/mysql.png';
@@ -13,7 +22,6 @@ import kotlinIcon from '../assets/photo/kotlin.png';
 import phpIcon from '../assets/photo/php.png';
 
 function Skills() {
-  // Gunakan Context (HAPUS state lokal isDark)
   const { isDark, bgClass, cardBg, textColor, textMuted, neumorph, neumorphInset } = useDarkMode();
   
   const [hoveredSkill, setHoveredSkill] = useState(null);
@@ -40,13 +48,11 @@ function Skills() {
         <div className="absolute bottom-1/4 right-10 w-80 h-80 bg-red-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
       </div>
 
-      {/* DARK MODE TOGGLE DIHAPUS DARI SINI */}
-
       <div className="max-w-7xl mx-auto px-8 relative z-10">
         {/* Header */}
         <div className="text-center mb-16">
           <div className={`inline-flex items-center gap-2 ${cardBg} ${neumorph} rounded-full px-5 py-2.5 mb-6`}>
-            <span className="text-xl">📚</span>
+            <IoBookOutline className="w-5 h-5 text-orange-500" />
             <span className={`text-sm font-medium ${textColor}`}>My Skillset</span>
           </div>
           
@@ -117,50 +123,61 @@ function Skills() {
                 year: '2023', 
                 title: 'Started Web Development', 
                 desc: 'Learned HTML, CSS, and JavaScript basics',
-                status: '✅ Completed'
+                status: 'Completed',
+                icon: IoLeafOutline
               },
               { 
                 year: '2024', 
                 title: 'Full-Stack Development', 
                 desc: 'Built projects with React, Laravel, and MySQL',
-                status: '✅ Completed'
+                status: 'Completed',
+                icon: IoRocketOutline
               },
               { 
                 year: '2024', 
                 title: 'Mobile Development', 
                 desc: 'Started learning Android development with Kotlin',
-                status: '🔄 In Progress'
+                status: 'In Progress',
+                icon: IoPhonePortraitOutline
               },
-            ].map((milestone, index) => (
-              <div
-                key={index}
-                className={`${cardBg} ${neumorph} rounded-2xl p-6 transform transition-all duration-300 hover:scale-102`}
-              >
-                <div className="flex items-start gap-4">
-                  <div className={`${cardBg} ${neumorphInset} rounded-full w-12 h-12 flex items-center justify-center flex-shrink-0 text-xl`}>
-                    {milestone.year === '2023' ? '🌱' : milestone.year === '2024' && index === 1 ? '🚀' : milestone.year === '2024' && index === 2 ? '📱' : '⚡'}
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between mb-2">
-                      <div>
-                        <span className={`text-sm font-bold text-orange-500`}>{milestone.year}</span>
-                        <h4 className={`text-lg font-bold ${textColor}`}>{milestone.title}</h4>
-                      </div>
-                      <span className={`text-xs ${textMuted} ${cardBg} ${neumorphInset} px-3 py-1 rounded-full`}>
-                        {milestone.status}
-                      </span>
+            ].map((milestone, index) => {
+              const Icon = milestone.icon;
+              return (
+                <div
+                  key={index}
+                  className={`${cardBg} ${neumorph} rounded-2xl p-6 transform transition-all duration-300 hover:scale-102`}
+                >
+                  <div className="flex items-start gap-4">
+                    <div className={`${cardBg} ${neumorphInset} rounded-full w-12 h-12 flex items-center justify-center flex-shrink-0`}>
+                      <Icon className={`w-6 h-6 ${textColor}`} />
                     </div>
-                    <p className={`${textMuted} text-sm`}>{milestone.desc}</p>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between mb-2">
+                        <div>
+                          <span className={`text-sm font-bold text-orange-500`}>{milestone.year}</span>
+                          <h4 className={`text-lg font-bold ${textColor}`}>{milestone.title}</h4>
+                        </div>
+                        <span className={`text-xs ${textMuted} ${cardBg} ${neumorphInset} px-3 py-1 rounded-full flex items-center gap-1`}>
+                          {milestone.status === 'Completed' ? (
+                            <IoCheckmarkCircleOutline className="w-4 h-4 text-green-500" />
+                          ) : (
+                            <IoTimeOutline className="w-4 h-4 text-orange-500" />
+                          )}
+                          {milestone.status}
+                        </span>
+                      </div>
+                      <p className={`${textMuted} text-sm`}>{milestone.desc}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 
         {/* Currently Learning */}
         <div className={`${cardBg} ${neumorph} rounded-2xl p-8 text-center`}>
-          <span className="text-4xl mb-4 block">🎯</span>
+          <IoRadioButtonOnOutline className={`w-12 h-12 ${textColor} mx-auto mb-4`} />
           <h4 className={`text-xl font-bold ${textColor} mb-3`}>Currently Focusing On</h4>
           <p className={`${textMuted} mb-6`}>
             Building real-world projects and improving my problem-solving skills
