@@ -1,0 +1,58 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", system-ui, sans-serif;
+  
+  /* Custom Color Palette */
+  --color-dark: #000000;
+  --color-red: #CF0A0A;
+  --color-orange: #DC5F00;
+  --color-light: #EEEEEE;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+/* Floating Animation untuk Tags */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Swinging Animation untuk Lanyard */
+@keyframes swing {
+  0%, 100% {
+    transform: translateX(-50%) rotate(-2deg);
+  }
+  50% {
+    transform: translateX(-50%) rotate(2deg);
+  }
+}
+
+.animate-swing {
+  animation: swing 2s ease-in-out infinite;
+}
+
+/* Slow Swing untuk Card */
+@keyframes swing-slow {
+  0%, 100% {
+    transform: rotate(-1deg);
+  }
+  50% {
+    transform: rotate(1deg);
+  }
+}
+
+.animate-swing-slow {
+  animation: swing-slow 4s ease-in-out infinite;
+}
