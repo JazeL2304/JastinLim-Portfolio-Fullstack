@@ -76,7 +76,7 @@ function NavbarFooter() {
   <BiCodeAlt size={28} />
 </div>
              <span className="hidden md:block font-playfair">
-               JazeL<span className="text-orange-500">Portfolio</span>
+               JazeL<span className="text-orange-500">PORTFOLIO</span>
             </span>
             </button>
 

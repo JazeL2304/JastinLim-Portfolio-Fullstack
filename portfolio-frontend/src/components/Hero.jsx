@@ -86,9 +86,9 @@ function Hero() {
 
             {/* Main Heading */}
             <div>
-              <h1 className={`text-5xl md:text-6xl font-extrabold ${textColor} mb-4 leading-tight`}>
+              <h1 className={`text-5xl md:text-6xl font-extrabold ${textColor} mb-4 leading-tight font-playfair`}>
                 Hi, I'm{' '}
-                <span className="bg-gradient-to-r from-orange-500 via-red-600 to-orange-700 bg-clip-text text-transparent font-playfair">
+                <span className="bg-gradient-to-r from-orange-500 via-red-600 to-orange-700 bg-clip-text text-transparent">
                 Jastin Lim
                 </span>
               </h1>
