@@ -1,12 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useDarkMode } from '../contexts/DarkModeContext';
 import { Github, ExternalLink, Code, Star, Layers, Zap } from 'lucide-react';
 
 function Projects() {
-  const [isDark, setIsDark] = useState(true);
+  // Gunakan Context (HAPUS state lokal isDark)
+  const { isDark, bgClass, cardBg, textColor, textMuted, neumorph, neumorphInset } = useDarkMode();
+  
   const [selectedFilter, setSelectedFilter] = useState('All');
   const [hoveredProject, setHoveredProject] = useState(null);
 
-  // Mock project data - ganti dengan data dari API nanti
+  // Mock project data
   const projects = [
     {
       id: 1,
@@ -82,22 +85,6 @@ function Projects() {
     ? projects 
     : projects.filter(p => p.category === selectedFilter);
 
-  const bgClass = isDark 
-    ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-black' 
-    : 'bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300';
-  
-  const cardBg = isDark ? 'bg-gray-800' : 'bg-gray-200';
-  const textColor = isDark ? 'text-white' : 'text-gray-900';
-  const textMuted = isDark ? 'text-gray-400' : 'text-gray-600';
-  
-  const neumorph = isDark
-    ? 'shadow-[8px_8px_16px_#0a0a0a,-8px_-8px_16px_#2a2a2a]'
-    : 'shadow-[8px_8px_16px_#bebebe,-8px_-8px_16px_#ffffff]';
-    
-  const neumorphInset = isDark
-    ? 'shadow-[inset_8px_8px_16px_#0a0a0a,inset_-8px_-8px_16px_#2a2a2a]'
-    : 'shadow-[inset_8px_8px_16px_#bebebe,inset_-8px_-8px_16px_#ffffff]';
-
   return (
     <div className={`min-h-screen ${bgClass} py-24 relative overflow-hidden transition-all duration-500`}>
       {/* Background Decoration */}
@@ -106,13 +93,7 @@ function Projects() {
         <div className="absolute bottom-20 right-20 w-96 h-96 bg-red-500/10 rounded-full blur-3xl" />
       </div>
 
-      {/* Dark Mode Toggle */}
-      <button
-        onClick={() => setIsDark(!isDark)}
-        className={`fixed top-8 right-8 z-50 w-16 h-16 rounded-full ${cardBg} ${neumorph} flex items-center justify-center transition-all duration-300 hover:scale-110`}
-      >
-        {isDark ? '🌙' : '☀️'}
-      </button>
+      {/* DARK MODE TOGGLE DIHAPUS DARI SINI */}
 
       <div className="max-w-7xl mx-auto px-8 relative z-10">
         {/* Header */}

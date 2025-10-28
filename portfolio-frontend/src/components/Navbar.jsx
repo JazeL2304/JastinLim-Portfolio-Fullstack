@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react';
+import { useDarkMode } from '../contexts/DarkModeContext';
 
 function NavbarFooter() {
-  const [isDark, setIsDark] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
+
+  // Ambil dark mode dari Context (TANPA toggleDarkMode)
+  const { isDark, textColor, neumorph, neumorphInset } = useDarkMode();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -34,18 +37,6 @@ function NavbarFooter() {
     }
   };
 
-  const bgClass = isDark ? 'bg-gray-800' : 'bg-gray-200';
-  const textColor = isDark ? 'text-white' : 'text-gray-900';
-  const textMuted = isDark ? 'text-gray-400' : 'text-gray-600';
-  
-  const neumorph = isDark
-    ? 'shadow-[8px_8px_16px_#0a0a0a,-8px_-8px_16px_#2a2a2a]'
-    : 'shadow-[8px_8px_16px_#bebebe,-8px_-8px_16px_#ffffff]';
-    
-  const neumorphInset = isDark
-    ? 'shadow-[inset_8px_8px_16px_#0a0a0a,inset_-8px_-8px_16px_#2a2a2a]'
-    : 'shadow-[inset_8px_8px_16px_#bebebe,inset_-8px_-8px_16px_#ffffff]';
-
   const navItems = [
     { id: 'home', label: 'Home', emoji: '🏠' },
     { id: 'about', label: 'About', emoji: '👤' },
@@ -59,7 +50,7 @@ function NavbarFooter() {
       {/* NAVBAR */}
       <nav
         className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 ${
-          scrolled ? `${bgClass} ${neumorph}` : 'bg-transparent'
+          scrolled ? `bg-gray-800 ${neumorph}` : 'bg-transparent'
         }`}
       >
         <div className="max-w-7xl mx-auto px-8 py-4">
@@ -83,7 +74,7 @@ function NavbarFooter() {
                 <button
                   key={item.id}
                   onClick={() => scrollToSection(item.id)}
-                  className={`${bgClass} ${
+                  className={`bg-gray-800 ${
                     activeSection === item.id ? neumorphInset : neumorph
                   } px-5 py-2.5 rounded-full ${textColor} font-medium transition-all duration-300 hover:scale-105 flex items-center gap-2 ${
                     activeSection === item.id ? 'text-orange-500' : ''
@@ -95,24 +86,13 @@ function NavbarFooter() {
               ))}
             </div>
 
-            {/* Right Actions */}
-            <div className="flex items-center gap-3">
-              {/* Dark Mode Toggle */}
-              <button
-                onClick={() => setIsDark(!isDark)}
-                className={`w-11 h-11 ${bgClass} ${neumorph} rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 text-xl`}
-              >
-                {isDark ? '🌙' : '☀️'}
-              </button>
-
-              {/* Mobile Menu Toggle */}
-              <button
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className={`md:hidden w-11 h-11 ${bgClass} ${neumorph} rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 text-xl`}
-              >
-                {isMenuOpen ? '✕' : '☰'}
-              </button>
-            </div>
+            {/* Mobile Menu Toggle - HANYA INI, TIDAK ADA DARK MODE TOGGLE */}
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className={`md:hidden w-11 h-11 bg-gray-800 ${neumorph} rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 text-xl`}
+            >
+              {isMenuOpen ? '✕' : '☰'}
+            </button>
           </div>
 
           {/* Mobile Menu */}
@@ -121,12 +101,12 @@ function NavbarFooter() {
               isMenuOpen ? 'max-h-96 opacity-100 mt-4' : 'max-h-0 opacity-0'
             }`}
           >
-            <div className={`${bgClass} ${neumorph} rounded-2xl p-4 space-y-2`}>
+            <div className={`bg-gray-800 ${neumorph} rounded-2xl p-4 space-y-2`}>
               {navItems.map((item) => (
                 <button
                   key={item.id}
                   onClick={() => scrollToSection(item.id)}
-                  className={`w-full ${bgClass} ${
+                  className={`w-full bg-gray-800 ${
                     activeSection === item.id ? neumorphInset : neumorph
                   } px-5 py-3 rounded-xl ${textColor} font-medium transition-all duration-300 hover:scale-105 flex items-center gap-3 ${
                     activeSection === item.id ? 'text-orange-500' : ''
@@ -151,14 +131,12 @@ function NavbarFooter() {
         </div>
       </nav>
 
-  
-
       {/* Scroll to Top Button */}
       <button
         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-        className={`fixed bottom-8 right-8 w-12 h-12 ${bgClass} ${neumorph} rounded-full flex items-center justify-center hover:scale-110 transition-all duration-300 text-xl ${
+        className={`fixed bottom-8 right-8 w-12 h-12 bg-gray-800 ${neumorph} rounded-full flex items-center justify-center hover:scale-110 transition-all duration-300 text-xl ${
           scrolled ? 'opacity-100' : 'opacity-0 pointer-events-none'
-        }`}
+        } z-50`}
       >
         ⬆️
       </button>

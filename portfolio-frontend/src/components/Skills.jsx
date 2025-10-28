@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useDarkMode } from '../contexts/DarkModeContext';
 import reactIcon from '../assets/photo/react.png';
 import laravelIcon from '../assets/photo/laravel.png';
 import mysqlIcon from '../assets/photo/mysql.png';
@@ -12,7 +13,9 @@ import kotlinIcon from '../assets/photo/kotlin.png';
 import phpIcon from '../assets/photo/php.png';
 
 function Skills() {
-  const [isDark, setIsDark] = useState(true);
+  // Gunakan Context (HAPUS state lokal isDark)
+  const { isDark, bgClass, cardBg, textColor, textMuted, neumorph, neumorphInset } = useDarkMode();
+  
   const [hoveredSkill, setHoveredSkill] = useState(null);
 
   const skills = [
@@ -29,22 +32,6 @@ function Skills() {
     { name: 'Figma', icon: figmaIcon, level: 72, category: 'Design' }
   ];
 
-  const bgClass = isDark 
-    ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-black' 
-    : 'bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300';
-  
-  const cardBg = isDark ? 'bg-gray-800' : 'bg-gray-200';
-  const textColor = isDark ? 'text-white' : 'text-gray-900';
-  const textMuted = isDark ? 'text-gray-400' : 'text-gray-600';
-  
-  const neumorph = isDark
-    ? 'shadow-[8px_8px_16px_#0a0a0a,-8px_-8px_16px_#2a2a2a]'
-    : 'shadow-[8px_8px_16px_#bebebe,-8px_-8px_16px_#ffffff]';
-    
-  const neumorphInset = isDark
-    ? 'shadow-[inset_8px_8px_16px_#0a0a0a,inset_-8px_-8px_16px_#2a2a2a]'
-    : 'shadow-[inset_8px_8px_16px_#bebebe,inset_-8px_-8px_16px_#ffffff]';
-
   return (
     <div className={`min-h-screen ${bgClass} py-20 relative overflow-hidden transition-all duration-500`}>
       {/* Background Effects */}
@@ -53,13 +40,7 @@ function Skills() {
         <div className="absolute bottom-1/4 right-10 w-80 h-80 bg-red-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
       </div>
 
-      {/* Dark Mode Toggle */}
-      <button
-        onClick={() => setIsDark(!isDark)}
-        className={`fixed top-8 right-8 z-50 w-14 h-14 rounded-full ${cardBg} ${neumorph} flex items-center justify-center transition-all duration-300 hover:scale-110 text-2xl`}
-      >
-        {isDark ? '🌙' : '☀️'}
-      </button>
+      {/* DARK MODE TOGGLE DIHAPUS DARI SINI */}
 
       <div className="max-w-7xl mx-auto px-8 relative z-10">
         {/* Header */}

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Heart, Mail, MapPin, Phone, Github, Linkedin, Twitter, Instagram, ArrowUp } from 'lucide-react';
+import { useDarkMode } from '../contexts/DarkModeContext';
 
 function Footer() {
   const [isDark, setIsDark] = useState(true);

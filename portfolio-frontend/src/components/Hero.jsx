@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
+import { useDarkMode } from '../contexts/DarkModeContext';
 import reactIcon from '../assets/photo/react.png';
 import laravelIcon from '../assets/photo/laravel.png';
 import tailwindIcon from '../assets/photo/tailwind.png';
 import myPhoto from '../assets/photo/FOTO_JASTIN_1.jpg';
 
 function Hero() {
-  const [isDark, setIsDark] = useState(true);
+  // Gunakan Context untuk Dark Mode
+  const { isDark, toggleDarkMode, bgClass, cardBg, textColor, textMuted, neumorph, neumorphInset } = useDarkMode();
+  
   const [displayText, setDisplayText] = useState('');
   const fullText = "Learning, Building, Growing";
   
@@ -22,29 +25,13 @@ function Hero() {
     return () => clearInterval(timer);
   }, []);
 
-  const bgClass = isDark 
-    ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-black' 
-    : 'bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300';
-  
-  const cardBg = isDark ? 'bg-gray-800' : 'bg-gray-200';
-  const textColor = isDark ? 'text-white' : 'text-gray-900';
-  const textMuted = isDark ? 'text-gray-400' : 'text-gray-600';
-  
-  const neumorph = isDark
-    ? 'shadow-[8px_8px_16px_#0a0a0a,-8px_-8px_16px_#2a2a2a]'
-    : 'shadow-[8px_8px_16px_#bebebe,-8px_-8px_16px_#ffffff]';
-    
-  const neumorphInset = isDark
-    ? 'shadow-[inset_8px_8px_16px_#0a0a0a,inset_-8px_-8px_16px_#2a2a2a]'
-    : 'shadow-[inset_8px_8px_16px_#bebebe,inset_-8px_-8px_16px_#ffffff]';
-
   const scrollToSection = (id) => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
     <div className={`min-h-screen ${bgClass} transition-all duration-500 relative overflow-hidden`}>
-      {/* Floating Particles - Reduced */}
+      {/* Floating Particles */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {[...Array(8)].map((_, i) => (
           <div
@@ -62,10 +49,12 @@ function Hero() {
         ))}
       </div>
 
-      {/* Dark Mode Toggle */}
+      {/* Dark Mode Toggle - POSISI FIXED KANAN ATAS */}
       <button
-        onClick={() => setIsDark(!isDark)}
-        className={`fixed top-8 right-8 z-50 w-14 h-14 rounded-full ${cardBg} ${neumorph} flex items-center justify-center transition-all duration-300 hover:scale-110 text-2xl`}
+        onClick={toggleDarkMode}
+        className={`fixed top-20 right-8 z-[999] w-14 h-14 rounded-full ${cardBg} ${neumorph} flex items-center justify-center transition-all duration-300 hover:scale-110 text-2xl shadow-2xl`}
+        aria-label="Toggle Dark Mode"
+        title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
       >
         {isDark ? '🌙' : '☀️'}
       </button>
@@ -101,7 +90,7 @@ function Hero() {
               </div>
             </div>
 
-            {/* Tech Stack with Real Icons */}
+            {/* Tech Stack */}
             <div>
               <p className={`${textMuted} text-sm mb-3 font-semibold`}>Technologies I Work With:</p>
               <div className="flex flex-wrap gap-3">
@@ -140,13 +129,10 @@ function Hero() {
 
           {/* Right Content - Profile Card */}
           <div className="relative">
-            {/* Decorative Circles */}
             <div className="absolute -top-10 -right-10 w-64 h-64 bg-gradient-to-br from-orange-500/20 to-red-600/20 rounded-full blur-3xl animate-pulse" />
             <div className="absolute -bottom-10 -left-10 w-64 h-64 bg-gradient-to-br from-red-600/20 to-orange-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
             
-            {/* Main Profile Card */}
             <div className={`relative ${cardBg} ${neumorph} rounded-3xl p-6 transform hover:scale-105 transition-all duration-500`}>
-              {/* Photo Container */}
               <div className={`relative ${cardBg} ${neumorphInset} rounded-2xl p-3 mb-5 overflow-hidden`}>
                 <div className="aspect-[3/4] rounded-xl relative overflow-hidden">
                   <img 
@@ -154,9 +140,7 @@ function Hero() {
                     alt="Jastin Lim"
                     className="w-full h-full object-cover"
                   />
-                  {/* Overlay */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
-                  {/* Badge */}
                   <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm rounded-full px-3 py-1.5 flex items-center gap-2">
                     <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
                     <span className="text-xs font-bold text-gray-900">Available</span>
@@ -164,12 +148,10 @@ function Hero() {
                 </div>
               </div>
 
-              {/* Info Section */}
               <div className="text-center mb-5">
                 <h3 className={`text-xl font-bold ${textColor} mb-1`}>Jastin Lim</h3>
                 <p className={`${textMuted} text-sm mb-4`}>CS Student | Web Developer</p>
                 
-                {/* Social Links */}
                 <div className="flex justify-center gap-3">
                   {[
                     { emoji: '💼', label: 'LinkedIn' },
@@ -187,7 +169,6 @@ function Hero() {
                 </div>
               </div>
 
-              {/* Quick Info */}
               <div className={`${cardBg} ${neumorphInset} rounded-xl p-4 space-y-2.5`}>
                 <div className="flex items-center justify-between">
                   <span className={`text-xs ${textMuted}`}>📍 Location</span>
