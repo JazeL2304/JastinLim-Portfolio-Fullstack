@@ -150,12 +150,6 @@ function Skills() {
                 desc: 'Started learning Android development with Kotlin',
                 status: '🔄 In Progress'
               },
-              { 
-                year: '2025', 
-                title: 'Advanced Topics', 
-                desc: 'Planning to learn cloud services and DevOps',
-                status: '📅 Upcoming'
-              }
             ].map((milestone, index) => (
               <div
                 key={index}
