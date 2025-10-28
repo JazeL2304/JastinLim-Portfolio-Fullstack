@@ -77,7 +77,7 @@ function Footer() {
             <div className="flex items-center gap-2 mb-6">
               <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-600 rounded-lg flex items-center justify-center text-white font-bold">
                 <BiCodeAlt size={28} />
-              </div>
+              </div>  
               <h3 className={`text-xl font-bold ${textColor}`}>
                 Jastin Lim
               </h3>

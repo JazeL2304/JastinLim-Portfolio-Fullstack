@@ -75,9 +75,9 @@ function NavbarFooter() {
    <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-600 rounded-lg flex items-center justify-center text-white font-bold">
   <BiCodeAlt size={28} />
 </div>
-              <span className="hidden md:block">
-                JazeL<span className="text-orange-500">Portfolio</span>
-              </span>
+             <span className="hidden md:block font-playfair">
+               JazeL<span className="text-orange-500">Portfolio</span>
+            </span>
             </button>
 
             {/* Desktop Navigation */}

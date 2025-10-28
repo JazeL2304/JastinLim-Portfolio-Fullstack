@@ -88,8 +88,8 @@ function Hero() {
             <div>
               <h1 className={`text-5xl md:text-6xl font-extrabold ${textColor} mb-4 leading-tight`}>
                 Hi, I'm{' '}
-                <span className="bg-gradient-to-r from-orange-500 via-red-600 to-orange-700 bg-clip-text text-transparent">
-                  Jastin Lim
+                <span className="bg-gradient-to-r from-orange-500 via-red-600 to-orange-700 bg-clip-text text-transparent font-playfair">
+                Jastin Lim
                 </span>
               </h1>
               <div className={`${cardBg} ${neumorphInset} rounded-2xl p-5 mb-4`}>

@@ -1,7 +1,9 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&display=swap');
 
 @theme {
   --font-sans: "Inter", system-ui, sans-serif;
+  --font-playfair: "Playfair Display", serif;
   
   /* Custom Color Palette */
   --color-dark: #000000;
@@ -13,6 +15,11 @@
 body {
   margin: 0;
   padding: 0;
+}
+
+/* Playfair Display Font Class */
+.font-playfair {
+  font-family: "Playfair Display", serif !important;
 }
 
 /* Floating Animation untuk Tags */
