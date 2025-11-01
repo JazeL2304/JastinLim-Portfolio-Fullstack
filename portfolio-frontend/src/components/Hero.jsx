@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useDarkMode } from '../contexts/DarkModeContext';
-import Lanyard from './Lanyard'; // IMPORT LANYARD COMPONENT
+import Lanyard from './Lanyard';
 import { 
   IoMoonOutline, 
   IoSunnyOutline
@@ -11,7 +11,7 @@ import tailwindIcon from '../assets/photo/tailwind.png';
 import myPhoto from '../assets/photo/FOTO_JASTIN_1.jpg';
 
 function Hero() {
-  const { isDark, toggleDarkMode, bgClass, cardBg, textColor, textMuted, neumorph, neumorphInset } = useDarkMode();
+  const { isDark, toggleDarkMode, cardBg, textColor, textMuted, neumorph, neumorphInset } = useDarkMode();
   
   const [displayText, setDisplayText] = useState('');
   const fullText = "Learning, Building, Growing";
@@ -34,7 +34,7 @@ function Hero() {
   };
 
   return (
-    <div className={`min-h-screen ${bgClass} transition-all duration-500 relative overflow-hidden`}>
+    <div className="min-h-screen transition-all duration-500 relative overflow-hidden pt-20">
       {/* Floating Particles */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {[...Array(8)].map((_, i) => (
@@ -69,7 +69,7 @@ function Hero() {
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-8 py-20 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center min-h-screen">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center min-h-[calc(100vh-10rem)]">
           
           {/* Left Content */}
           <div className="space-y-6">
@@ -135,12 +135,11 @@ function Hero() {
             </div>
           </div>
 
-          {/* Right Content - GANTI DENGAN LANYARD COMPONENT */}
+          {/* Right Content */}
           <div className="relative h-[700px]">
             <div className="absolute -top-10 -right-10 w-64 h-64 bg-gradient-to-br from-orange-500/20 to-red-600/20 rounded-full blur-3xl animate-pulse" />
             <div className="absolute -bottom-10 -left-10 w-64 h-64 bg-gradient-to-br from-red-600/20 to-orange-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
             
-            {/* LANYARD COMPONENT */}
             <Lanyard
               name="Jastin Lim"
               role="CS Student | Web Developer"

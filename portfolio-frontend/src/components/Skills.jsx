@@ -22,7 +22,7 @@ import kotlinIcon from '../assets/photo/kotlin.png';
 import phpIcon from '../assets/photo/php.png';
 
 function Skills() {
-  const { isDark, bgClass, cardBg, textColor, textMuted, neumorph, neumorphInset } = useDarkMode();
+  const { cardBg, textColor, textMuted, neumorph, neumorphInset } = useDarkMode();
   
   const [hoveredSkill, setHoveredSkill] = useState(null);
 
@@ -41,7 +41,7 @@ function Skills() {
   ];
 
   return (
-    <div className={`min-h-screen ${bgClass} py-20 relative overflow-hidden transition-all duration-500`}>
+    <div className="py-32 relative overflow-hidden transition-all duration-500">
       {/* Background Effects */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 left-10 w-80 h-80 bg-orange-500/10 rounded-full blur-3xl animate-pulse" />

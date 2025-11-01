@@ -19,7 +19,7 @@ import {
 import { BiCodeAlt } from "react-icons/bi";
 
 function Footer() {
-  const { isDark, bgClass, cardBg, textColor, textMuted, neumorph, neumorphInset } = useDarkMode();
+  const { isDark, cardBg, textColor, textMuted, neumorph, neumorphInset } = useDarkMode();
   
   const [email, setEmail] = useState('');
 
@@ -30,16 +30,10 @@ function Footer() {
   };
 
   return (
-    <footer className={`${bgClass} py-16 relative overflow-hidden transition-all duration-500`}>
-      {/* Background Decoration */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -left-40 w-96 h-96 bg-orange-500/10 rounded-full blur-3xl" />
-        <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-red-500/10 rounded-full blur-3xl" />
-      </div>
-
+    <footer className="py-16 relative overflow-hidden transition-all duration-500">
       <div className="max-w-7xl mx-auto px-8 relative z-10">
         {/* Newsletter Section */}
-        <div className={`${cardBg} ${neumorph} rounded-3xl p-8 md:p-12 mb-12`}>
+        <div className={`${cardBg} ${neumorph} rounded-3xl p-8 md:p-12 mb-16`}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <div>
               <h3 className={`text-3xl font-bold ${textColor} mb-3 flex items-center gap-3`}>
@@ -70,8 +64,8 @@ function Footer() {
           </div>
         </div>
 
-        {/* Main Footer Content */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+        {/* Main Footer Content - NO CARDS, just text */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
           {/* About Column */}
           <div>
             <div className="flex items-center gap-2 mb-6">
@@ -158,7 +152,7 @@ function Footer() {
                 </div>
                 <div>
                   <p className={`text-xs ${textMuted} mb-1`}>Email</p>
-                  <a href="mailto:jastin.lim@example.com" className={`text-sm ${textColor} hover:text-orange-500 transition-colors duration-300`}>
+                  <a href="mailto:jastinlim2304@gmail.com" className={`text-sm ${textColor} hover:text-orange-500 transition-colors duration-300 break-all`}>
                     jastinlim2304@gmail.com
                   </a>
                 </div>
@@ -189,11 +183,11 @@ function Footer() {
           </div>
         </div>
 
-        {/* Divider */}
-        <div className={`${cardBg} ${neumorphInset} h-px mb-8`} />
+        {/* Divider - Very subtle */}
+        <div className={`h-px mb-12 ${isDark ? 'bg-gray-700/20' : 'bg-gray-300/20'}`} />
 
         {/* Bottom Bar */}
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-12">
           {/* Copyright */}
           <div className={`${textMuted} text-sm text-center md:text-left`}>
             <p className="flex items-center justify-center md:justify-start gap-2">
@@ -224,7 +218,7 @@ function Footer() {
         </div>
 
         {/* Fun Stats */}
-        <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           {[
             { icon: IoCafeOutline, value: '1000+', label: 'Cups of Coffee' },
             { icon: IoCodeSlashOutline, value: '50K+', label: 'Lines of Code' },
@@ -246,7 +240,7 @@ function Footer() {
         </div>
 
         {/* Easter Egg */}
-        <div className="mt-8 text-center">
+        <div className="text-center">
           <button
             onClick={() => alert('🎉 You found the easter egg! Thanks for exploring!')}
             className={`text-xs ${textMuted} hover:text-orange-500 transition-colors duration-300`}>

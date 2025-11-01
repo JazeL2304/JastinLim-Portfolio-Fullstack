@@ -19,12 +19,11 @@ import {
 } from 'react-icons/io5';
 
 function Projects() {
-  const { isDark, bgClass, cardBg, textColor, textMuted, neumorph, neumorphInset } = useDarkMode();
+  const { cardBg, textColor, textMuted, neumorph, neumorphInset } = useDarkMode();
   
   const [selectedFilter, setSelectedFilter] = useState('All');
   const [hoveredProject, setHoveredProject] = useState(null);
 
-  // Mock project data
   const projects = [
     {
       id: 1,
@@ -101,7 +100,7 @@ function Projects() {
     : projects.filter(p => p.category === selectedFilter);
 
   return (
-    <div className={`min-h-screen ${bgClass} py-24 relative overflow-hidden transition-all duration-500`}>
+    <div className="py-32 relative overflow-hidden transition-all duration-500">
       {/* Background Decoration */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 left-20 w-96 h-96 bg-orange-500/10 rounded-full blur-3xl" />

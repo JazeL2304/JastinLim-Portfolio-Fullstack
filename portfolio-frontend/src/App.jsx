@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { DarkModeProvider } from './contexts/DarkModeContext';
-import LoadingAnimation from './components/LoadingAnimation';
+import { DarkModeProvider, useDarkMode } from './contexts/DarkModeContext';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import About from './components/About';
@@ -8,12 +7,13 @@ import Projects from './components/Projects';
 import Skills from './components/Skills';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
+import LoadingAnimation from './components/LoadingAnimation';
 
-function App() {
+function AppContent() {
   const [loading, setLoading] = useState(true);
+  const { bgClass } = useDarkMode();
 
   useEffect(() => {
-    // Simulate loading
     const timer = setTimeout(() => {
       setLoading(false);
     }, 3000);
@@ -26,28 +26,32 @@ function App() {
   }
 
   return (
-    <DarkModeProvider>
-      <div className="App">
-        <Navbar />
-        <main>
-          <section id="home">
-            <Hero />
-          </section>
-          <section id="about">
-            <About />
-          </section>
-          <section id="projects">
-            <Projects />
-          </section>
-          <section id="skills">
-            <Skills />
-          </section>
-          <section id="contact">
-            <Contact />
-          </section>
-        </main>
-        <Footer />
+    <div className={`${bgClass} transition-all duration-500`}>
+      <Navbar />
+      <div id="home">
+        <Hero />
       </div>
+      <div id="about">
+        <About />
+      </div>
+      <div id="projects">
+        <Projects />
+      </div>
+      <div id="skills">
+        <Skills />
+      </div>
+      <div id="contact">
+        <Contact />
+      </div>
+      <Footer />
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <DarkModeProvider>
+      <AppContent />
     </DarkModeProvider>
   );
 }

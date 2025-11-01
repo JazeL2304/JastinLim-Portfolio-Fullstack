@@ -13,10 +13,10 @@ import {
 import myPhoto from '../assets/photo/FOTO_JASTIN_1.jpg';
 
 function About() {
-  const { isDark, bgClass, cardBg, textColor, textMuted, neumorph, neumorphInset } = useDarkMode();
+  const { cardBg, textColor, textMuted, neumorph, neumorphInset } = useDarkMode();
 
   return (
-    <div className={`min-h-screen ${bgClass} py-20 transition-all duration-500 relative overflow-hidden`}>
+    <div className="py-32 transition-all duration-500 relative overflow-hidden">
       {/* Background Effects */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 right-20 w-80 h-80 bg-orange-500/10 rounded-full blur-3xl" />
@@ -25,7 +25,7 @@ function About() {
 
       <div className="max-w-7xl mx-auto px-8 relative z-10">
         {/* ABOUT SECTION */}
-        <section id="about">
+        <section>
           <div className="text-center mb-16">
             <div className={`inline-flex items-center gap-2 ${cardBg} ${neumorph} rounded-full px-5 py-2.5 mb-6`}>
               <IoHandRightOutline className="w-5 h-5 text-orange-500" />

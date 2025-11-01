@@ -10,7 +10,7 @@ import {
 } from 'react-icons/io5';
 
 function Contact() {
-  const { isDark, bgClass, cardBg, textColor, textMuted, neumorph, neumorphInset } = useDarkMode();
+  const { cardBg, textColor, textMuted, neumorph, neumorphInset } = useDarkMode();
   
   const [formData, setFormData] = useState({
     name: '',
@@ -33,7 +33,7 @@ function Contact() {
   };
 
   return (
-    <div className={`min-h-screen ${bgClass} py-20 transition-all duration-500 relative overflow-hidden`}>
+    <div className="py-32 transition-all duration-500 relative overflow-hidden">
       {/* Background Effects */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 right-20 w-80 h-80 bg-orange-500/10 rounded-full blur-3xl" />
@@ -42,7 +42,7 @@ function Contact() {
 
       <div className="max-w-7xl mx-auto px-8 relative z-10">
         {/* CONTACT SECTION */}
-        <section id="contact">
+        <section>
           <div className="text-center mb-16">
             <div className={`inline-flex items-center gap-2 ${cardBg} ${neumorph} rounded-full px-5 py-2.5 mb-6`}>
               <IoMailOutline className="w-5 h-5 text-orange-500" />
