@@ -1,9 +1,11 @@
 @import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 
 @theme {
   --font-sans: "Inter", system-ui, sans-serif;
   --font-playfair: "Playfair Display", serif;
+  --font-inter: "Inter", sans-serif;
   
   /* Custom Color Palette */
   --color-dark: #000000;
@@ -12,14 +14,42 @@
   --color-light: #EEEEEE;
 }
 
-body {
+body, html, #root {
   margin: 0;
   padding: 0;
+  font-family: "Inter", sans-serif;
+  overflow-x: hidden;
 }
 
 /* Playfair Display Font Class */
 .font-playfair {
   font-family: "Playfair Display", serif !important;
+}
+
+/* Inter Font Class */
+.font-inter {
+  font-family: "Inter", sans-serif !important;
+  letter-spacing: -0.02em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* CRITICAL - Canvas and 3D Elements Z-Index */
+canvas {
+  position: fixed !important;
+  z-index: 99999 !important;
+  pointer-events: all !important;
+}
+
+/* Lanyard Container Override */
+.lanyard-container {
+  overflow: visible !important;
+  z-index: 99999 !important;
+  position: relative !important;
+}
+
+.lanyard-container * {
+  overflow: visible !important;
 }
 
 /* Floating Animation untuk Tags */

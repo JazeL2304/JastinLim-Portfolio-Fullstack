@@ -34,9 +34,9 @@ function Hero() {
   };
 
   return (
-    <div className="min-h-screen transition-all duration-500 relative overflow-hidden pt-20">
+    <div className="min-h-screen transition-all duration-500 relative pt-20" style={{ overflow: 'visible' }}>
       {/* Floating Particles */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      <div className="absolute inset-0 pointer-events-none" style={{ overflow: 'visible' }}>
         {[...Array(8)].map((_, i) => (
           <div
             key={i}
@@ -68,8 +68,8 @@ function Hero() {
       </button>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-8 py-20 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center min-h-[calc(100vh-10rem)]">
+      <div className="max-w-7xl mx-auto px-8 py-20 relative z-10" style={{ overflow: 'visible' }}>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center min-h-[calc(100vh-10rem)]" style={{ overflow: 'visible' }}>
           
           {/* Left Content */}
           <div className="space-y-6">
@@ -81,7 +81,7 @@ function Hero() {
 
             {/* Main Heading */}
             <div>
-              <h1 className={`text-5xl md:text-6xl font-extrabold ${textColor} mb-4 leading-tight font-playfair`}>
+              <h1 className={`text-5xl md:text-6xl font-black ${textColor} mb-4 leading-tight font-inter`}>
                 Hi, I'm{' '}
                 <span className="bg-gradient-to-r from-orange-500 via-red-600 to-orange-700 bg-clip-text text-transparent">
                   Jastin Lim
@@ -135,25 +135,28 @@ function Hero() {
             </div>
           </div>
 
-          {/* Right Content */}
-          <div className="relative h-[700px]">
-            <div className="absolute -top-10 -right-10 w-64 h-64 bg-gradient-to-br from-orange-500/20 to-red-600/20 rounded-full blur-3xl animate-pulse" />
-            <div className="absolute -bottom-10 -left-10 w-64 h-64 bg-gradient-to-br from-red-600/20 to-orange-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+          {/* Right Content - FIXED Z-INDEX */}
+          <div className="relative h-[700px] z-50" style={{ overflow: 'visible' }}>
+            <div className="absolute -top-10 -right-10 w-64 h-64 bg-gradient-to-br from-orange-500/20 to-red-600/20 rounded-full blur-3xl animate-pulse -z-10" />
+            <div className="absolute -bottom-10 -left-10 w-64 h-64 bg-gradient-to-br from-red-600/20 to-orange-500/20 rounded-full blur-3xl animate-pulse -z-10" style={{ animationDelay: '1s' }} />
             
-            <Lanyard
-              name="Jastin Lim"
-              role="CS Student | Web Developer"
-              location="Tangerang, Indonesia"
-              status="Student"
-              focus="Full-Stack Dev"
-              photo={myPhoto}
-              isDark={isDark}
-              cardBg={cardBg}
-              textColor={textColor}
-              textMuted={textMuted}
-              neumorph={neumorph}
-              neumorphInset={neumorphInset}
-            />
+            {/* Lanyard with Maximum Z-Index */}
+            <div className="relative z-[9999]" style={{ position: 'relative', zIndex: 9999 }}>
+              <Lanyard
+                name="Jastin Lim"
+                role="CS Student | Web Developer"
+                location="Tangerang, Indonesia"
+                status="Student"
+                focus="Full-Stack Dev"
+                photo={myPhoto}
+                isDark={isDark}
+                cardBg={cardBg}
+                textColor={textColor}
+                textMuted={textMuted}
+                neumorph={neumorph}
+                neumorphInset={neumorphInset}
+              />
+            </div>
           </div>
         </div>
       </div>

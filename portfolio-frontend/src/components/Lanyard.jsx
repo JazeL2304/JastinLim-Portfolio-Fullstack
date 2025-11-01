@@ -152,11 +152,23 @@ function Band({ maxSpeed = 50, minSpeed = 0 }) {
 
 export default function Lanyard({ position = [0, 0, 30], gravity = [0, -40, 0], fov = 20, transparent = true }) {
   return (
-    <div className="relative z-0 w-full h-screen flex justify-center items-center transform scale-100 origin-center">
+    <div 
+      className="relative w-full h-screen flex justify-center items-center transform scale-100 origin-center" 
+      style={{ 
+        zIndex: 9999, 
+        position: 'relative',
+        pointerEvents: 'all'
+      }}
+    >
       <Canvas
         camera={{ position: position, fov: fov }}
         gl={{ alpha: transparent }}
         onCreated={({ gl }) => gl.setClearColor(new THREE.Color(0x000000), transparent ? 0 : 1)}
+        style={{ 
+          position: 'relative', 
+          zIndex: 9999,
+          pointerEvents: 'all'
+        }}
       >
         <ambientLight intensity={Math.PI} />
         <Physics gravity={gravity} timeStep={1 / 60}>
