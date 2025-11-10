@@ -95,7 +95,7 @@ function Band({ maxSpeed = 50, minSpeed = 0 }) {
 
   return (
     <>
-      <group position={[0, 4, 0]}>
+      <group position={[3, 4, 0]}>
         <RigidBody ref={fixed} {...segmentProps} type="fixed" />
         <RigidBody position={[0.5, 0, 0]} ref={j1} {...segmentProps}>
           <BallCollider args={[0.1]} />
@@ -138,12 +138,14 @@ function Band({ maxSpeed = 50, minSpeed = 0 }) {
         <meshLineGeometry />
         <meshLineMaterial
           color="white"
-          depthTest={false}
+          depthTest={true}
           resolution={isSmall ? [1000, 2000] : [1000, 1000]}
           useMap
           map={texture}
           repeat={[-4, 1]}
           lineWidth={1}
+          opacity={1}
+          transparent={false}
         />
       </mesh>
     </>
@@ -152,60 +154,54 @@ function Band({ maxSpeed = 50, minSpeed = 0 }) {
 
 export default function Lanyard({ position = [0, 0, 30], gravity = [0, -40, 0], fov = 20, transparent = true }) {
   return (
-    <div 
-      className="relative w-full h-screen flex justify-center items-center transform scale-100 origin-center" 
+    <Canvas
+      camera={{ position: position, fov: fov }}
+      gl={{ alpha: transparent }}
+      onCreated={({ gl }) => gl.setClearColor(new THREE.Color(0x000000), transparent ? 0 : 1)}
       style={{ 
-        zIndex: 9999, 
-        position: 'relative',
-        pointerEvents: 'all'
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        zIndex: 1
       }}
     >
-      <Canvas
-        camera={{ position: position, fov: fov }}
-        gl={{ alpha: transparent }}
-        onCreated={({ gl }) => gl.setClearColor(new THREE.Color(0x000000), transparent ? 0 : 1)}
-        style={{ 
-          position: 'relative', 
-          zIndex: 9999,
-          pointerEvents: 'all'
-        }}
-      >
-        <ambientLight intensity={Math.PI} />
-        <Physics gravity={gravity} timeStep={1 / 60}>
-          <Band />
-        </Physics>
-        <Environment blur={0.75}>
-          <Lightformer
-            intensity={2}
-            color="white"
-            position={[0, -1, 5]}
-            rotation={[0, 0, Math.PI / 3]}
-            scale={[100, 0.1, 1]}
-          />
-          <Lightformer
-            intensity={3}
-            color="white"
-            position={[-1, -1, 1]}
-            rotation={[0, 0, Math.PI / 3]}
-            scale={[100, 0.1, 1]}
-          />
-          <Lightformer
-            intensity={3}
-            color="white"
-            position={[1, 1, 1]}
-            rotation={[0, 0, Math.PI / 3]}
-            scale={[100, 0.1, 1]}
-          />
-          <Lightformer
-            intensity={10}
-            color="white"
-            position={[-10, 0, 14]}
-            rotation={[0, Math.PI / 2, Math.PI / 3]}
-            scale={[100, 10, 1]}
-          />
-        </Environment>
-      </Canvas>
-    </div>
+      <ambientLight intensity={Math.PI} />
+      <Physics gravity={gravity} timeStep={1 / 60}>
+        <Band />
+      </Physics>
+      <Environment blur={0.75}>
+        <Lightformer
+          intensity={2}
+          color="white"
+          position={[0, -1, 5]}
+          rotation={[0, 0, Math.PI / 3]}
+          scale={[100, 0.1, 1]}
+        />
+        <Lightformer
+          intensity={3}
+          color="white"
+          position={[-1, -1, 1]}
+          rotation={[0, 0, Math.PI / 3]}
+          scale={[100, 0.1, 1]}
+        />
+        <Lightformer
+          intensity={3}
+          color="white"
+          position={[1, 1, 1]}
+          rotation={[0, 0, Math.PI / 3]}
+          scale={[100, 0.1, 1]}
+        />
+        <Lightformer
+          intensity={10}
+          color="white"
+          position={[-10, 0, 14]}
+          rotation={[0, Math.PI / 2, Math.PI / 3]}
+          scale={[100, 10, 1]}
+        />
+      </Environment>
+    </Canvas>
   );
 }
 

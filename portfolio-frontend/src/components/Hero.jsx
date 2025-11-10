@@ -34,9 +34,27 @@ function Hero() {
   };
 
   return (
-    <div className="min-h-screen transition-all duration-500 relative pt-20" style={{ overflow: 'visible' }}>
+    <div className="min-h-screen transition-all duration-500 relative pt-20" style={{ position: 'relative' }}>
+      {/* Canvas Background - Full Hero Section, bisa interact */}
+      <div className="absolute inset-0" style={{ zIndex: 1 }}>
+        <Lanyard
+          name="Jastin Lim"
+          role="CS Student | Web Developer"
+          location="Tangerang, Indonesia"
+          status="Student"
+          focus="Full-Stack Dev"
+          photo={myPhoto}
+          isDark={isDark}
+          cardBg={cardBg}
+          textColor={textColor}
+          textMuted={textMuted}
+          neumorph={neumorph}
+          neumorphInset={neumorphInset}
+        />
+      </div>
+
       {/* Floating Particles */}
-      <div className="absolute inset-0 pointer-events-none" style={{ overflow: 'visible' }}>
+      <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 5 }}>
         {[...Array(8)].map((_, i) => (
           <div
             key={i}
@@ -56,7 +74,8 @@ function Hero() {
       {/* Dark Mode Toggle */}
       <button
         onClick={toggleDarkMode}
-        className={`fixed top-20 right-8 z-[999] w-14 h-14 rounded-full ${cardBg} ${neumorph} flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-2xl`}
+        className={`fixed top-20 right-8 w-14 h-14 rounded-full ${cardBg} ${neumorph} flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-2xl`}
+        style={{ zIndex: 100 }}
         aria-label="Toggle Dark Mode"
         title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
       >
@@ -67,12 +86,12 @@ function Hero() {
         )}
       </button>
 
-      {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-8 py-20 relative z-10" style={{ overflow: 'visible' }}>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center min-h-[calc(100vh-10rem)]" style={{ overflow: 'visible' }}>
+      {/* Main Content - pointer-events hanya untuk elemen yang perlu diklik */}
+      <div className="max-w-7xl mx-auto px-8 py-20 relative pointer-events-none" style={{ zIndex: 10 }}>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center min-h-[calc(100vh-10rem)]">
           
-          {/* Left Content */}
-          <div className="space-y-6">
+          {/* Left Content - Aktifkan pointer events hanya untuk konten ini */}
+          <div className="space-y-6 relative pointer-events-auto">
             {/* Status Badge */}
             <div className={`inline-flex items-center gap-2 ${cardBg} ${neumorph} rounded-full px-5 py-2.5`}>
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
@@ -135,34 +154,17 @@ function Hero() {
             </div>
           </div>
 
-          {/* Right Content - FIXED Z-INDEX */}
-          <div className="relative h-[700px] z-50" style={{ overflow: 'visible' }}>
-            <div className="absolute -top-10 -right-10 w-64 h-64 bg-gradient-to-br from-orange-500/20 to-red-600/20 rounded-full blur-3xl animate-pulse -z-10" />
-            <div className="absolute -bottom-10 -left-10 w-64 h-64 bg-gradient-to-br from-red-600/20 to-orange-500/20 rounded-full blur-3xl animate-pulse -z-10" style={{ animationDelay: '1s' }} />
-            
-            {/* Lanyard with Maximum Z-Index */}
-            <div className="relative z-[9999]" style={{ position: 'relative', zIndex: 9999 }}>
-              <Lanyard
-                name="Jastin Lim"
-                role="CS Student | Web Developer"
-                location="Tangerang, Indonesia"
-                status="Student"
-                focus="Full-Stack Dev"
-                photo={myPhoto}
-                isDark={isDark}
-                cardBg={cardBg}
-                textColor={textColor}
-                textMuted={textMuted}
-                neumorph={neumorph}
-                neumorphInset={neumorphInset}
-              />
-            </div>
+          {/* Right Content - Hanya glow effects, tidak blocking canvas */}
+          <div className="relative h-[700px] pointer-events-none">
+            {/* Background Glow Effects */}
+            <div className="absolute -top-10 -right-10 w-64 h-64 bg-gradient-to-br from-orange-500/20 to-red-600/20 rounded-full blur-3xl animate-pulse" />
+            <div className="absolute -bottom-10 -left-10 w-64 h-64 bg-gradient-to-br from-red-600/20 to-orange-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
           </div>
         </div>
       </div>
 
       {/* Scroll Indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce pointer-events-none" style={{ zIndex: 20 }}>
         <div className={`w-7 h-11 ${cardBg} ${neumorph} rounded-full flex items-center justify-center`}>
           <div className={`w-1.5 h-1.5 ${isDark ? 'bg-orange-500' : 'bg-orange-600'} rounded-full animate-pulse`} />
         </div>

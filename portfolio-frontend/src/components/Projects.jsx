@@ -7,100 +7,158 @@ import {
   IoCodeSlashOutline,
   IoFlashOutline,
   IoStarOutline,
-  IoCartOutline,
-  IoCheckboxOutline,
-  IoFitnessOutline,
+  IoGlobeOutline,
+  IoPhonePortraitOutline,
+  IoBrushOutline,
   IoGameControllerOutline,
-  IoHardwareChipOutline,
-  IoRestaurantOutline,
   IoRocketOutline,
   IoPeopleOutline,
-  IoTrophyOutline
+  IoTrophyOutline,
+  IoCloseOutline,
+  IoAlertCircleOutline
 } from 'react-icons/io5';
+import SumateraUtaraImg from '../assets/photo/project/SumateraUtaraProject.png';
+import PTSumberCahayaImg from '../assets/photo/project/PTSumberCahayaTimurProject.png';
+import HarbourMindImg from '../assets/photo/project/HarbourMindProject.png';
+import TheLazyJannahImg from '../assets/photo/project/TheLazyJannahProject.png';
+
+
 
 function Projects() {
   const { cardBg, textColor, textMuted, neumorph, neumorphInset } = useDarkMode();
   
   const [selectedFilter, setSelectedFilter] = useState('All');
   const [hoveredProject, setHoveredProject] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
 
   const projects = [
     {
       id: 1,
-      title: 'E-Commerce Platform',
-      description: 'Full-featured online shopping platform with payment gateway integration, inventory management, and admin dashboard.',
+      title: 'Website Pengenalan Budaya Sumatera Utara',
+      description: 'Website informatif yang menampilkan kekayaan budaya Sumatera Utara dengan desain modern dan interaktif menggunakan React JS.',
       category: 'Web App',
-      techStack: ['React', 'Laravel', 'MySQL', 'Tailwind'],
-      icon: IoCartOutline,
+      techStack: ['React JS', 'CSS', 'JavaScript'],
+      icon: IoGlobeOutline,
       gradient: 'from-blue-500 to-cyan-500',
-      stars: 42,
-      status: 'Production'
+      stars: 0,
+      status: 'Production',
+      githubLink: '', // Kosongkan untuk sementara
+      demoLink: '' // Kosongkan untuk sementara
     },
     {
       id: 2,
-      title: 'Task Management System',
-      description: 'Collaborative project management tool with real-time updates, team chat, and progress tracking features.',
+      title: 'PT. Sumber Cahaya Timur - Company Profile',
+      description: 'Website company profile modern dengan desain responsive dan animasi smooth menggunakan React Vite dan Tailwind CSS.',
       category: 'Web App',
-      techStack: ['React', 'Node.js', 'MongoDB', 'Socket.io'],
-      icon: IoCheckboxOutline,
+      techStack: ['React Vite', 'Tailwind CSS', 'JavaScript'],
+      icon: IoGlobeOutline,
       gradient: 'from-purple-500 to-pink-500',
-      stars: 38,
-      status: 'Production'
+      stars: 0,
+      status: 'Production',
+      githubLink: 'https://github.com/JazeL2304/sct-company-profile', // Kosongkan untuk sementara
+      demoLink: 'https://sctv1.vercel.app/' // Kosongkan untuk sementara
     },
     {
       id: 3,
-      title: 'Mobile Fitness Tracker',
-      description: 'Android app for tracking workouts, calories, and health metrics with beautiful UI and offline support.',
-      category: 'Mobile',
-      techStack: ['Kotlin', 'Android Studio', 'Room DB', 'Material Design'],
-      icon: IoFitnessOutline,
+      title: 'HarbourMind - Prototype Aplikasi',
+      description: 'Prototype aplikasi mobile untuk manajemen kesehatan mental dengan UI/UX yang user-friendly dan modern, dibuat menggunakan Figma.',
+      category: 'Design',
+      techStack: ['Figma', 'UI/UX Design', 'Prototyping'],
+      icon: IoBrushOutline,
       gradient: 'from-green-500 to-emerald-500',
-      stars: 56,
-      status: 'Beta'
+      stars: 0,
+      status: 'Prototype',
+      githubLink: 'https://www.figma.com/design/UgzaPg9hD6fEnlUj8VcX4G/Mockup-aplikasi-kesehatan-mental--HarbourMind-?node-id=0-1&t=x3kAft9AbiLnmJaO-1', // Tidak ada GitHub untuk prototype Figma
+      demoLink: 'https://www.figma.com/proto/UgzaPg9hD6fEnlUj8VcX4G/Mockup-aplikasi-kesehatan-mental--HarbourMind-?node-id=27-6866&t=LdzlayKvKEIlHaUz-1&starting-point-node-id=27%3A6853' // Kosongkan untuk sementara (link Figma)
     },
     {
       id: 4,
-      title: '3D Game Portfolio',
-      description: 'Interactive 3D puzzle game built with Unity featuring stunning graphics and engaging gameplay mechanics.',
+      title: 'The Lazy Jannah - Game',
+      description: 'Game interaktif yang dikembangkan menggunakan Unity dan C# dengan gameplay menarik dan grafis yang memukau.',
       category: 'Game',
-      techStack: ['Unity', 'C#', 'Blender', '3D Modeling'],
+      techStack: ['Unity', 'C#', 'Game Development'],
       icon: IoGameControllerOutline,
       gradient: 'from-orange-500 to-red-500',
-      stars: 67,
-      status: 'Production'
-    },
-    {
-      id: 5,
-      title: 'AI Chatbot Assistant',
-      description: 'Smart chatbot using NLP for customer support with sentiment analysis and multi-language support.',
-      category: 'AI/ML',
-      techStack: ['Python', 'TensorFlow', 'React', 'FastAPI'],
-      icon: IoHardwareChipOutline,
-      gradient: 'from-indigo-500 to-purple-500',
-      stars: 91,
-      status: 'Development'
-    },
-    {
-      id: 6,
-      title: 'Restaurant Management',
-      description: 'Complete restaurant POS system with table reservations, kitchen display, and inventory tracking.',
-      category: 'Web App',
-      techStack: ['Laravel', 'Vue.js', 'MySQL', 'Bootstrap'],
-      icon: IoRestaurantOutline,
-      gradient: 'from-yellow-500 to-orange-500',
-      stars: 45,
-      status: 'Production'
+      stars: 0,
+      status: 'Production',
+      githubLink: 'https://github.com/JazeL2304/TheLazyJannah', // Kosongkan untuk sementara
+      demoLink: '' // Kosongkan untuk sementara
     }
   ];
 
-  const filters = ['All', 'Web App', 'Mobile', 'Game', 'AI/ML'];
+  const filters = ['All', 'Web App', 'Design', 'Game'];
   
   const filteredProjects = selectedFilter === 'All' 
     ? projects 
     : projects.filter(p => p.category === selectedFilter);
 
+  const handleLinkClick = (link, type) => {
+    if (!link || link.trim() === '') {
+      setModalMessage(`Untuk sementara bagian ${type} belum tersedia`);
+      setShowModal(true);
+    } else {
+      window.open(link, '_blank');
+    }
+  };
+
+  const Modal = ({ show, onClose, message }) => {
+    if (!show) return null;
+
+    return (
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center">
+        {/* Backdrop */}
+        <div 
+          className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+          onClick={onClose}
+        />
+        
+        {/* Modal Content */}
+        <div className={`relative ${cardBg} ${neumorph} rounded-3xl p-8 max-w-md w-full mx-4 transform transition-all duration-300 scale-100`}>
+          {/* Close Button */}
+          <button
+            onClick={onClose}
+            className={`absolute top-4 right-4 w-10 h-10 ${cardBg} ${neumorph} rounded-full flex items-center justify-center hover:scale-110 transition-all duration-300`}
+          >
+            <IoCloseOutline className={`w-6 h-6 ${textColor}`} />
+          </button>
+
+          {/* Icon */}
+          <div className="flex justify-center mb-6">
+            <div className={`w-20 h-20 ${cardBg} ${neumorphInset} rounded-full flex items-center justify-center`}>
+              <IoAlertCircleOutline className="w-10 h-10 text-orange-500" />
+            </div>
+          </div>
+
+          {/* Message */}
+          <h3 className={`text-2xl font-bold ${textColor} text-center mb-4`}>
+            Pemberitahuan
+          </h3>
+          <p className={`${textMuted} text-center mb-6`}>
+            {message}
+          </p>
+
+          {/* OK Button */}
+          <button
+            onClick={onClose}
+            className={`w-full ${cardBg} ${neumorph} rounded-xl py-4 ${textColor} font-bold text-lg hover:scale-105 transition-all duration-300`}
+          >
+            Mengerti
+          </button>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="py-32 relative overflow-hidden transition-all duration-500">
+      {/* Modal */}
+      <Modal 
+        show={showModal} 
+        onClose={() => setShowModal(false)} 
+        message={modalMessage}
+      />
+
       {/* Background Decoration */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 left-20 w-96 h-96 bg-orange-500/10 rounded-full blur-3xl" />
@@ -142,7 +200,7 @@ function Projects() {
         </div>
 
         {/* Projects Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {filteredProjects.map((project, index) => {
             const Icon = project.icon;
             return (
@@ -165,10 +223,18 @@ function Projects() {
                   <div className={`absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center gap-4 transition-opacity duration-300 ${
                     hoveredProject === project.id ? 'opacity-100' : 'opacity-0'
                   }`}>
-                    <button className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/30 transition-all duration-300 hover:scale-110">
+                    <button 
+                      onClick={() => handleLinkClick(project.githubLink, 'GitHub Repository')}
+                      className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/30 transition-all duration-300 hover:scale-110"
+                      title="View GitHub Repository"
+                    >
                       <IoLogoGithub className="w-6 h-6 text-white" />
                     </button>
-                    <button className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/30 transition-all duration-300 hover:scale-110">
+                    <button 
+                      onClick={() => handleLinkClick(project.demoLink, 'Live Demo')}
+                      className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/30 transition-all duration-300 hover:scale-110"
+                      title="View Live Demo"
+                    >
                       <IoOpenOutline className="w-6 h-6 text-white" />
                     </button>
                   </div>
@@ -186,10 +252,12 @@ function Projects() {
                     <h3 className={`text-xl font-bold ${textColor} flex-1`}>
                       {project.title}
                     </h3>
-                    <div className={`flex items-center gap-1 ${cardBg} ${neumorphInset} rounded-full px-3 py-1`}>
-                      <IoStarOutline className="w-4 h-4 text-yellow-500" />
-                      <span className={`text-sm font-semibold ${textColor}`}>{project.stars}</span>
-                    </div>
+                    {project.stars > 0 && (
+                      <div className={`flex items-center gap-1 ${cardBg} ${neumorphInset} rounded-full px-3 py-1`}>
+                        <IoStarOutline className="w-4 h-4 text-yellow-500" />
+                        <span className={`text-sm font-semibold ${textColor}`}>{project.stars}</span>
+                      </div>
+                    )}
                   </div>
 
                   {/* Description */}
@@ -211,11 +279,17 @@ function Projects() {
 
                   {/* Action Buttons */}
                   <div className="flex gap-3">
-                    <button className={`flex-1 ${cardBg} ${neumorph} rounded-xl py-3 ${textColor} font-semibold text-sm hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2`}>
+                    <button 
+                      onClick={() => handleLinkClick(project.githubLink, 'GitHub Repository')}
+                      className={`flex-1 ${cardBg} ${neumorph} rounded-xl py-3 ${textColor} font-semibold text-sm hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2`}
+                    >
                       <IoCodeSlashOutline className="w-4 h-4" />
                       View Code
                     </button>
-                    <button className={`flex-1 ${cardBg} ${neumorph} rounded-xl py-3 ${textColor} font-semibold text-sm hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2`}>
+                    <button 
+                      onClick={() => handleLinkClick(project.demoLink, 'Live Demo')}
+                      className={`flex-1 ${cardBg} ${neumorph} rounded-xl py-3 ${textColor} font-semibold text-sm hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2`}
+                    >
                       <IoFlashOutline className="w-4 h-4" />
                       Live Demo
                     </button>
@@ -226,21 +300,13 @@ function Projects() {
           })}
         </div>
 
-        {/* Load More Button */}
-        <div className="text-center mt-16">
-          <button className={`${cardBg} ${neumorph} px-12 py-5 rounded-2xl ${textColor} font-bold text-lg hover:scale-105 transition-all duration-300 inline-flex items-center gap-3`}>
-            <span>Load More Projects</span>
-            <div className="w-2 h-2 bg-orange-500 rounded-full animate-pulse" />
-          </button>
-        </div>
-
         {/* Stats Section */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-24">
           {[
-            { icon: IoRocketOutline, value: '15+', label: 'Projects Completed' },
-            { icon: IoStarOutline, value: '340+', label: 'GitHub Stars' },
-            { icon: IoPeopleOutline, value: '8+', label: 'Happy Clients' },
-            { icon: IoTrophyOutline, value: '5+', label: 'Awards Won' }
+            { icon: IoRocketOutline, value: '4+', label: 'Projects Completed' },
+            { icon: IoStarOutline, value: '0', label: 'GitHub Stars' },
+            { icon: IoPeopleOutline, value: '2+', label: 'Collaborations' },
+            { icon: IoTrophyOutline, value: '1+', label: 'Awards Won' }
           ].map((stat, i) => {
             const Icon = stat.icon;
             return (

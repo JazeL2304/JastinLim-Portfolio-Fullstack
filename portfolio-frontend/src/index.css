@@ -34,23 +34,16 @@ body, html, #root {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* CRITICAL - Canvas and 3D Elements Z-Index */
+/* ✅ HAPUS BAGIAN INI - Ini yang menyebabkan masalah
 canvas {
   position: fixed !important;
   z-index: 99999 !important;
   pointer-events: all !important;
 }
+*/
 
-/* Lanyard Container Override */
-.lanyard-container {
-  overflow: visible !important;
-  z-index: 99999 !important;
-  position: relative !important;
-}
-
-.lanyard-container * {
-  overflow: visible !important;
-}
+/* Lanyard Container Override - TIDAK PERLU LAGI */
+/* Biarkan React Three Fiber handle sendiri */
 
 /* Floating Animation untuk Tags */
 @keyframes float {

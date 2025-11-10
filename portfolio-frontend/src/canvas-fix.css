@@ -1,0 +1,34 @@
+/* CRITICAL FIX: Force canvas to stay behind */
+
+/* Target all canvas elements inside lanyard */
+.lanyard-wrapper {
+  position: absolute !important;
+  z-index: 1 !important;
+  pointer-events: none !important;
+}
+
+.lanyard-wrapper canvas {
+  position: absolute !important;
+  z-index: 1 !important;
+  pointer-events: auto !important;
+}
+
+/* Ensure hero content stays on top */
+.hero-content,
+.hero-content * {
+  position: relative !important;
+  z-index: 10 !important;
+  pointer-events: auto !important;
+}
+
+/* Override any global canvas styles */
+canvas[data-engine="three.js r168"] {
+  position: absolute !important;
+  z-index: 1 !important;
+}
+
+/* Specific fix for React Three Fiber canvas */
+div[style*="position: fixed"] canvas {
+  position: absolute !important;
+  z-index: 1 !important;
+}
