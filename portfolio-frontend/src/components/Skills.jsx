@@ -20,24 +20,27 @@ import figmaIcon from '../assets/photo/figma.png';
 import androidStudioIcon from '../assets/photo/androidstudio.png';
 import kotlinIcon from '../assets/photo/kotlin.png';
 import phpIcon from '../assets/photo/php.png';
+import csharpIcon from '../assets/photo/csharp.png';
 
 function Skills() {
   const { cardBg, textColor, textMuted, neumorph, neumorphInset } = useDarkMode();
   
   const [hoveredSkill, setHoveredSkill] = useState(null);
 
+  // Skills diurutkan berdasarkan level (tertinggi ke terendah)
   const skills = [
-    { name: 'React', icon: reactIcon, level: 70, category: 'Frontend' },
-    { name: 'JavaScript', icon: javascriptIcon, level: 75, category: 'Frontend' },
     { name: 'Tailwind CSS', icon: tailwindIcon, level: 80, category: 'Frontend' },
-    { name: 'Laravel', icon: laravelIcon, level: 65, category: 'Backend' },
+    { name: 'React', icon: reactIcon, level: 80, category: 'Frontend' },
+    { name: 'JavaScript', icon: javascriptIcon, level: 75, category: 'Frontend' },
+    { name: 'Figma', icon: figmaIcon, level: 75, category: 'Design' },
     { name: 'PHP', icon: phpIcon, level: 70, category: 'Backend' },
-    { name: 'MySQL', icon: mysqlIcon, level: 68, category: 'Backend' },
-    { name: 'Android Studio', icon: androidStudioIcon, level: 60, category: 'Mobile' },
-    { name: 'Kotlin', icon: kotlinIcon, level: 55, category: 'Mobile' },
-    { name: 'Unity', icon: unityIcon, level: 50, category: 'Game Dev' },
+    { name: 'Laravel', icon: laravelIcon, level: 70, category: 'Backend' },
+    { name: 'MySQL', icon: mysqlIcon, level: 70, category: 'Backend' },
     { name: 'Python', icon: pythonIcon, level: 60, category: 'Programming' },
-    { name: 'Figma', icon: figmaIcon, level: 72, category: 'Design' }
+    { name: 'Android Studio', icon: androidStudioIcon, level: 50, category: 'Mobile' },
+    { name: 'Kotlin', icon: kotlinIcon, level: 50, category: 'Mobile' },
+    { name: 'Unity', icon: unityIcon, level: 50, category: 'Game Dev' },
+    { name: 'C#', icon: csharpIcon, level: 50, category: 'Game Dev' }
   ];
 
   return (
@@ -135,8 +138,8 @@ function Skills() {
               },
               { 
                 year: '2024', 
-                title: 'Mobile Development', 
-                desc: 'Started learning Android development with Kotlin',
+                title: 'Mobile & Game Development', 
+                desc: 'Started learning Android development with Kotlin and Unity with C#',
                 status: 'In Progress',
                 icon: IoPhonePortraitOutline
               },

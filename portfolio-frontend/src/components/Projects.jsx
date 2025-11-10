@@ -15,14 +15,14 @@ import {
   IoPeopleOutline,
   IoTrophyOutline,
   IoCloseOutline,
-  IoAlertCircleOutline
+  IoAlertCircleOutline,
+  IoLogoFigma
 } from 'react-icons/io5';
+import { SiFigma } from 'react-icons/si';
 import SumateraUtaraImg from '../assets/photo/project/SumateraUtaraProject.png';
 import PTSumberCahayaImg from '../assets/photo/project/PTSumberCahayaTimurProject.png';
 import HarbourMindImg from '../assets/photo/project/HarbourMindProject.png';
 import TheLazyJannahImg from '../assets/photo/project/TheLazyJannahProject.png';
-
-
 
 function Projects() {
   const { cardBg, textColor, textMuted, neumorph, neumorphInset } = useDarkMode();
@@ -40,11 +40,13 @@ function Projects() {
       category: 'Web App',
       techStack: ['React JS', 'CSS', 'JavaScript'],
       icon: IoGlobeOutline,
+      image: SumateraUtaraImg,
       gradient: 'from-blue-500 to-cyan-500',
       stars: 0,
       status: 'Production',
-      githubLink: '', // Kosongkan untuk sementara
-      demoLink: '' // Kosongkan untuk sementara
+      githubLink: '',
+      demoLink: '',
+      isFigma: false
     },
     {
       id: 2,
@@ -53,11 +55,13 @@ function Projects() {
       category: 'Web App',
       techStack: ['React Vite', 'Tailwind CSS', 'JavaScript'],
       icon: IoGlobeOutline,
+      image: PTSumberCahayaImg,
       gradient: 'from-purple-500 to-pink-500',
       stars: 0,
       status: 'Production',
-      githubLink: 'https://github.com/JazeL2304/sct-company-profile', // Kosongkan untuk sementara
-      demoLink: 'https://sctv1.vercel.app/' // Kosongkan untuk sementara
+      githubLink: 'https://github.com/JazeL2304/sct-company-profile',
+      demoLink: 'https://sctv1.vercel.app/',
+      isFigma: false
     },
     {
       id: 3,
@@ -66,11 +70,13 @@ function Projects() {
       category: 'Design',
       techStack: ['Figma', 'UI/UX Design', 'Prototyping'],
       icon: IoBrushOutline,
+      image: HarbourMindImg,
       gradient: 'from-green-500 to-emerald-500',
       stars: 0,
       status: 'Prototype',
-      githubLink: 'https://www.figma.com/design/UgzaPg9hD6fEnlUj8VcX4G/Mockup-aplikasi-kesehatan-mental--HarbourMind-?node-id=0-1&t=x3kAft9AbiLnmJaO-1', // Tidak ada GitHub untuk prototype Figma
-      demoLink: 'https://www.figma.com/proto/UgzaPg9hD6fEnlUj8VcX4G/Mockup-aplikasi-kesehatan-mental--HarbourMind-?node-id=27-6866&t=LdzlayKvKEIlHaUz-1&starting-point-node-id=27%3A6853' // Kosongkan untuk sementara (link Figma)
+      figmaLink: 'https://www.figma.com/design/UgzaPg9hD6fEnlUj8VcX4G/Mockup-aplikasi-kesehatan-mental--HarbourMind-?node-id=0-1&t=x3kAft9AbiLnmJaO-1',
+      demoLink: 'https://www.figma.com/proto/UgzaPg9hD6fEnlUj8VcX4G/Mockup-aplikasi-kesehatan-mental--HarbourMind-?node-id=27-6866&t=LdzlayKvKEIlHaUz-1&starting-point-node-id=27%3A6853',
+      isFigma: true
     },
     {
       id: 4,
@@ -79,11 +85,13 @@ function Projects() {
       category: 'Game',
       techStack: ['Unity', 'C#', 'Game Development'],
       icon: IoGameControllerOutline,
+      image: TheLazyJannahImg,
       gradient: 'from-orange-500 to-red-500',
       stars: 0,
       status: 'Production',
-      githubLink: 'https://github.com/JazeL2304/TheLazyJannah', // Kosongkan untuk sementara
-      demoLink: '' // Kosongkan untuk sementara
+      githubLink: 'https://github.com/JazeL2304/TheLazyJannah',
+      demoLink: '',
+      isFigma: false
     }
   ];
 
@@ -107,15 +115,12 @@ function Projects() {
 
     return (
       <div className="fixed inset-0 z-[9999] flex items-center justify-center">
-        {/* Backdrop */}
         <div 
           className="absolute inset-0 bg-black/60 backdrop-blur-sm"
           onClick={onClose}
         />
         
-        {/* Modal Content */}
         <div className={`relative ${cardBg} ${neumorph} rounded-3xl p-8 max-w-md w-full mx-4 transform transition-all duration-300 scale-100`}>
-          {/* Close Button */}
           <button
             onClick={onClose}
             className={`absolute top-4 right-4 w-10 h-10 ${cardBg} ${neumorph} rounded-full flex items-center justify-center hover:scale-110 transition-all duration-300`}
@@ -123,14 +128,12 @@ function Projects() {
             <IoCloseOutline className={`w-6 h-6 ${textColor}`} />
           </button>
 
-          {/* Icon */}
           <div className="flex justify-center mb-6">
             <div className={`w-20 h-20 ${cardBg} ${neumorphInset} rounded-full flex items-center justify-center`}>
               <IoAlertCircleOutline className="w-10 h-10 text-orange-500" />
             </div>
           </div>
 
-          {/* Message */}
           <h3 className={`text-2xl font-bold ${textColor} text-center mb-4`}>
             Pemberitahuan
           </h3>
@@ -138,7 +141,6 @@ function Projects() {
             {message}
           </p>
 
-          {/* OK Button */}
           <button
             onClick={onClose}
             className={`w-full ${cardBg} ${neumorph} rounded-xl py-4 ${textColor} font-bold text-lg hover:scale-105 transition-all duration-300`}
@@ -152,21 +154,18 @@ function Projects() {
 
   return (
     <div className="py-32 relative overflow-hidden transition-all duration-500">
-      {/* Modal */}
       <Modal 
         show={showModal} 
         onClose={() => setShowModal(false)} 
         message={modalMessage}
       />
 
-      {/* Background Decoration */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 left-20 w-96 h-96 bg-orange-500/10 rounded-full blur-3xl" />
         <div className="absolute bottom-20 right-20 w-96 h-96 bg-red-500/10 rounded-full blur-3xl" />
       </div>
 
       <div className="max-w-7xl mx-auto px-8 relative z-10">
-        {/* Header */}
         <div className="text-center mb-16">
           <div className={`inline-flex items-center gap-2 ${cardBg} ${neumorph} rounded-full px-6 py-3 mb-6`}>
             <IoLayersOutline className="w-5 h-5 text-orange-500" />
@@ -184,7 +183,6 @@ function Projects() {
           </p>
         </div>
 
-        {/* Filter Buttons */}
         <div className="flex flex-wrap justify-center gap-4 mb-16">
           {filters.map((filter) => (
             <button
@@ -199,7 +197,6 @@ function Projects() {
           ))}
         </div>
 
-        {/* Projects Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {filteredProjects.map((project, index) => {
             const Icon = project.icon;
@@ -213,30 +210,59 @@ function Projects() {
                   animationDelay: `${index * 0.1}s`
                 }}
               >
-                {/* Project Image/Icon */}
-                <div className={`relative h-64 bg-gradient-to-br ${project.gradient} flex items-center justify-center overflow-hidden`}>
-                  <div className="transform transition-transform duration-500 hover:scale-110">
-                    <Icon className="w-32 h-32 text-white" />
-                  </div>
+                {/* Project Image */}
+                <div className="relative h-64 overflow-hidden bg-gradient-to-br from-gray-800 to-gray-900">
+                  {project.image ? (
+                    <img 
+                      src={project.image} 
+                      alt={project.title}
+                      className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+                    />
+                  ) : (
+                    <div className={`h-full bg-gradient-to-br ${project.gradient} flex items-center justify-center`}>
+                      <Icon className="w-32 h-32 text-white" />
+                    </div>
+                  )}
                   
                   {/* Overlay on Hover */}
                   <div className={`absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center gap-4 transition-opacity duration-300 ${
                     hoveredProject === project.id ? 'opacity-100' : 'opacity-0'
                   }`}>
-                    <button 
-                      onClick={() => handleLinkClick(project.githubLink, 'GitHub Repository')}
-                      className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/30 transition-all duration-300 hover:scale-110"
-                      title="View GitHub Repository"
-                    >
-                      <IoLogoGithub className="w-6 h-6 text-white" />
-                    </button>
-                    <button 
-                      onClick={() => handleLinkClick(project.demoLink, 'Live Demo')}
-                      className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/30 transition-all duration-300 hover:scale-110"
-                      title="View Live Demo"
-                    >
-                      <IoOpenOutline className="w-6 h-6 text-white" />
-                    </button>
+                    {project.isFigma ? (
+                      <>
+                        <button 
+                          onClick={() => handleLinkClick(project.figmaLink, 'Figma Design')}
+                          className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/30 transition-all duration-300 hover:scale-110"
+                          title="View Figma Design"
+                        >
+                          <SiFigma className="w-6 h-6 text-white" />
+                        </button>
+                        <button 
+                          onClick={() => handleLinkClick(project.demoLink, 'Prototype Demo')}
+                          className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/30 transition-all duration-300 hover:scale-110"
+                          title="View Prototype"
+                        >
+                          <IoOpenOutline className="w-6 h-6 text-white" />
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <button 
+                          onClick={() => handleLinkClick(project.githubLink, 'GitHub Repository')}
+                          className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/30 transition-all duration-300 hover:scale-110"
+                          title="View GitHub Repository"
+                        >
+                          <IoLogoGithub className="w-6 h-6 text-white" />
+                        </button>
+                        <button 
+                          onClick={() => handleLinkClick(project.demoLink, 'Live Demo')}
+                          className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/30 transition-all duration-300 hover:scale-110"
+                          title="View Live Demo"
+                        >
+                          <IoOpenOutline className="w-6 h-6 text-white" />
+                        </button>
+                      </>
+                    )}
                   </div>
 
                   {/* Status Badge */}
@@ -247,7 +273,6 @@ function Projects() {
 
                 {/* Project Info */}
                 <div className="p-6">
-                  {/* Title & Stars */}
                   <div className="flex items-start justify-between mb-3">
                     <h3 className={`text-xl font-bold ${textColor} flex-1`}>
                       {project.title}
@@ -260,12 +285,10 @@ function Projects() {
                     )}
                   </div>
 
-                  {/* Description */}
                   <p className={`${textMuted} text-sm mb-4 line-clamp-3`}>
                     {project.description}
                   </p>
 
-                  {/* Tech Stack */}
                   <div className="flex flex-wrap gap-2 mb-4">
                     {project.techStack.map((tech, i) => (
                       <span
@@ -277,22 +300,43 @@ function Projects() {
                     ))}
                   </div>
 
-                  {/* Action Buttons */}
+                  {/* Action Buttons - Berbeda untuk Figma */}
                   <div className="flex gap-3">
-                    <button 
-                      onClick={() => handleLinkClick(project.githubLink, 'GitHub Repository')}
-                      className={`flex-1 ${cardBg} ${neumorph} rounded-xl py-3 ${textColor} font-semibold text-sm hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2`}
-                    >
-                      <IoCodeSlashOutline className="w-4 h-4" />
-                      View Code
-                    </button>
-                    <button 
-                      onClick={() => handleLinkClick(project.demoLink, 'Live Demo')}
-                      className={`flex-1 ${cardBg} ${neumorph} rounded-xl py-3 ${textColor} font-semibold text-sm hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2`}
-                    >
-                      <IoFlashOutline className="w-4 h-4" />
-                      Live Demo
-                    </button>
+                    {project.isFigma ? (
+                      <>
+                        <button 
+                          onClick={() => handleLinkClick(project.figmaLink, 'Figma Design')}
+                          className={`flex-1 ${cardBg} ${neumorph} rounded-xl py-3 ${textColor} font-semibold text-sm hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2`}
+                        >
+                          <SiFigma className="w-4 h-4" />
+                          View Design
+                        </button>
+                        <button 
+                          onClick={() => handleLinkClick(project.demoLink, 'Prototype Demo')}
+                          className={`flex-1 ${cardBg} ${neumorph} rounded-xl py-3 ${textColor} font-semibold text-sm hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2`}
+                        >
+                          <IoFlashOutline className="w-4 h-4" />
+                          Prototype
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <button 
+                          onClick={() => handleLinkClick(project.githubLink, 'GitHub Repository')}
+                          className={`flex-1 ${cardBg} ${neumorph} rounded-xl py-3 ${textColor} font-semibold text-sm hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2`}
+                        >
+                          <IoCodeSlashOutline className="w-4 h-4" />
+                          View Code
+                        </button>
+                        <button 
+                          onClick={() => handleLinkClick(project.demoLink, 'Live Demo')}
+                          className={`flex-1 ${cardBg} ${neumorph} rounded-xl py-3 ${textColor} font-semibold text-sm hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2`}
+                        >
+                          <IoFlashOutline className="w-4 h-4" />
+                          Live Demo
+                        </button>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>
@@ -303,10 +347,10 @@ function Projects() {
         {/* Stats Section */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-24">
           {[
-            { icon: IoRocketOutline, value: '4+', label: 'Projects Completed' },
-            { icon: IoStarOutline, value: '0', label: 'GitHub Stars' },
-            { icon: IoPeopleOutline, value: '2+', label: 'Collaborations' },
-            { icon: IoTrophyOutline, value: '1+', label: 'Awards Won' }
+            { icon: IoRocketOutline, value: '4+', label: 'Projects Built' },
+            { icon: IoCodeSlashOutline, value: '3+', label: 'Technologies' },
+            { icon: IoPeopleOutline, value: '2+', label: 'Team Projects' },
+            { icon: IoFlashOutline, value: '100+', label: 'Hours Coding' }
           ].map((stat, i) => {
             const Icon = stat.icon;
             return (
