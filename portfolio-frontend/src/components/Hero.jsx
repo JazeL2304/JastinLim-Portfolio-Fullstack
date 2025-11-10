@@ -3,7 +3,8 @@ import { useDarkMode } from '../contexts/DarkModeContext';
 import Lanyard from './Lanyard';
 import { 
   IoMoonOutline, 
-  IoSunnyOutline
+  IoSunnyOutline,
+  IoDownloadOutline
 } from 'react-icons/io5';
 import reactIcon from '../assets/photo/react.png';
 import laravelIcon from '../assets/photo/laravel.png';
@@ -29,14 +30,10 @@ function Hero() {
     return () => clearInterval(timer);
   }, []);
 
-  const scrollToSection = (id) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
-  };
-
   return (
-    <div className="min-h-screen transition-all duration-500 relative pt-20" style={{ position: 'relative' }}>
+    <div className="min-h-screen transition-all duration-500 relative pt-20" style={{ position: 'relative', overflow: 'hidden' }}>
       {/* Canvas Background - Full Hero Section, bisa interact */}
-      <div className="absolute inset-0" style={{ zIndex: 1 }}>
+      <div className="absolute inset-0 pointer-events-auto" style={{ zIndex: 1 }}>
         <Lanyard
           name="Jastin Lim"
           role="CS Student | Web Developer"
@@ -137,20 +134,16 @@ function Hero() {
               </div>
             </div>
 
-            {/* CTA Buttons */}
+            {/* CTA Button - Download CV */}
             <div className="flex gap-4 pt-4">
-              <button 
-                onClick={() => scrollToSection('projects')}
-                className={`${cardBg} ${neumorph} hover:shadow-2xl px-7 py-3.5 rounded-xl ${textColor} font-bold text-base transition-all duration-300 hover:scale-105`}
+              <a 
+                href="/path-to-your-cv.pdf" 
+                download="Jastin_Lim_CV.pdf"
+                className={`${cardBg} ${neumorph} hover:shadow-2xl px-7 py-3.5 rounded-xl ${textColor} font-bold text-base transition-all duration-300 hover:scale-105 flex items-center gap-2`}
               >
-                View Projects
-              </button>
-              <button 
-                onClick={() => scrollToSection('contact')}
-                className={`${cardBg} ${neumorph} hover:shadow-2xl px-7 py-3.5 rounded-xl ${textColor} font-bold text-base transition-all duration-300 hover:scale-105`}
-              >
-                Contact Me
-              </button>
+                <IoDownloadOutline className="w-5 h-5" />
+                Download CV
+              </a>
             </div>
           </div>
 
@@ -160,13 +153,6 @@ function Hero() {
             <div className="absolute -top-10 -right-10 w-64 h-64 bg-gradient-to-br from-orange-500/20 to-red-600/20 rounded-full blur-3xl animate-pulse" />
             <div className="absolute -bottom-10 -left-10 w-64 h-64 bg-gradient-to-br from-red-600/20 to-orange-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
           </div>
-        </div>
-      </div>
-
-      {/* Scroll Indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce pointer-events-none" style={{ zIndex: 20 }}>
-        <div className={`w-7 h-11 ${cardBg} ${neumorph} rounded-full flex items-center justify-center`}>
-          <div className={`w-1.5 h-1.5 ${isDark ? 'bg-orange-500' : 'bg-orange-600'} rounded-full animate-pulse`} />
         </div>
       </div>
 
