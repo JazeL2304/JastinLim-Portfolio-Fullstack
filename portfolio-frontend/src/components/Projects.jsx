@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useDarkMode } from '../contexts/DarkModeContext';
+import { useScrollAnimation } from '../hooks/useScrollAnimation';
 import { 
   IoLayersOutline,
   IoLogoGithub,
@@ -8,15 +9,12 @@ import {
   IoFlashOutline,
   IoStarOutline,
   IoGlobeOutline,
-  IoPhonePortraitOutline,
   IoBrushOutline,
   IoGameControllerOutline,
   IoRocketOutline,
   IoPeopleOutline,
-  IoTrophyOutline,
   IoCloseOutline,
-  IoAlertCircleOutline,
-  IoLogoFigma
+  IoAlertCircleOutline
 } from 'react-icons/io5';
 import { SiFigma } from 'react-icons/si';
 import SumateraUtaraImg from '../assets/photo/project/SumateraUtaraProject.png';
@@ -31,6 +29,12 @@ function Projects() {
   const [hoveredProject, setHoveredProject] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
+
+  // Animation hooks
+  const [headerRef, headerVisible] = useScrollAnimation(0.1);
+  const [filtersRef, filtersVisible] = useScrollAnimation(0.1);
+  const [projectsRef, projectsVisible] = useScrollAnimation(0.1);
+  const [statsRef, statsVisible] = useScrollAnimation(0.2);
 
   const projects = [
     {
@@ -166,7 +170,11 @@ function Projects() {
       </div>
 
       <div className="max-w-7xl mx-auto px-8 relative z-10">
-        <div className="text-center mb-16">
+        {/* Header - Slide Down */}
+        <div 
+          ref={headerRef}
+          className={`text-center mb-16 scroll-hidden ${headerVisible ? 'animate-slide-down' : ''}`}
+        >
           <div className={`inline-flex items-center gap-2 ${cardBg} ${neumorph} rounded-full px-6 py-3 mb-6`}>
             <IoLayersOutline className="w-5 h-5 text-orange-500" />
             <span className={`text-sm font-medium ${textColor}`}>My Work</span>
@@ -183,7 +191,11 @@ function Projects() {
           </p>
         </div>
 
-        <div className="flex flex-wrap justify-center gap-4 mb-16">
+        {/* Filters - Fade In */}
+        <div 
+          ref={filtersRef}
+          className={`flex flex-wrap justify-center gap-4 mb-16 scroll-hidden ${filtersVisible ? 'animate-fade-in delay-200' : ''}`}
+        >
           {filters.map((filter) => (
             <button
               key={filter}
@@ -197,7 +209,11 @@ function Projects() {
           ))}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {/* Projects Grid - Slide Up */}
+        <div 
+          ref={projectsRef}
+          className={`grid grid-cols-1 md:grid-cols-2 gap-8 scroll-hidden ${projectsVisible ? 'animate-slide-up' : ''}`}
+        >
           {filteredProjects.map((project, index) => {
             const Icon = project.icon;
             return (
@@ -300,7 +316,7 @@ function Projects() {
                     ))}
                   </div>
 
-                  {/* Action Buttons - Berbeda untuk Figma */}
+                  {/* Action Buttons */}
                   <div className="flex gap-3">
                     {project.isFigma ? (
                       <>
@@ -344,8 +360,11 @@ function Projects() {
           })}
         </div>
 
-        {/* Stats Section */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-24">
+        {/* Stats Section - Zoom In */}
+        <div 
+          ref={statsRef}
+          className={`grid grid-cols-2 md:grid-cols-4 gap-6 mt-24 scroll-hidden ${statsVisible ? 'animate-zoom-in' : ''}`}
+        >
           {[
             { icon: IoRocketOutline, value: '4+', label: 'Projects Built' },
             { icon: IoCodeSlashOutline, value: '3+', label: 'Technologies' },

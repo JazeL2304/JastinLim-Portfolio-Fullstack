@@ -34,17 +34,6 @@ body, html, #root {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* ✅ HAPUS BAGIAN INI - Ini yang menyebabkan masalah
-canvas {
-  position: fixed !important;
-  z-index: 99999 !important;
-  pointer-events: all !important;
-}
-*/
-
-/* Lanyard Container Override - TIDAK PERLU LAGI */
-/* Biarkan React Three Fiber handle sendiri */
-
 /* Floating Animation untuk Tags */
 @keyframes float {
   0%, 100% {
@@ -86,3 +75,114 @@ canvas {
 .animate-swing-slow {
   animation: swing-slow 4s ease-in-out infinite;
 }
+
+/* ========================================= */
+/* SCROLL ANIMATION EFFECTS - TAMBAHAN BARU */
+/* ========================================= */
+
+/* Scroll Animation Keyframes */
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Animation Classes */
+.animate-slide-left {
+  animation: slideInLeft 0.8s ease-out forwards;
+}
+
+.animate-slide-right {
+  animation: slideInRight 0.8s ease-out forwards;
+}
+
+.animate-slide-up {
+  animation: slideInUp 0.8s ease-out forwards;
+}
+
+.animate-slide-down {
+  animation: slideInDown 0.8s ease-out forwards;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.8s ease-out forwards;
+}
+
+.animate-zoom-in {
+  animation: zoomIn 0.8s ease-out forwards;
+}
+
+/* Initial Hidden State */
+.scroll-hidden {
+  opacity: 0;
+}
+
+/* Stagger Delays */
+.delay-100 { animation-delay: 0.1s; }
+.delay-200 { animation-delay: 0.2s; }
+.delay-300 { animation-delay: 0.3s; }
+.delay-400 { animation-delay: 0.4s; }
+.delay-500 { animation-delay: 0.5s; }
+.delay-600 { animation-delay: 0.6s; }
+.delay-700 { animation-delay: 0.7s; }
+.delay-800 { animation-delay: 0.8s; }

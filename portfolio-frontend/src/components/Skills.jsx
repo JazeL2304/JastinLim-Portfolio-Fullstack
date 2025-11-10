@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useDarkMode } from '../contexts/DarkModeContext';
+import { useScrollAnimation } from '../hooks/useScrollAnimation';
 import { 
   IoBookOutline,
   IoLeafOutline,
@@ -27,7 +28,12 @@ function Skills() {
   
   const [hoveredSkill, setHoveredSkill] = useState(null);
 
-  // Skills diurutkan berdasarkan level (tertinggi ke terendah)
+  // Animation hooks
+  const [headerRef, headerVisible] = useScrollAnimation(0.1);
+  const [skillsRef, skillsVisible] = useScrollAnimation(0.1);
+  const [journeyRef, journeyVisible] = useScrollAnimation(0.2);
+  const [focusRef, focusVisible] = useScrollAnimation(0.2);
+
   const skills = [
     { name: 'Tailwind CSS', icon: tailwindIcon, level: 80, category: 'Frontend' },
     { name: 'React', icon: reactIcon, level: 80, category: 'Frontend' },
@@ -52,8 +58,11 @@ function Skills() {
       </div>
 
       <div className="max-w-7xl mx-auto px-8 relative z-10">
-        {/* Header */}
-        <div className="text-center mb-16">
+        {/* Header - Slide Down */}
+        <div 
+          ref={headerRef}
+          className={`text-center mb-16 scroll-hidden ${headerVisible ? 'animate-slide-down' : ''}`}
+        >
           <div className={`inline-flex items-center gap-2 ${cardBg} ${neumorph} rounded-full px-5 py-2.5 mb-6`}>
             <IoBookOutline className="w-5 h-5 text-orange-500" />
             <span className={`text-sm font-medium ${textColor}`}>My Skillset</span>
@@ -70,14 +79,18 @@ function Skills() {
           </p>
         </div>
 
-        {/* Skills Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+        {/* Skills Grid - Zoom In with stagger */}
+        <div 
+          ref={skillsRef}
+          className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16 scroll-hidden ${skillsVisible ? 'animate-zoom-in' : ''}`}
+        >
           {skills.map((skill, index) => (
             <div
               key={index}
               onMouseEnter={() => setHoveredSkill(skill.name)}
               onMouseLeave={() => setHoveredSkill(null)}
               className={`${cardBg} ${neumorph} rounded-2xl p-6 transform transition-all duration-500 hover:scale-105 cursor-pointer`}
+              style={{ animationDelay: `${index * 0.05}s` }}
             >
               {/* Skill Header */}
               <div className="flex items-center gap-4 mb-4">
@@ -114,8 +127,11 @@ function Skills() {
           ))}
         </div>
 
-        {/* Learning Journey */}
-        <div className={`${cardBg} ${neumorph} rounded-3xl p-8 md:p-12 mb-12`}>
+        {/* Learning Journey - Slide Right */}
+        <div 
+          ref={journeyRef}
+          className={`${cardBg} ${neumorph} rounded-3xl p-8 md:p-12 mb-12 scroll-hidden ${journeyVisible ? 'animate-slide-right' : ''}`}
+        >
           <h3 className={`text-3xl font-bold ${textColor} mb-8 text-center`}>
             My Learning Journey
           </h3>
@@ -178,8 +194,11 @@ function Skills() {
           </div>
         </div>
 
-        {/* Currently Learning */}
-        <div className={`${cardBg} ${neumorph} rounded-2xl p-8 text-center`}>
+        {/* Currently Learning - Fade In */}
+        <div 
+          ref={focusRef}
+          className={`${cardBg} ${neumorph} rounded-2xl p-8 text-center scroll-hidden ${focusVisible ? 'animate-fade-in delay-200' : ''}`}
+        >
           <IoRadioButtonOnOutline className={`w-12 h-12 ${textColor} mx-auto mb-4`} />
           <h4 className={`text-xl font-bold ${textColor} mb-3`}>Currently Focusing On</h4>
           <p className={`${textMuted} mb-6`}>

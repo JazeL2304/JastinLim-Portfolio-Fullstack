@@ -1,4 +1,5 @@
 import { useDarkMode } from '../contexts/DarkModeContext';
+import { useScrollAnimation } from '../hooks/useScrollAnimation';
 import { 
   IoHandRightOutline,
   IoSchoolOutline,
@@ -15,6 +16,13 @@ import myPhoto from '../assets/photo/FOTO_JASTIN_1.jpg';
 function About() {
   const { cardBg, textColor, textMuted, neumorph, neumorphInset } = useDarkMode();
 
+  // Animation hooks
+  const [headerRef, headerVisible] = useScrollAnimation(0.1);
+  const [imageRef, imageVisible] = useScrollAnimation(0.1);
+  const [contentRef, contentVisible] = useScrollAnimation(0.1);
+  const [factsRef, factsVisible] = useScrollAnimation(0.2);
+  const [interestsRef, interestsVisible] = useScrollAnimation(0.2);
+
   return (
     <div className="py-32 transition-all duration-500 relative overflow-hidden">
       {/* Background Effects */}
@@ -26,7 +34,11 @@ function About() {
       <div className="max-w-7xl mx-auto px-8 relative z-10">
         {/* ABOUT SECTION */}
         <section>
-          <div className="text-center mb-16">
+          {/* Header - Slide Down */}
+          <div 
+            ref={headerRef}
+            className={`text-center mb-16 scroll-hidden ${headerVisible ? 'animate-slide-down' : ''}`}
+          >
             <div className={`inline-flex items-center gap-2 ${cardBg} ${neumorph} rounded-full px-5 py-2.5 mb-6`}>
               <IoHandRightOutline className="w-5 h-5 text-orange-500" />
               <span className={`text-sm font-medium ${textColor}`}>Get to Know Me</span>
@@ -41,8 +53,11 @@ function About() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {/* Left: Profile Image */}
-            <div className="relative">
+            {/* Left: Profile Image - Slide Left */}
+            <div 
+              ref={imageRef}
+              className={`relative scroll-hidden ${imageVisible ? 'animate-slide-left' : ''}`}
+            >
               <div className={`${cardBg} ${neumorph} rounded-3xl p-6 transform hover:scale-105 transition-all duration-500`}>
                 <div className={`aspect-square rounded-2xl relative overflow-hidden ${neumorphInset}`}>
                   <img 
@@ -60,7 +75,11 @@ function About() {
 
             {/* Right: About Content */}
             <div className="space-y-6">
-              <div className={`${cardBg} ${neumorph} rounded-2xl p-8`}>
+              {/* Main Content - Slide Right */}
+              <div 
+                ref={contentRef}
+                className={`${cardBg} ${neumorph} rounded-2xl p-8 scroll-hidden ${contentVisible ? 'animate-slide-right' : ''}`}
+              >
                 <h3 className={`text-2xl font-bold ${textColor} mb-4`}>
                   Student & Aspiring Developer
                 </h3>
@@ -78,8 +97,11 @@ function About() {
                 </p>
               </div>
 
-              {/* Quick Facts */}
-              <div className={`${cardBg} ${neumorphInset} rounded-2xl p-6 space-y-3`}>
+              {/* Quick Facts - Slide Right with delay */}
+              <div 
+                ref={factsRef}
+                className={`${cardBg} ${neumorphInset} rounded-2xl p-6 space-y-3 scroll-hidden ${factsVisible ? 'animate-slide-right delay-200' : ''}`}
+              >
                 <div className="flex items-center justify-between">
                   <span className={`${textMuted} text-sm flex items-center gap-2`}>
                     <IoSchoolOutline className="w-4 h-4" />
@@ -110,8 +132,11 @@ function About() {
                 </div>
               </div>
 
-              {/* Interests */}
-              <div className="grid grid-cols-2 gap-3">
+              {/* Interests - Fade In with stagger */}
+              <div 
+                ref={interestsRef}
+                className={`grid grid-cols-2 gap-3 scroll-hidden ${interestsVisible ? 'animate-fade-in delay-300' : ''}`}
+              >
                 {[
                   { icon: IoCodeSlashOutline, label: 'Web Dev' },
                   { icon: IoCafeOutline, label: 'Coffee' },

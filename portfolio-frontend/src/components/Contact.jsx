@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useDarkMode } from '../contexts/DarkModeContext';
+import { useScrollAnimation } from '../hooks/useScrollAnimation';
 import { 
   IoMailOutline,
   IoCallOutline,
@@ -27,7 +28,11 @@ function Contact() {
   const [modalType, setModalType] = useState('success');
   const [modalMessage, setModalMessage] = useState('');
 
-  // ✅ Fungsi untuk mengirim email menggunakan Web3Forms API (GRATIS, tanpa install)
+  // Animation hooks
+  const [headerRef, headerVisible] = useScrollAnimation(0.1);
+  const [cardsRef, cardsVisible] = useScrollAnimation(0.1);
+  const [formRef, formVisible] = useScrollAnimation(0.1);
+
   const sendEmail = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -39,11 +44,11 @@ function Contact() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          access_key: 'e5e8d917-86ed-4390-98ce-15d309750dec', // ✅ Ganti dengan key Anda dari web3forms.com
+          access_key: 'e5e8d917-86ed-4390-98ce-15d309750dec',
           name: formData.name,
           email: formData.email,
           message: formData.message,
-          to: 'jastinlim2304@gmail.com', // Email tujuan
+          to: 'jastinlim2304@gmail.com',
           subject: `New Portfolio Message from ${formData.name}`,
         }),
       });
@@ -80,13 +85,13 @@ function Contact() {
       icon: IoMailOutline,
       title: 'Email',
       value: 'jastinlim2304@gmail.com',
-      link: 'mailto:jastinlim2304@gmail.com'
+      link: 'https://mail.google.com/mail/?view=cm&fs=1&to=jastinlim2304@gmail.com'
     },
     {
       icon: IoCallOutline,
       title: 'Phone',
       value: '+62 812-3913-3300',
-      link: 'tel:+6281239133300'
+      link: 'https://wa.me/6281239133300'
     },
     {
       icon: IoLocationOutline,
@@ -117,7 +122,6 @@ function Contact() {
     }
   ];
 
-  // ✅ Modal Component
   const Modal = () => {
     if (!showModal) return null;
 
@@ -178,7 +182,11 @@ function Contact() {
 
       <div className="max-w-7xl mx-auto px-8 relative z-10">
         <section>
-          <div className="text-center mb-16">
+          {/* Header - Slide Down */}
+          <div 
+            ref={headerRef}
+            className={`text-center mb-16 scroll-hidden ${headerVisible ? 'animate-slide-down' : ''}`}
+          >
             <div className={`inline-flex items-center gap-2 ${cardBg} ${neumorph} rounded-full px-5 py-2.5 mb-6`}>
               <IoMailOutline className="w-5 h-5 text-orange-500" />
               <span className={`text-sm font-medium ${textColor}`}>Let's Connect</span>
@@ -196,8 +204,11 @@ function Contact() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Contact Info Cards */}
-            <div className="space-y-6">
+            {/* Contact Info Cards - Slide Left */}
+            <div 
+              ref={cardsRef}
+              className={`space-y-6 scroll-hidden ${cardsVisible ? 'animate-slide-left' : ''}`}
+            >
               {contactInfo.map((contact, i) => {
                 const Icon = contact.icon;
                 return (
@@ -207,6 +218,7 @@ function Contact() {
                     target="_blank"
                     rel="noopener noreferrer"
                     className={`block ${cardBg} ${neumorph} rounded-2xl p-6 hover:scale-105 transition-all duration-300 cursor-pointer`}
+                    style={{ animationDelay: `${i * 0.1}s` }}
                   >
                     <div className="mb-3">
                       <Icon className={`w-10 h-10 ${textColor}`} />
@@ -240,8 +252,11 @@ function Contact() {
               </div>
             </div>
 
-            {/* Contact Form */}
-            <div className={`lg:col-span-2 ${cardBg} ${neumorph} rounded-3xl p-8`}>
+            {/* Contact Form - Slide Right */}
+            <div 
+              ref={formRef}
+              className={`lg:col-span-2 ${cardBg} ${neumorph} rounded-3xl p-8 scroll-hidden ${formVisible ? 'animate-slide-right' : ''}`}
+            >
               <form onSubmit={sendEmail} className="space-y-6">
                 <div>
                   <label className={`block ${textColor} font-semibold mb-3 text-sm`}>
