@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unknown-property */
 import { useEffect, useRef, useState } from 'react';
-import { Canvas, extend, useFrame } from '@react-three/fiber';
+import { Canvas, extend, useFrame, useThree } from '@react-three/fiber';
 import { useGLTF, useTexture, Environment, Lightformer } from '@react-three/drei';
 import { BallCollider, CuboidCollider, Physics, RigidBody, useRopeJoint, useSphericalJoint } from '@react-three/rapier';
 import { MeshLineGeometry, MeshLineMaterial } from 'meshline';
@@ -8,29 +8,30 @@ import * as THREE from 'three';
 
 extend({ MeshLineGeometry, MeshLineMaterial });
 
-// ✅ Definisi path file di luar component
 const cardGLB = '/models/card.glb';
 const lanyardTexture = '/models/lanyard.png';
 
 function Band({ maxSpeed = 50, minSpeed = 10 }) {
-  const band = useRef(),
-    fixed = useRef(),
-    j1 = useRef(),
-    j2 = useRef(),
-    j3 = useRef(),
-    card = useRef();
-  const vec = new THREE.Vector3(),
-    ang = new THREE.Vector3(),
-    rot = new THREE.Vector3(),
-    dir = new THREE.Vector3();
+  const band = useRef();
+  const fixed = useRef();
+  const j1 = useRef();
+  const j2 = useRef();
+  const j3 = useRef();
+  const card = useRef();
   
-  // ✅ Perbaikan: Kurangi damping agar lebih stabil
+  const vec = new THREE.Vector3();
+  const ang = new THREE.Vector3();
+  const rot = new THREE.Vector3();
+  const dir = new THREE.Vector3();
+  
+  const { camera, size, viewport } = useThree();
+  
   const segmentProps = { 
     type: 'dynamic', 
     canSleep: true, 
     colliders: false, 
-    angularDamping: 2, // Dikurangi dari 4
-    linearDamping: 2   // Dikurangi dari 4
+    angularDamping: 2,
+    linearDamping: 2
   };
   
   const { nodes, materials } = useGLTF(cardGLB);
@@ -45,18 +46,15 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
         new THREE.Vector3()
       ])
   );
-  const [dragged, drag] = useState(false);
-  const [hovered, hover] = useState(false);
+  
+  const [dragged, setDrag] = useState(false);
+  const [hovered, setHover] = useState(false);
   const [isSmall, setIsSmall] = useState(() => typeof window !== 'undefined' && window.innerWidth < 1024);
 
-  // ✅ Perbaikan: Tambahkan max distance untuk rope joints
-  useRopeJoint(fixed, j1, [[0, 0, 0], [0, 0, 0], 1.5]); // Tambah max distance dari 1 ke 1.5
+  useRopeJoint(fixed, j1, [[0, 0, 0], [0, 0, 0], 1.5]);
   useRopeJoint(j1, j2, [[0, 0, 0], [0, 0, 0], 1.5]);
   useRopeJoint(j2, j3, [[0, 0, 0], [0, 0, 0], 1.5]);
-  useSphericalJoint(j3, card, [
-    [0, 0, 0],
-    [0, 1.5, 0]
-  ]);
+  useSphericalJoint(j3, card, [[0, 0, 0], [0, 1.5, 0]]);
 
   useEffect(() => {
     if (hovered) {
@@ -69,42 +67,29 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
     const handleResize = () => {
       setIsSmall(window.innerWidth < 1024);
     };
-
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   useFrame((state, delta) => {
-    if (dragged) {
-      vec.set(state.pointer.x, state.pointer.y, 0.5).unproject(state.camera);
-      dir.copy(vec).sub(state.camera.position).normalize();
-      vec.add(dir.multiplyScalar(state.camera.position.length()));
+    if (dragged && card.current) {
+      // ✅ FIX: Konversi pointer ke world space dengan benar
+      const x = (state.pointer.x * viewport.width) / 2;
+      const y = (state.pointer.y * viewport.height) / 2;
       
-      // ✅ Wake up all bodies
+      // Wake up all bodies
       [card, j1, j2, j3, fixed].forEach(ref => ref.current?.wakeUp());
       
-      // ✅ Perbaikan: Limit dragging range
-      const dragOffset = new THREE.Vector3(
-        vec.x - dragged.x,
-        vec.y - dragged.y,
-        vec.z - dragged.z
-      );
-      
-      // Clamp position to prevent extreme stretching
-      const maxDragDistance = 5;
-      if (dragOffset.length() > maxDragDistance) {
-        dragOffset.normalize().multiplyScalar(maxDragDistance);
-      }
-      
-      card.current?.setNextKinematicTranslation({ 
-        x: fixed.current.translation().x + dragOffset.x, 
-        y: fixed.current.translation().y + dragOffset.y, 
-        z: dragOffset.z 
+      // ✅ Set posisi card langsung ke posisi mouse dengan offset
+      card.current.setNextKinematicTranslation({ 
+        x: x,
+        y: y,
+        z: 0
       });
     }
     
     if (fixed.current) {
-      // ✅ Perbaikan: Smooth lerping dengan safeguard
+      // Smooth lerping untuk joints
       [j1, j2].forEach(ref => {
         if (!ref.current.lerped) {
           ref.current.lerped = new THREE.Vector3().copy(ref.current.translation());
@@ -112,20 +97,17 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
         const currentPos = ref.current.translation();
         const distance = ref.current.lerped.distanceTo(currentPos);
         const clampedDistance = Math.max(0.1, Math.min(1, distance));
-        
-        // Limit lerp speed
         const lerpSpeed = Math.min(delta * (minSpeed + clampedDistance * (maxSpeed - minSpeed)), 0.5);
         ref.current.lerped.lerp(currentPos, lerpSpeed);
       });
       
-      // ✅ Update curve points dengan safeguard
+      // Update curve points
       if (j3.current && j2.current && j1.current && fixed.current) {
         curve.points[0].copy(j3.current.translation());
         curve.points[1].copy(j2.current.lerped);
         curve.points[2].copy(j1.current.lerped);
         curve.points[3].copy(fixed.current.translation());
         
-        // Update band geometry
         try {
           band.current.geometry.setPoints(curve.getPoints(32));
         } catch (error) {
@@ -133,13 +115,13 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
         }
       }
       
-      // ✅ Angular velocity damping
+      // Angular velocity damping
       if (card.current) {
         ang.copy(card.current.angvel());
         rot.copy(card.current.rotation());
         card.current.setAngvel({ 
           x: ang.x * 0.95, 
-          y: ang.y - rot.y * 0.15, // Dikurangi dari 0.25
+          y: ang.y - rot.y * 0.15,
           z: ang.z * 0.95 
         });
       }
@@ -167,7 +149,6 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
           ref={card} 
           {...segmentProps} 
           type={dragged ? 'kinematicPosition' : 'dynamic'}
-          // ✅ Add additional damping for card
           linearDamping={3}
           angularDamping={3}
         >
@@ -175,15 +156,16 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
           <group
             scale={2.25}
             position={[0, -1.2, -0.05]}
-            onPointerOver={() => hover(true)}
-            onPointerOut={() => hover(false)}
-            onPointerUp={e => {
+            onPointerOver={() => setHover(true)}
+            onPointerOut={() => setHover(false)}
+            onPointerUp={(e) => {
               e.target.releasePointerCapture(e.pointerId);
-              drag(false);
+              setDrag(false);
             }}
-            onPointerDown={e => {
+            onPointerDown={(e) => {
               e.target.setPointerCapture(e.pointerId);
-              drag(new THREE.Vector3().copy(e.point).sub(vec.copy(card.current.translation())));
+              e.stopPropagation();
+              setDrag(true);
             }}
           >
             <mesh geometry={nodes.card.geometry}>
@@ -221,7 +203,7 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
 
 export default function Lanyard({ 
   position = [0, 0, 30], 
-  gravity = [0, -30, 0], // ✅ Dikurangi dari -40 ke -30
+  gravity = [0, -30, 0],
   fov = 20, 
   transparent = true 
 }) {
@@ -230,12 +212,12 @@ export default function Lanyard({
       camera={{ position: position, fov: fov }}
       gl={{ 
         alpha: transparent,
-        antialias: true, // ✅ Tambah antialiasing
-        powerPreference: "high-performance" // ✅ Performance optimization
+        antialias: true,
+        powerPreference: "high-performance"
       }}
       onCreated={({ gl }) => {
         gl.setClearColor(new THREE.Color(0x000000), transparent ? 0 : 1);
-        gl.shadowMap.enabled = false; // ✅ Disable shadows for better performance
+        gl.shadowMap.enabled = false;
       }}
       style={{ 
         position: 'absolute',
@@ -245,14 +227,12 @@ export default function Lanyard({
         height: '100%',
         zIndex: 1
       }}
-      // ✅ Add frame loop to prevent rendering issues
       frameloop="always"
     >
       <ambientLight intensity={Math.PI} />
       <Physics 
         gravity={gravity} 
         timeStep={1 / 60}
-        // ✅ Add these properties for more stable physics
         iterations={20}
         colliders="hull"
       >
@@ -292,6 +272,5 @@ export default function Lanyard({
   );
 }
 
-// Preload assets
 useGLTF.preload(cardGLB);
 useTexture.preload(lanyardTexture);
