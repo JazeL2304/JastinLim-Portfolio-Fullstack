@@ -155,7 +155,6 @@ function Projects() {
         behavior: 'smooth'
       });
 
-      // Reset states after animation
       setTimeout(() => {
         setIsScrolling(false);
         setSwipeDirection(null);
@@ -286,7 +285,7 @@ function Projects() {
             <IoChevronForwardOutline className={`w-7 h-7 ${textColor}`} />
           </button>
 
-          {/* Projects Carousel */}
+          {/* Projects Carousel - FIXED CARD SIZES */}
           <div
             ref={carouselRef}
             className={`flex overflow-x-auto scroll-smooth scrollbar-hide pb-8 ${
@@ -307,22 +306,31 @@ function Projects() {
                   key={project.id}
                   onMouseEnter={() => setHoveredProject(project.id)}
                   onMouseLeave={() => setHoveredProject(null)}
-                  className={`project-card ${cardBg} ${neumorph} rounded-3xl overflow-hidden transition-all duration-500 hover:scale-105 cursor-pointer flex-shrink-0 ${
+                  className={`project-card ${cardBg} ${neumorph} rounded-3xl overflow-hidden transition-all duration-500 hover:scale-105 cursor-pointer flex-shrink-0 flex flex-col ${
                     isScrolling ? (swipeDirection === 'right' ? 'swipe-out-left' : 'swipe-out-right') : ''
                   }`}
                   style={{
                     width: 'calc((100% - 32px) / 2)',
+                    minWidth: 'calc((100% - 32px) / 2)',
+                    height: '652px', // FIXED HEIGHT
                     scrollSnapAlign: 'start',
                     animationDelay: `${index * 0.1}s`
                   }}
                 >
-                  {/* Project Image */}
-                  <div className="relative h-64 overflow-hidden bg-gradient-to-br from-gray-800 to-gray-900">
+                  {/* Project Image - FIXED HEIGHT */}
+                  <div className="relative h-72 overflow-hidden bg-gradient-to-br from-gray-800 to-gray-900 flex-shrink-0">
                     {project.image ? (
                       <img 
                         src={project.image} 
                         alt={project.title}
                         className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+                        style={{
+                          objectPosition: project.id === 3 
+                            ? 'center 30%'      // HarbourMind - mulai dari logo
+                            : project.id === 5 
+                            ? 'center top'      // Aplikasi RSRJ - dari atas
+                            : 'center center'   // Project lainnya - dari tengah
+                        }}
                       />
                     ) : (
                       <div className={`h-full bg-gradient-to-br ${project.gradient} flex items-center justify-center`}>
@@ -377,37 +385,60 @@ function Projects() {
                     </div>
                   </div>
 
-                  {/* Project Info */}
-                  <div className="p-6">
-                    <div className="flex items-start justify-between mb-3">
-                      <h3 className={`text-xl font-bold ${textColor} flex-1`}>
+                  {/* Project Info - FIXED HEIGHT CONTENT */}
+                  <div className="p-6 flex flex-col flex-grow">
+                    {/* Title Section - Fixed Height */}
+                    <div className="flex items-start justify-between mb-3" style={{ minHeight: '64px' }}>
+                      <h3 
+                        className={`text-xl font-bold ${textColor} flex-1 pr-2`}
+                        style={{ 
+                          display: '-webkit-box',
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: 'vertical',
+                          overflow: 'hidden',
+                          lineHeight: '1.4'
+                        }}
+                      >
                         {project.title}
                       </h3>
                       {project.stars > 0 && (
-                        <div className={`flex items-center gap-1 ${cardBg} ${neumorphInset} rounded-full px-3 py-1`}>
+                        <div className={`flex items-center gap-1 ${cardBg} ${neumorphInset} rounded-full px-3 py-1 flex-shrink-0`}>
                           <IoStarOutline className="w-4 h-4 text-yellow-500" />
                           <span className={`text-sm font-semibold ${textColor}`}>{project.stars}</span>
                         </div>
                       )}
                     </div>
 
-                    <p className={`${textMuted} text-sm mb-4 line-clamp-3`}>
+                    {/* Description - Fixed Height */}
+                    <p 
+                      className={`${textMuted} text-sm mb-4`}
+                      style={{ 
+                        minHeight: '63px',
+                        maxHeight: '63px',
+                        display: '-webkit-box',
+                        WebkitLineClamp: 3,
+                        WebkitBoxOrient: 'vertical',
+                        overflow: 'hidden',
+                        lineHeight: '1.5'
+                      }}
+                    >
                       {project.description}
                     </p>
 
-                    <div className="flex flex-wrap gap-2 mb-4">
+                    {/* Tech Stack - Fixed Height */}
+                    <div className="flex flex-wrap gap-2 mb-4" style={{ minHeight: '76px' }}>
                       {project.techStack.map((tech, i) => (
                         <span
                           key={i}
-                          className={`${cardBg} ${neumorphInset} rounded-full px-3 py-1 text-xs font-semibold ${textColor}`}
+                          className={`${cardBg} ${neumorphInset} rounded-full px-3 py-1 text-xs font-semibold ${textColor} h-fit`}
                         >
                           {tech}
                         </span>
                       ))}
                     </div>
 
-                    {/* Action Buttons */}
-                    <div className="flex gap-3">
+                    {/* Action Buttons - Pushed to Bottom */}
+                    <div className="flex gap-3 mt-auto">
                       {project.isFigma ? (
                         <>
                           <button 
@@ -486,13 +517,11 @@ function Projects() {
           scrollbar-width: none;
         }
         
-        /* Smooth scroll animation with better performance */
         .scroll-smooth {
           scroll-behavior: smooth;
           -webkit-overflow-scrolling: touch;
         }
         
-        /* Card transition animation */
         .project-card {
           transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
                       opacity 0.3s ease,
@@ -500,12 +529,10 @@ function Projects() {
           will-change: transform, opacity;
         }
         
-        /* Smooth hover effect */
         .project-card:hover {
           box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
         }
         
-        /* Prevent layout shift during scroll */
         .project-card img {
           display: block;
           width: 100%;
@@ -513,7 +540,6 @@ function Projects() {
           object-fit: cover;
         }
         
-        /* Snap scroll for precise alignment */
         @supports (scroll-snap-type: x mandatory) {
           .scroll-smooth {
             scroll-snap-type: x mandatory;
@@ -525,7 +551,6 @@ function Projects() {
           }
         }
         
-        /* Swipe animations */
         @keyframes swipeOutLeft {
           0% {
             transform: translateX(0) scale(1);
@@ -578,7 +603,6 @@ function Projects() {
           }
         }
         
-        /* Apply swipe animations */
         .project-card.swipe-out-left {
           animation: swipeOutLeft 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -587,7 +611,6 @@ function Projects() {
           animation: swipeOutRight 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
-        /* Container swipe effect */
         .swipe-left {
           animation: containerSwipeLeft 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -620,7 +643,6 @@ function Projects() {
           }
         }
         
-        /* Fade animation on scroll */
         @keyframes fadeSlide {
           from {
             opacity: 0;
@@ -632,7 +654,6 @@ function Projects() {
           }
         }
         
-        /* Apply animation when cards enter viewport */
         .project-card.visible {
           animation: fadeSlide 0.5s ease-out forwards;
         }
