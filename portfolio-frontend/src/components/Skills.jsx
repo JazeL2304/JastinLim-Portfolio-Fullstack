@@ -35,8 +35,8 @@ function Skills() {
   const [focusRef, focusVisible] = useScrollAnimation(0.2);
 
   const skills = [
-    { name: 'Tailwind CSS', icon: tailwindIcon, level: 80, category: 'Frontend' },
     { name: 'React', icon: reactIcon, level: 80, category: 'Frontend' },
+    { name: 'Tailwind CSS', icon: tailwindIcon, level: 80, category: 'Frontend' },
     { name: 'JavaScript', icon: javascriptIcon, level: 75, category: 'Frontend' },
     { name: 'Figma', icon: figmaIcon, level: 75, category: 'Design' },
     { name: 'PHP', icon: phpIcon, level: 70, category: 'Backend' },
@@ -153,7 +153,7 @@ function Skills() {
                 icon: IoRocketOutline
               },
               { 
-                year: '2024', 
+                year: '2025', 
                 title: 'Mobile & Game Development', 
                 desc: 'Started learning Android development with Kotlin and Unity with C#',
                 status: 'In Progress',

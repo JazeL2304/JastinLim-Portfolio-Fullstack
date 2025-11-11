@@ -7,7 +7,6 @@ import {
   IoDownloadOutline
 } from 'react-icons/io5';
 import reactIcon from '../assets/photo/react.png';
-import laravelIcon from '../assets/photo/laravel.png';
 import tailwindIcon from '../assets/photo/tailwind.png';
 import myPhoto from '../assets/photo/FOTO_JASTIN_1.jpg';
 
@@ -116,12 +115,11 @@ function Hero() {
 
             {/* Tech Stack */}
             <div>
-              <p className={`${textMuted} text-sm mb-3 font-semibold`}>Technologies I Work With:</p>
+              <p className={`${textMuted} text-sm mb-3 font-semibold`}>Built with modern technologies:</p>
               <div className="flex flex-wrap gap-3">
                 {[
                   { name: 'React', icon: reactIcon },
-                  { name: 'Laravel', icon: laravelIcon },
-                  { name: 'Tailwind', icon: tailwindIcon }
+                  { name: 'Tailwind CSS', icon: tailwindIcon }
                 ].map((tech, i) => (
                   <div
                     key={i}
