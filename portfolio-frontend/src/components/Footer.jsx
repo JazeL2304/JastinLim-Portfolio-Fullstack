@@ -9,7 +9,6 @@ import {
   IoLogoLinkedin,
   IoLogoTwitter,
   IoLogoInstagram,
-  IoArrowUpOutline,
   IoSendOutline,
   IoCafeOutline,
   IoCodeSlashOutline,
@@ -81,10 +80,10 @@ function Footer() {
             </p>
             <div className="flex gap-3">
               {[
-                { icon: IoLogoGithub, link: '#', color: 'from-gray-600 to-gray-800' },
-                { icon: IoLogoLinkedin, link: '#', color: 'from-blue-600 to-blue-800' },
+                { icon: IoLogoGithub, link: 'https://github.com/JazeL2304', color: 'from-gray-600 to-gray-800' },
+                { icon: IoLogoLinkedin, link: 'https://www.linkedin.com/in/jastin-lim', color: 'from-blue-600 to-blue-800' },
                 { icon: IoLogoTwitter, link: '#', color: 'from-sky-500 to-blue-600' },
-                { icon: IoLogoInstagram, link: '#', color: 'from-pink-500 to-purple-600' }
+                { icon: IoLogoInstagram, link: 'https://www.instagram.com/jastinlim_', color: 'from-pink-500 to-purple-600' }
               ].map((social, i) => {
                 const Icon = social.icon;
                 return (
@@ -163,7 +162,7 @@ function Footer() {
                 </div>
                 <div>
                   <p className={`text-xs ${textMuted} mb-1`}>Phone</p>
-                  <a href="tel:+6281234567890" className={`text-sm ${textColor} hover:text-orange-500 transition-colors duration-300`}>
+                  <a href="tel:+6281239133300" className={`text-sm ${textColor} hover:text-orange-500 transition-colors duration-300`}>
                     +62 812-3913-3300
                   </a>
                 </div>
@@ -197,24 +196,6 @@ function Footer() {
               <IoCafeOutline className="w-4 h-4" />
             </p>
           </div>
-
-          {/* Tech Stack Badge */}
-          <div className={`${cardBg} ${neumorph} rounded-full px-6 py-3 flex items-center gap-2`}>
-            <span className={`text-xs ${textMuted}`}>Built with:</span>
-            <div className="flex items-center gap-2">
-              <IoCodeSlashOutline className="w-5 h-5 text-cyan-500" />
-              <span className="text-lg">🔥</span>
-              <span className="text-lg">🎨</span>
-            </div>
-          </div>
-
-          {/* Back to Top */}
-          <button
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className={`${cardBg} ${neumorph} w-12 h-12 rounded-full flex items-center justify-center hover:scale-110 transition-all duration-300 group`}
-          >
-            <IoArrowUpOutline className="w-5 h-5 text-orange-500 group-hover:animate-bounce" />
-          </button>
         </div>
 
         {/* Fun Stats */}

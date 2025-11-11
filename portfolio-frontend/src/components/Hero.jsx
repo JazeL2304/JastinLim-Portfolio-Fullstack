@@ -4,16 +4,20 @@ import Lanyard from './Lanyard';
 import { 
   IoMoonOutline, 
   IoSunnyOutline,
-  IoDownloadOutline
+  IoDownloadOutline,
+  IoCheckmarkCircleOutline,
+  IoAlertCircleOutline
 } from 'react-icons/io5';
 import reactIcon from '../assets/photo/react.png';
 import tailwindIcon from '../assets/photo/tailwind.png';
 import myPhoto from '../assets/photo/FOTO_JASTIN_1.jpg';
+import cvFile from '../assets/cv/Jastin Lim-resume.pdf';
 
 function Hero() {
   const { isDark, toggleDarkMode, cardBg, textColor, textMuted, neumorph, neumorphInset } = useDarkMode();
   
   const [displayText, setDisplayText] = useState('');
+  const [downloadStatus, setDownloadStatus] = useState('idle'); // idle, downloading, success, error
   const fullText = "Learning, Building, Growing";
   
   useEffect(() => {
@@ -28,6 +32,56 @@ function Hero() {
     }, 80);
     return () => clearInterval(timer);
   }, []);
+
+  // Function untuk download CV
+  const handleDownloadCV = async () => {
+    try {
+      setDownloadStatus('downloading');
+      
+      // Fetch file CV dari assets
+      const response = await fetch(cvFile);
+      
+      if (!response.ok) {
+        throw new Error('CV file not found');
+      }
+      
+      // Convert response ke blob
+      const blob = await response.blob();
+      
+      // Buat URL dari blob
+      const url = window.URL.createObjectURL(blob);
+      
+      // Buat element anchor untuk download
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'Jastin_Lim_CV.pdf';
+      
+      // Trigger download
+      document.body.appendChild(link);
+      link.click();
+      
+      // Cleanup
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      
+      // Set status success
+      setDownloadStatus('success');
+      
+      // Reset status setelah 3 detik
+      setTimeout(() => {
+        setDownloadStatus('idle');
+      }, 3000);
+      
+    } catch (error) {
+      console.error('Error downloading CV:', error);
+      setDownloadStatus('error');
+      
+      // Reset status setelah 3 detik
+      setTimeout(() => {
+        setDownloadStatus('idle');
+      }, 3000);
+    }
+  };
 
   return (
     <div className="min-h-screen transition-all duration-500 relative pt-20" style={{ position: 'relative', overflow: 'hidden' }}>
@@ -132,16 +186,44 @@ function Hero() {
               </div>
             </div>
 
-            {/* CTA Button - Download CV */}
+            {/* CTA Button - Download CV dengan Status */}
             <div className="flex gap-4 pt-4">
-              <a 
-                href="/path-to-your-cv.pdf" 
-                download="Jastin_Lim_CV.pdf"
-                className={`${cardBg} ${neumorph} hover:shadow-2xl px-7 py-3.5 rounded-xl ${textColor} font-bold text-base transition-all duration-300 hover:scale-105 flex items-center gap-2`}
+              <button 
+                onClick={handleDownloadCV}
+                disabled={downloadStatus === 'downloading'}
+                className={`${cardBg} ${neumorph} hover:shadow-2xl px-7 py-3.5 rounded-xl ${textColor} font-bold text-base transition-all duration-300 flex items-center gap-2 ${
+                  downloadStatus === 'downloading' ? 'opacity-70 cursor-wait' : 'hover:scale-105'
+                } ${
+                  downloadStatus === 'success' ? 'bg-green-500/10' : ''
+                } ${
+                  downloadStatus === 'error' ? 'bg-red-500/10' : ''
+                }`}
               >
-                <IoDownloadOutline className="w-5 h-5" />
-                Download CV
-              </a>
+                {downloadStatus === 'downloading' && (
+                  <>
+                    <div className="w-5 h-5 border-2 border-t-orange-500 border-r-transparent border-b-orange-500 border-l-transparent rounded-full animate-spin" />
+                    Downloading...
+                  </>
+                )}
+                {downloadStatus === 'success' && (
+                  <>
+                    <IoCheckmarkCircleOutline className="w-5 h-5 text-green-500" />
+                    Downloaded!
+                  </>
+                )}
+                {downloadStatus === 'error' && (
+                  <>
+                    <IoAlertCircleOutline className="w-5 h-5 text-red-500" />
+                    File Not Found
+                  </>
+                )}
+                {downloadStatus === 'idle' && (
+                  <>
+                    <IoDownloadOutline className="w-5 h-5" />
+                    Download CV
+                  </>
+                )}
+              </button>
             </div>
           </div>
 
