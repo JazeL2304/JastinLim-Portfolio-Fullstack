@@ -205,7 +205,7 @@ function Skills() {
             Building real-world projects and improving my problem-solving skills
           </p>
           <div className="flex flex-wrap justify-center gap-3">
-            {['Clean Code', 'Problem Solving', 'UI/UX Design', 'Best Practices'].map((focus, i) => (
+            {['Clean Code', 'Problem Solving', 'UI/UX Design', 'Full Stack'].map((focus, i) => (
               <span
                 key={i}
                 className={`${cardBg} ${neumorphInset} rounded-full px-5 py-2.5 text-sm font-semibold ${textColor}`}

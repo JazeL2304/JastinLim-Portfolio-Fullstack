@@ -15,7 +15,7 @@ import {
 } from 'react-icons/io5';
 
 function Contact() {
-  const { cardBg, textColor, textMuted, neumorph, neumorphInset } = useDarkMode();
+  const { isDark, cardBg, textColor, textMuted, neumorph, neumorphInset } = useDarkMode();
   
   const [formData, setFormData] = useState({
     name: '',
@@ -269,7 +269,8 @@ function Contact() {
                     onChange={handleChange}
                     required
                     disabled={loading}
-                    className={`w-full ${cardBg} ${neumorphInset} rounded-xl px-6 py-4 ${textColor} focus:outline-none transition-all duration-300 ${
+                    autoComplete="off"
+                    className={`w-full ${cardBg} ${neumorphInset} rounded-xl px-6 py-4 ${textColor} focus:outline-none transition-all duration-300 contact-input ${
                       loading ? 'opacity-50 cursor-not-allowed' : ''
                     }`}
                     placeholder="John Doe"
@@ -287,7 +288,8 @@ function Contact() {
                     onChange={handleChange}
                     required
                     disabled={loading}
-                    className={`w-full ${cardBg} ${neumorphInset} rounded-xl px-6 py-4 ${textColor} focus:outline-none transition-all duration-300 ${
+                    autoComplete="off"
+                    className={`w-full ${cardBg} ${neumorphInset} rounded-xl px-6 py-4 ${textColor} focus:outline-none transition-all duration-300 contact-input ${
                       loading ? 'opacity-50 cursor-not-allowed' : ''
                     }`}
                     placeholder="john@example.com"
@@ -305,7 +307,8 @@ function Contact() {
                     required
                     disabled={loading}
                     rows={6}
-                    className={`w-full ${cardBg} ${neumorphInset} rounded-xl px-6 py-4 ${textColor} focus:outline-none resize-none transition-all duration-300 ${
+                    autoComplete="off"
+                    className={`w-full ${cardBg} ${neumorphInset} rounded-xl px-6 py-4 ${textColor} focus:outline-none resize-none transition-all duration-300 contact-input ${
                       loading ? 'opacity-50 cursor-not-allowed' : ''
                     }`}
                     placeholder="Your message here..."
@@ -361,6 +364,30 @@ function Contact() {
         }
         .animate-shake {
           animation: shake 0.5s ease-out;
+        }
+
+        /* FIX AUTOCOMPLETE STYLING - Prevent style changes */
+        .contact-input:-webkit-autofill,
+        .contact-input:-webkit-autofill:hover,
+        .contact-input:-webkit-autofill:focus,
+        .contact-input:-webkit-autofill:active {
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: ${isDark ? '#ffffff' : '#111827'} !important;
+          transition: background-color 5000s ease-in-out 0s !important;
+          box-shadow: inset 8px 8px 16px ${isDark ? '#0a0a0a' : '#bebebe'}, inset -8px -8px 16px ${isDark ? '#2a2a2a' : '#ffffff'} !important;
+          background-color: ${isDark ? '#1f2937' : '#e5e7eb'} !important;
+          caret-color: ${isDark ? '#ffffff' : '#111827'} !important;
+          color: ${isDark ? '#ffffff' : '#111827'} !important;
+        }
+        
+        .contact-input::placeholder {
+          color: ${isDark ? '#9ca3af' : '#6b7280'} !important;
+          opacity: 1 !important;
+        }
+        
+        /* Force background color consistency */
+        .contact-input {
+          background-color: ${isDark ? '#1f2937' : '#e5e7eb'} !important;
         }
       `}</style>
     </div>
