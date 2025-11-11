@@ -110,13 +110,13 @@ function Contact() {
     },
     { 
       icon: IoLogoLinkedin, 
-      link: 'https://www.linkedin.com/in/jastin-lim', 
+      link: 'https://www.linkedin.com/in/jastin-lim-30a20228a/', 
       label: 'LinkedIn',
       color: 'hover:text-blue-600'
     },
     { 
       icon: IoLogoInstagram, 
-      link: 'https://www.instagram.com/jastinlim_', 
+      link: 'https://www.instagram.com/jast.lim/', 
       label: 'Instagram',
       color: 'hover:text-pink-600'
     }
