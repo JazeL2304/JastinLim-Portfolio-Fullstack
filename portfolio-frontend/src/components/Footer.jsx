@@ -220,10 +220,10 @@ function Footer() {
         {/* Fun Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           {[
-            { icon: IoCafeOutline, value: '1000+', label: 'Cups of Coffee' },
-            { icon: IoCodeSlashOutline, value: '50K+', label: 'Lines of Code' },
-            { icon: IoBugOutline, value: '500+', label: 'Bugs Fixed' },
-            { icon: IoHappyOutline, value: '10+', label: 'Happy Clients' }
+            { icon: IoCafeOutline, value: '100+', label: 'Cups of Coffee' },
+            { icon: IoCodeSlashOutline, value: '20K+', label: 'Lines of Code' },
+            { icon: IoBugOutline, value: '200+', label: 'Bugs Fixed' },
+            { icon: IoHappyOutline, value: '5+', label: 'Happy Clients' }
           ].map((stat, i) => {
             const Icon = stat.icon;
             return (
