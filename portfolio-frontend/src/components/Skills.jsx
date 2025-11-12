@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo, memo, useCallback } from 'react';
 import { useDarkMode } from '../contexts/DarkModeContext';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 import { 
@@ -23,18 +23,114 @@ import kotlinIcon from '../assets/photo/kotlin.png';
 import phpIcon from '../assets/photo/php.png';
 import csharpIcon from '../assets/photo/csharp.png';
 
+// Memoize SkillCard component
+const SkillCard = memo(function SkillCard({ 
+  skill, 
+  index, 
+  hoveredSkill, 
+  setHoveredSkill,
+  cardBg,
+  textColor,
+  textMuted,
+  neumorph,
+  neumorphInset 
+}) {
+  const handlers = useMemo(() => ({
+    onMouseEnter: () => setHoveredSkill(skill.name),
+    onMouseLeave: () => setHoveredSkill(null),
+  }), [skill.name, setHoveredSkill]);
+
+  return (
+    <div
+      {...handlers}
+      className={`${cardBg} ${neumorph} rounded-2xl p-6 transform transition-all duration-500 hover:scale-105 cursor-pointer`}
+      style={{ animationDelay: `${index * 0.05}s` }}
+    >
+      <div className="flex items-center gap-4 mb-4">
+        <div className={`w-14 h-14 ${cardBg} ${neumorphInset} rounded-xl p-2.5 flex items-center justify-center transform transition-transform duration-300 ${
+          hoveredSkill === skill.name ? 'scale-110' : ''
+        }`}>
+          <img 
+            src={skill.icon} 
+            alt={skill.name}
+            className="w-full h-full object-contain"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+        <div className="flex-1">
+          <h3 className={`text-base font-bold ${textColor} mb-1`}>{skill.name}</h3>
+          <p className={`text-xs ${textMuted}`}>{skill.category}</p>
+        </div>
+        <div className={`${cardBg} ${neumorphInset} rounded-full px-3 py-1`}>
+          <span className={`text-sm font-bold ${textColor}`}>{skill.level}%</span>
+        </div>
+      </div>
+
+      <div className={`${cardBg} ${neumorphInset} rounded-full h-3 overflow-hidden relative`}>
+        <div
+          className={`h-full bg-gradient-to-r from-orange-500 to-red-600 rounded-full transition-all duration-1000 ease-out relative overflow-hidden`}
+          style={{ 
+            width: hoveredSkill === skill.name ? `${skill.level}%` : '0%'
+          }}
+        >
+          <div className="absolute inset-0 bg-white/20 animate-shimmer" />
+        </div>
+      </div>
+    </div>
+  );
+});
+
+// Memoize MilestoneCard component
+const MilestoneCard = memo(function MilestoneCard({ 
+  milestone, 
+  cardBg, 
+  textColor, 
+  textMuted, 
+  neumorph, 
+  neumorphInset 
+}) {
+  const Icon = milestone.icon;
+  
+  return (
+    <div className={`${cardBg} ${neumorph} rounded-2xl p-6 transform transition-all duration-300 hover:scale-102`}>
+      <div className="flex items-start gap-4">
+        <div className={`${cardBg} ${neumorphInset} rounded-full w-12 h-12 flex items-center justify-center flex-shrink-0`}>
+          <Icon className={`w-6 h-6 ${textColor}`} />
+        </div>
+        <div className="flex-1">
+          <div className="flex items-center justify-between mb-2">
+            <div>
+              <span className={`text-sm font-bold text-orange-500`}>{milestone.year}</span>
+              <h4 className={`text-lg font-bold ${textColor}`}>{milestone.title}</h4>
+            </div>
+            <span className={`text-xs ${textMuted} ${cardBg} ${neumorphInset} px-3 py-1 rounded-full flex items-center gap-1`}>
+              {milestone.status === 'Completed' ? (
+                <IoCheckmarkCircleOutline className="w-4 h-4 text-green-500" />
+              ) : (
+                <IoTimeOutline className="w-4 h-4 text-orange-500" />
+              )}
+              {milestone.status}
+            </span>
+          </div>
+          <p className={`${textMuted} text-sm`}>{milestone.desc}</p>
+        </div>
+      </div>
+    </div>
+  );
+});
+
 function Skills() {
   const { cardBg, textColor, textMuted, neumorph, neumorphInset } = useDarkMode();
   
   const [hoveredSkill, setHoveredSkill] = useState(null);
 
-  // Animation hooks
   const [headerRef, headerVisible] = useScrollAnimation(0.1);
   const [skillsRef, skillsVisible] = useScrollAnimation(0.1);
   const [journeyRef, journeyVisible] = useScrollAnimation(0.2);
   const [focusRef, focusVisible] = useScrollAnimation(0.2);
 
-  const skills = [
+  const skills = useMemo(() => [
     { name: 'React', icon: reactIcon, level: 80, category: 'Frontend' },
     { name: 'Tailwind CSS', icon: tailwindIcon, level: 80, category: 'Frontend' },
     { name: 'JavaScript', icon: javascriptIcon, level: 75, category: 'Frontend' },
@@ -47,18 +143,42 @@ function Skills() {
     { name: 'Kotlin', icon: kotlinIcon, level: 50, category: 'Mobile' },
     { name: 'Unity', icon: unityIcon, level: 50, category: 'Game Dev' },
     { name: 'C#', icon: csharpIcon, level: 50, category: 'Game Dev' }
-  ];
+  ], []);
+
+  const milestones = useMemo(() => [
+    { 
+      year: '2023', 
+      title: 'Started Web Development', 
+      desc: 'Learned HTML, CSS, and JavaScript basics',
+      status: 'Completed',
+      icon: IoLeafOutline
+    },
+    { 
+      year: '2024', 
+      title: 'Full-Stack Development', 
+      desc: 'Built projects with React, Laravel, and MySQL',
+      status: 'Completed',
+      icon: IoRocketOutline
+    },
+    { 
+      year: '2025', 
+      title: 'Mobile & Game Development', 
+      desc: 'Started learning Android development with Kotlin and Unity with C#',
+      status: 'In Progress',
+      icon: IoPhonePortraitOutline
+    },
+  ], []);
+
+  const focusAreas = useMemo(() => ['Clean Code', 'Problem Solving', 'UI/UX Design', 'Full Stack'], []);
 
   return (
     <div className="py-32 relative overflow-hidden transition-all duration-500">
-      {/* Background Effects */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 left-10 w-80 h-80 bg-orange-500/10 rounded-full blur-3xl animate-pulse" />
         <div className="absolute bottom-1/4 right-10 w-80 h-80 bg-red-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
       </div>
 
       <div className="max-w-7xl mx-auto px-8 relative z-10">
-        {/* Header - Slide Down */}
         <div 
           ref={headerRef}
           className={`text-center mb-16 scroll-hidden ${headerVisible ? 'animate-slide-down' : ''}`}
@@ -79,55 +199,26 @@ function Skills() {
           </p>
         </div>
 
-        {/* Skills Grid - Zoom In with stagger */}
         <div 
           ref={skillsRef}
           className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16 scroll-hidden ${skillsVisible ? 'animate-zoom-in' : ''}`}
         >
           {skills.map((skill, index) => (
-            <div
-              key={index}
-              onMouseEnter={() => setHoveredSkill(skill.name)}
-              onMouseLeave={() => setHoveredSkill(null)}
-              className={`${cardBg} ${neumorph} rounded-2xl p-6 transform transition-all duration-500 hover:scale-105 cursor-pointer`}
-              style={{ animationDelay: `${index * 0.05}s` }}
-            >
-              {/* Skill Header */}
-              <div className="flex items-center gap-4 mb-4">
-                <div className={`w-14 h-14 ${cardBg} ${neumorphInset} rounded-xl p-2.5 flex items-center justify-center transform transition-transform duration-300 ${
-                  hoveredSkill === skill.name ? 'scale-110' : ''
-                }`}>
-                  <img 
-                    src={skill.icon} 
-                    alt={skill.name}
-                    className="w-full h-full object-contain"
-                  />
-                </div>
-                <div className="flex-1">
-                  <h3 className={`text-base font-bold ${textColor} mb-1`}>{skill.name}</h3>
-                  <p className={`text-xs ${textMuted}`}>{skill.category}</p>
-                </div>
-                <div className={`${cardBg} ${neumorphInset} rounded-full px-3 py-1`}>
-                  <span className={`text-sm font-bold ${textColor}`}>{skill.level}%</span>
-                </div>
-              </div>
-
-              {/* Progress Bar */}
-              <div className={`${cardBg} ${neumorphInset} rounded-full h-3 overflow-hidden relative`}>
-                <div
-                  className={`h-full bg-gradient-to-r from-orange-500 to-red-600 rounded-full transition-all duration-1000 ease-out relative overflow-hidden`}
-                  style={{ 
-                    width: hoveredSkill === skill.name ? `${skill.level}%` : '0%'
-                  }}
-                >
-                  <div className="absolute inset-0 bg-white/20 animate-shimmer" />
-                </div>
-              </div>
-            </div>
+            <SkillCard
+              key={skill.name}
+              skill={skill}
+              index={index}
+              hoveredSkill={hoveredSkill}
+              setHoveredSkill={setHoveredSkill}
+              cardBg={cardBg}
+              textColor={textColor}
+              textMuted={textMuted}
+              neumorph={neumorph}
+              neumorphInset={neumorphInset}
+            />
           ))}
         </div>
 
-        {/* Learning Journey - Slide Right */}
         <div 
           ref={journeyRef}
           className={`${cardBg} ${neumorph} rounded-3xl p-8 md:p-12 mb-12 scroll-hidden ${journeyVisible ? 'animate-slide-right' : ''}`}
@@ -137,64 +228,20 @@ function Skills() {
           </h3>
           
           <div className="space-y-6">
-            {[
-              { 
-                year: '2023', 
-                title: 'Started Web Development', 
-                desc: 'Learned HTML, CSS, and JavaScript basics',
-                status: 'Completed',
-                icon: IoLeafOutline
-              },
-              { 
-                year: '2024', 
-                title: 'Full-Stack Development', 
-                desc: 'Built projects with React, Laravel, and MySQL',
-                status: 'Completed',
-                icon: IoRocketOutline
-              },
-              { 
-                year: '2025', 
-                title: 'Mobile & Game Development', 
-                desc: 'Started learning Android development with Kotlin and Unity with C#',
-                status: 'In Progress',
-                icon: IoPhonePortraitOutline
-              },
-            ].map((milestone, index) => {
-              const Icon = milestone.icon;
-              return (
-                <div
-                  key={index}
-                  className={`${cardBg} ${neumorph} rounded-2xl p-6 transform transition-all duration-300 hover:scale-102`}
-                >
-                  <div className="flex items-start gap-4">
-                    <div className={`${cardBg} ${neumorphInset} rounded-full w-12 h-12 flex items-center justify-center flex-shrink-0`}>
-                      <Icon className={`w-6 h-6 ${textColor}`} />
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between mb-2">
-                        <div>
-                          <span className={`text-sm font-bold text-orange-500`}>{milestone.year}</span>
-                          <h4 className={`text-lg font-bold ${textColor}`}>{milestone.title}</h4>
-                        </div>
-                        <span className={`text-xs ${textMuted} ${cardBg} ${neumorphInset} px-3 py-1 rounded-full flex items-center gap-1`}>
-                          {milestone.status === 'Completed' ? (
-                            <IoCheckmarkCircleOutline className="w-4 h-4 text-green-500" />
-                          ) : (
-                            <IoTimeOutline className="w-4 h-4 text-orange-500" />
-                          )}
-                          {milestone.status}
-                        </span>
-                      </div>
-                      <p className={`${textMuted} text-sm`}>{milestone.desc}</p>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
+            {milestones.map((milestone, index) => (
+              <MilestoneCard
+                key={index}
+                milestone={milestone}
+                cardBg={cardBg}
+                textColor={textColor}
+                textMuted={textMuted}
+                neumorph={neumorph}
+                neumorphInset={neumorphInset}
+              />
+            ))}
           </div>
         </div>
 
-        {/* Currently Learning - Fade In */}
         <div 
           ref={focusRef}
           className={`${cardBg} ${neumorph} rounded-2xl p-8 text-center scroll-hidden ${focusVisible ? 'animate-fade-in delay-200' : ''}`}
@@ -205,7 +252,7 @@ function Skills() {
             Building real-world projects and improving my problem-solving skills
           </p>
           <div className="flex flex-wrap justify-center gap-3">
-            {['Clean Code', 'Problem Solving', 'UI/UX Design', 'Full Stack'].map((focus, i) => (
+            {focusAreas.map((focus, i) => (
               <span
                 key={i}
                 className={`${cardBg} ${neumorphInset} rounded-full px-5 py-2.5 text-sm font-semibold ${textColor}`}

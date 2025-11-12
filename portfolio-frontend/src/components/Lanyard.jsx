@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unknown-property */
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, memo, useMemo } from 'react';
 import { Canvas, extend, useFrame, useThree } from '@react-three/fiber';
 import { useGLTF, useTexture, Environment, Lightformer } from '@react-three/drei';
 import { BallCollider, CuboidCollider, Physics, RigidBody, useRopeJoint, useSphericalJoint } from '@react-three/rapier';
@@ -11,7 +11,8 @@ extend({ MeshLineGeometry, MeshLineMaterial });
 const cardGLB = '/models/card.glb';
 const lanyardTexture = '/models/lanyard.png';
 
-function Band({ maxSpeed = 50, minSpeed = 10 }) {
+// Memoize Band component untuk mencegah re-render
+const Band = memo(function Band({ maxSpeed = 50, minSpeed = 10 }) {
   const band = useRef();
   const fixed = useRef();
   const j1 = useRef();
@@ -19,20 +20,21 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
   const j3 = useRef();
   const card = useRef();
   
-  const vec = new THREE.Vector3();
-  const ang = new THREE.Vector3();
-  const rot = new THREE.Vector3();
-  const dir = new THREE.Vector3();
+  // Gunakan useMemo untuk objek yang tidak berubah
+  const vec = useMemo(() => new THREE.Vector3(), []);
+  const ang = useMemo(() => new THREE.Vector3(), []);
+  const rot = useMemo(() => new THREE.Vector3(), []);
+  const dir = useMemo(() => new THREE.Vector3(), []);
   
   const { camera, size, viewport } = useThree();
   
-  const segmentProps = { 
+  const segmentProps = useMemo(() => ({ 
     type: 'dynamic', 
     canSleep: true, 
     colliders: false, 
     angularDamping: 2,
     linearDamping: 2
-  };
+  }), []);
   
   const { nodes, materials } = useGLTF(cardGLB);
   const texture = useTexture(lanyardTexture);
@@ -67,20 +69,24 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
     const handleResize = () => {
       setIsSmall(window.innerWidth < 1024);
     };
-    window.addEventListener('resize', handleResize);
+    window.addEventListener('resize', handleResize, { passive: true });
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Throttle frame updates untuk performa lebih baik
+  const frameCountRef = useRef(0);
   useFrame((state, delta) => {
+    frameCountRef.current++;
+    
+    // Update setiap 2 frame untuk mengurangi beban
+    if (frameCountRef.current % 2 !== 0 && !dragged) return;
+    
     if (dragged && card.current) {
-      // ✅ FIX: Konversi pointer ke world space dengan benar
       const x = (state.pointer.x * viewport.width) / 2;
       const y = (state.pointer.y * viewport.height) / 2;
       
-      // Wake up all bodies
       [card, j1, j2, j3, fixed].forEach(ref => ref.current?.wakeUp());
       
-      // ✅ Set posisi card langsung ke posisi mouse dengan offset
       card.current.setNextKinematicTranslation({ 
         x: x,
         y: y,
@@ -89,7 +95,6 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
     }
     
     if (fixed.current) {
-      // Smooth lerping untuk joints
       [j1, j2].forEach(ref => {
         if (!ref.current.lerped) {
           ref.current.lerped = new THREE.Vector3().copy(ref.current.translation());
@@ -101,7 +106,6 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
         ref.current.lerped.lerp(currentPos, lerpSpeed);
       });
       
-      // Update curve points
       if (j3.current && j2.current && j1.current && fixed.current) {
         curve.points[0].copy(j3.current.translation());
         curve.points[1].copy(j2.current.lerped);
@@ -115,7 +119,6 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
         }
       }
       
-      // Angular velocity damping
       if (card.current) {
         ang.copy(card.current.angvel());
         rot.copy(card.current.rotation());
@@ -130,6 +133,20 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
 
   curve.curveType = 'chordal';
   texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+
+  const handlers = useMemo(() => ({
+    onPointerOver: () => setHover(true),
+    onPointerOut: () => setHover(false),
+    onPointerUp: (e) => {
+      e.target.releasePointerCapture(e.pointerId);
+      setDrag(false);
+    },
+    onPointerDown: (e) => {
+      e.target.setPointerCapture(e.pointerId);
+      e.stopPropagation();
+      setDrag(true);
+    }
+  }), []);
 
   return (
     <>
@@ -156,17 +173,7 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
           <group
             scale={2.25}
             position={[0, -1.2, -0.05]}
-            onPointerOver={() => setHover(true)}
-            onPointerOut={() => setHover(false)}
-            onPointerUp={(e) => {
-              e.target.releasePointerCapture(e.pointerId);
-              setDrag(false);
-            }}
-            onPointerDown={(e) => {
-              e.target.setPointerCapture(e.pointerId);
-              e.stopPropagation();
-              setDrag(true);
-            }}
+            {...handlers}
           >
             <mesh geometry={nodes.card.geometry}>
               <meshPhysicalMaterial
@@ -199,7 +206,7 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
       </mesh>
     </>
   );
-}
+});
 
 export default function Lanyard({ 
   position = [0, 0, 30], 
@@ -207,6 +214,23 @@ export default function Lanyard({
   fov = 20, 
   transparent = true 
 }) {
+  // Pause physics saat tidak terlihat
+  const [isVisible, setIsVisible] = useState(true);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting);
+      },
+      { threshold: 0.1 }
+    );
+
+    const canvas = document.querySelector('canvas');
+    if (canvas) observer.observe(canvas);
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <Canvas
       camera={{ position: position, fov: fov }}
@@ -227,14 +251,16 @@ export default function Lanyard({
         height: '100%',
         zIndex: 1
       }}
-      frameloop="always"
+      frameloop={isVisible ? "always" : "demand"}
+      dpr={[1, 2]} // Limit pixel ratio untuk performa
     >
       <ambientLight intensity={Math.PI} />
       <Physics 
         gravity={gravity} 
         timeStep={1 / 60}
-        iterations={20}
+        iterations={15}
         colliders="hull"
+        paused={!isVisible}
       >
         <Band />
       </Physics>
