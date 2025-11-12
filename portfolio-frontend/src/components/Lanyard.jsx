@@ -11,8 +11,8 @@ extend({ MeshLineGeometry, MeshLineMaterial });
 const cardGLB = '/models/card.glb';
 const lanyardTexture = '/models/lanyard.png';
 
-// Memoize Band component untuk mencegah re-render
-const Band = memo(function Band({ maxSpeed = 50, minSpeed = 10 }) {
+// Optimized Band component
+const Band = memo(function Band({ maxSpeed = 80, minSpeed = 20 }) {
   const band = useRef();
   const fixed = useRef();
   const j1 = useRef();
@@ -20,13 +20,11 @@ const Band = memo(function Band({ maxSpeed = 50, minSpeed = 10 }) {
   const j3 = useRef();
   const card = useRef();
   
-  // Gunakan useMemo untuk objek yang tidak berubah
   const vec = useMemo(() => new THREE.Vector3(), []);
   const ang = useMemo(() => new THREE.Vector3(), []);
   const rot = useMemo(() => new THREE.Vector3(), []);
-  const dir = useMemo(() => new THREE.Vector3(), []);
   
-  const { camera, size, viewport } = useThree();
+  const { viewport } = useThree();
   
   const segmentProps = useMemo(() => ({ 
     type: 'dynamic', 
@@ -73,14 +71,8 @@ const Band = memo(function Band({ maxSpeed = 50, minSpeed = 10 }) {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Throttle frame updates untuk performa lebih baik
-  const frameCountRef = useRef(0);
+  // Optimized frame update - No throttling for smooth motion
   useFrame((state, delta) => {
-    frameCountRef.current++;
-    
-    // Update setiap 2 frame untuk mengurangi beban
-    if (frameCountRef.current % 2 !== 0 && !dragged) return;
-    
     if (dragged && card.current) {
       const x = (state.pointer.x * viewport.width) / 2;
       const y = (state.pointer.y * viewport.height) / 2;
@@ -95,14 +87,21 @@ const Band = memo(function Band({ maxSpeed = 50, minSpeed = 10 }) {
     }
     
     if (fixed.current) {
+      // Smoother lerping with adaptive speed
       [j1, j2].forEach(ref => {
         if (!ref.current.lerped) {
           ref.current.lerped = new THREE.Vector3().copy(ref.current.translation());
         }
         const currentPos = ref.current.translation();
         const distance = ref.current.lerped.distanceTo(currentPos);
-        const clampedDistance = Math.max(0.1, Math.min(1, distance));
-        const lerpSpeed = Math.min(delta * (minSpeed + clampedDistance * (maxSpeed - minSpeed)), 0.5);
+        
+        // Adaptive lerp speed based on distance - faster response
+        const lerpSpeed = THREE.MathUtils.clamp(
+          delta * (minSpeed + distance * maxSpeed), 
+          0.01, 
+          0.8
+        );
+        
         ref.current.lerped.lerp(currentPos, lerpSpeed);
       });
       
@@ -113,7 +112,8 @@ const Band = memo(function Band({ maxSpeed = 50, minSpeed = 10 }) {
         curve.points[3].copy(fixed.current.translation());
         
         try {
-          band.current.geometry.setPoints(curve.getPoints(32));
+          // Use more points for smoother curve
+          band.current.geometry.setPoints(curve.getPoints(64));
         } catch (error) {
           console.warn('Error updating band geometry:', error);
         }
@@ -122,10 +122,12 @@ const Band = memo(function Band({ maxSpeed = 50, minSpeed = 10 }) {
       if (card.current) {
         ang.copy(card.current.angvel());
         rot.copy(card.current.rotation());
+        
+        // Smoother angular velocity damping
         card.current.setAngvel({ 
-          x: ang.x * 0.95, 
-          y: ang.y - rot.y * 0.15,
-          z: ang.z * 0.95 
+          x: ang.x * 0.97, 
+          y: ang.y - rot.y * 0.2,
+          z: ang.z * 0.97 
         });
       }
     }
@@ -166,8 +168,8 @@ const Band = memo(function Band({ maxSpeed = 50, minSpeed = 10 }) {
           ref={card} 
           {...segmentProps} 
           type={dragged ? 'kinematicPosition' : 'dynamic'}
-          linearDamping={3}
-          angularDamping={3}
+          linearDamping={4}
+          angularDamping={4}
         >
           <CuboidCollider args={[0.8, 1.125, 0.01]} />
           <group
@@ -214,7 +216,6 @@ export default function Lanyard({
   fov = 20, 
   transparent = true 
 }) {
-  // Pause physics saat tidak terlihat
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
@@ -237,11 +238,14 @@ export default function Lanyard({
       gl={{ 
         alpha: transparent,
         antialias: true,
-        powerPreference: "high-performance"
+        powerPreference: "high-performance",
+        stencil: false,
+        depth: true
       }}
       onCreated={({ gl }) => {
         gl.setClearColor(new THREE.Color(0x000000), transparent ? 0 : 1);
         gl.shadowMap.enabled = false;
+        gl.physicallyCorrectLights = false;
       }}
       style={{ 
         position: 'absolute',
@@ -252,13 +256,14 @@ export default function Lanyard({
         zIndex: 1
       }}
       frameloop={isVisible ? "always" : "demand"}
-      dpr={[1, 2]} // Limit pixel ratio untuk performa
+      dpr={[1, 2]}
+      performance={{ min: 0.5 }}
     >
       <ambientLight intensity={Math.PI} />
       <Physics 
         gravity={gravity} 
         timeStep={1 / 60}
-        iterations={15}
+        iterations={20}
         colliders="hull"
         paused={!isVisible}
       >

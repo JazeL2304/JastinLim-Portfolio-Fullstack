@@ -7,9 +7,7 @@ import {
   IoCallOutline,
   IoLogoGithub,
   IoLogoLinkedin,
-  IoLogoTwitter,
   IoLogoInstagram,
-  IoSendOutline,
   IoCafeOutline,
   IoCodeSlashOutline,
   IoBugOutline,
@@ -22,14 +20,7 @@ import { BiCodeAlt } from "react-icons/bi";
 function Footer() {
   const { isDark, cardBg, textColor, textMuted, neumorph, neumorphInset } = useDarkMode();
   
-  const [email, setEmail] = useState('');
   const [showEasterEggModal, setShowEasterEggModal] = useState(false);
-
-  const handleNewsletterSubmit = (e) => {
-    e.preventDefault();
-    alert(`Thanks for subscribing with: ${email}`);
-    setEmail('');
-  };
 
   const handleEasterEggClick = () => {
     setShowEasterEggModal(true);
@@ -83,39 +74,7 @@ function Footer() {
       <EasterEggModal />
 
       <div className="max-w-7xl mx-auto px-8 relative z-10">
-        {/* Newsletter Section */}
-        <div className={`${cardBg} ${neumorph} rounded-3xl p-8 md:p-12 mb-16`}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-            <div>
-              <h3 className={`text-3xl font-bold ${textColor} mb-3 flex items-center gap-3`}>
-                <IoMailOutline className="w-8 h-8 text-orange-500" />
-                Stay Updated
-              </h3>
-              <p className={`${textMuted}`}>
-                Subscribe to get notified about new projects and tech insights!
-              </p>
-            </div>
-            <form onSubmit={handleNewsletterSubmit} className="flex gap-3">
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="your@email.com"
-                required
-                className={`flex-1 ${cardBg} ${neumorphInset} rounded-xl px-6 py-4 ${textColor} focus:outline-none`}
-              />
-              <button
-                type="submit"
-                className={`${cardBg} ${neumorph} px-8 py-4 rounded-xl ${textColor} font-bold hover:scale-105 transition-all duration-300 flex items-center gap-2`}
-              >
-                <IoSendOutline className="w-5 h-5" />
-                Subscribe
-              </button>
-            </form>
-          </div>
-        </div>
-
-        {/* Main Footer Content - NO CARDS, just text */}
+        {/* Main Footer Content */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
           {/* About Column */}
           <div>
@@ -233,7 +192,7 @@ function Footer() {
           </div>
         </div>
 
-        {/* Divider - Very subtle */}
+        {/* Divider */}
         <div className={`h-px mb-12 ${isDark ? 'bg-gray-700/20' : 'bg-gray-300/20'}`} />
 
         {/* Bottom Bar */}
@@ -271,7 +230,7 @@ function Footer() {
           })}
         </div>
 
-        {/* Easter Egg - Updated with Modal */}
+        {/* Easter Egg */}
         <div className="text-center">
           <button
             onClick={handleEasterEggClick}

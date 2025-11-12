@@ -38,11 +38,11 @@ function AppContent() {
       <div id="skills">
         <Skills />
       </div>
-      <div id="projects">
-        <Projects />
-      </div>
       <div id="certificate">
         <Certificate />
+      </div>
+      <div id="projects">
+        <Projects />
       </div>
       <div id="contact">
         <Contact />
