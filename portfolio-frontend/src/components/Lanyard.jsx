@@ -211,9 +211,9 @@ const Band = memo(function Band({ maxSpeed = 80, minSpeed = 20 }) {
 });
 
 export default function Lanyard({ 
-  position = [0, 0, 30], 
+  position = [0, 0, 25], 
   gravity = [0, -30, 0],
-  fov = 20, 
+  fov = 22, 
   transparent = true 
 }) {
   const [isVisible, setIsVisible] = useState(true);

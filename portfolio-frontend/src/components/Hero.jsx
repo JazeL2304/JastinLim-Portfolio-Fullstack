@@ -84,9 +84,9 @@ function Hero() {
   };
 
   return (
-    <div className="min-h-screen transition-all duration-500 relative pt-20" style={{ position: 'relative', overflow: 'hidden' }}>
+    <div className="min-h-screen transition-all duration-500 relative" style={{ position: 'relative', overflow: 'hidden' }}>
       {/* Canvas Background - Full Hero Section, bisa interact */}
-      <div className="absolute inset-0 pointer-events-auto" style={{ zIndex: 1 }}>
+      <div className="absolute inset-0 top-0 pointer-events-auto" style={{ zIndex: 1 }}>
         <Lanyard
           name="Jastin Lim"
           role="CS Student | Web Developer"
@@ -137,8 +137,8 @@ function Hero() {
       </button>
 
       {/* Main Content - pointer-events hanya untuk elemen yang perlu diklik */}
-      <div className="max-w-7xl mx-auto px-8 py-20 relative pointer-events-none" style={{ zIndex: 10 }}>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center min-h-[calc(100vh-10rem)]">
+      <div className="max-w-7xl mx-auto px-8 py-24 relative pointer-events-none" style={{ zIndex: 10 }}>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center min-h-[calc(100vh-6rem)]">
           
           {/* Left Content - Aktifkan pointer events hanya untuk konten ini */}
           <div className="space-y-6 relative pointer-events-auto">
