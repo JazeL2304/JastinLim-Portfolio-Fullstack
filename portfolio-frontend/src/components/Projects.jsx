@@ -17,7 +17,8 @@ import {
   IoAlertCircleOutline,
   IoChevronBackOutline,
   IoChevronForwardOutline,
-  IoMedicalOutline
+  IoMedicalOutline,
+  IoListOutline
 } from 'react-icons/io5';
 import { SiFigma } from 'react-icons/si';
 import SumateraUtaraImg from '../assets/photo/project/SumateraUtaraProject.png';
@@ -25,6 +26,7 @@ import PTSumberCahayaImg from '../assets/photo/project/PTSumberCahayaTimurProjec
 import HarbourMindImg from '../assets/photo/project/HarbourMindProject.png';
 import TheLazyJannahImg from '../assets/photo/project/TheLazyJannahProject.png';
 import AplikasiRSRJProjectImg from '../assets/photo/project/AplikasiRSRJProject.png';
+import TodolistProjectImg from '../assets/photo/project/TodolistProject.png';
 
 function Projects() {
   const { cardBg, textColor, textMuted, neumorph, neumorphInset } = useDarkMode();
@@ -74,6 +76,21 @@ function Projects() {
     },
     {
       id: 3,
+      title: 'Todolist Website',
+      description: 'Website todo list modern dengan fitur CRUD lengkap, filter tasks, dan storage untuk menyimpan data. Dibangun dengan Php dan styled menggunakan CSS basic.',
+      category: 'Web App',
+      techStack: ['Php', 'MySQL'],
+      icon: IoListOutline,
+      image: TodolistProjectImg,
+      gradient: 'from-indigo-500 to-purple-500',
+      stars: 0,
+      status: 'Production',
+      githubLink: 'https://github.com/JazeL2304/TODOLIST_PROJECT',
+      demoLink: '',
+      isFigma: false
+    },
+    {
+      id: 4,
       title: 'HarbourMind - Prototype Aplikasi',
       description: 'Prototype aplikasi mobile untuk manajemen kesehatan mental dengan UI/UX yang user-friendly dan modern, dibuat menggunakan Figma.',
       category: 'Design',
@@ -88,7 +105,7 @@ function Projects() {
       isFigma: true
     },
     {
-      id: 4,
+      id: 5,
       title: 'The Lazy Jannah - Game',
       description: 'Game interaktif yang dikembangkan menggunakan Unity dan C# dengan gameplay menarik dan grafis yang memukau.',
       category: 'Game',
@@ -103,7 +120,7 @@ function Projects() {
       isFigma: false
     },
     {
-      id: 5,
+      id: 6,
       title: 'Aplikasi Rumah Sakit Rawat Jalan',
       description: 'Aplikasi mobile untuk manajemen rawat jalan rumah sakit dengan fitur pendaftaran pasien, jadwal dokter, dan riwayat medis menggunakan Kotlin dan Android Studio.',
       category: 'Mobile App',
@@ -144,7 +161,7 @@ function Projects() {
       
       const container = carouselRef.current;
       const containerWidth = container.offsetWidth;
-      const scrollAmount = containerWidth + 32; // container width + gap
+      const scrollAmount = containerWidth + 32;
       
       const targetScroll = direction === 'left' 
         ? container.scrollLeft - scrollAmount
@@ -285,7 +302,7 @@ function Projects() {
             <IoChevronForwardOutline className={`w-7 h-7 ${textColor}`} />
           </button>
 
-          {/* Projects Carousel - FIXED CARD SIZES */}
+          {/* Projects Carousel */}
           <div
             ref={carouselRef}
             className={`flex overflow-x-auto scroll-smooth scrollbar-hide pb-8 ${
@@ -312,12 +329,12 @@ function Projects() {
                   style={{
                     width: 'calc((100% - 32px) / 2)',
                     minWidth: 'calc((100% - 32px) / 2)',
-                    height: '652px', // FIXED HEIGHT
+                    height: '652px',
                     scrollSnapAlign: 'start',
                     animationDelay: `${index * 0.1}s`
                   }}
                 >
-                  {/* Project Image - FIXED HEIGHT */}
+                  {/* Project Image */}
                   <div className="relative h-72 overflow-hidden bg-gradient-to-br from-gray-800 to-gray-900 flex-shrink-0">
                     {project.image ? (
                       <img 
@@ -325,11 +342,11 @@ function Projects() {
                         alt={project.title}
                         className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
                         style={{
-                          objectPosition: project.id === 3 
-                            ? 'center 30%'      // HarbourMind - mulai dari logo
-                            : project.id === 5 
-                            ? 'center top'      // Aplikasi RSRJ - dari atas
-                            : 'center center'   // Project lainnya - dari tengah
+                          objectPosition: project.id === 4 
+                            ? 'center 30%'
+                            : project.id === 6 
+                            ? 'center top'
+                            : 'center center'
                         }}
                       />
                     ) : (
@@ -385,9 +402,9 @@ function Projects() {
                     </div>
                   </div>
 
-                  {/* Project Info - FIXED HEIGHT CONTENT */}
+                  {/* Project Info */}
                   <div className="p-6 flex flex-col flex-grow">
-                    {/* Title Section - Fixed Height */}
+                    {/* Title Section */}
                     <div className="flex items-start justify-between mb-3" style={{ minHeight: '64px' }}>
                       <h3 
                         className={`text-xl font-bold ${textColor} flex-1 pr-2`}
@@ -409,7 +426,7 @@ function Projects() {
                       )}
                     </div>
 
-                    {/* Description - Fixed Height */}
+                    {/* Description */}
                     <p 
                       className={`${textMuted} text-sm mb-4`}
                       style={{ 
@@ -425,7 +442,7 @@ function Projects() {
                       {project.description}
                     </p>
 
-                    {/* Tech Stack - Fixed Height */}
+                    {/* Tech Stack */}
                     <div className="flex flex-wrap gap-2 mb-4" style={{ minHeight: '76px' }}>
                       {project.techStack.map((tech, i) => (
                         <span
@@ -437,7 +454,7 @@ function Projects() {
                       ))}
                     </div>
 
-                    {/* Action Buttons - Pushed to Bottom */}
+                    {/* Action Buttons */}
                     <div className="flex gap-3 mt-auto">
                       {project.isFigma ? (
                         <>
@@ -482,13 +499,13 @@ function Projects() {
           </div>
         </div>
 
-        {/* Stats Section */}
+        {/* Stats Section - Update jumlah projects */}
         <div 
           ref={statsRef}
           className={`grid grid-cols-2 md:grid-cols-4 gap-6 mt-24 scroll-hidden ${statsVisible ? 'animate-zoom-in' : ''}`}
         >
           {[
-            { icon: IoRocketOutline, value: '5+', label: 'Projects Built' },
+            { icon: IoRocketOutline, value: '6+', label: 'Projects Built' },
             { icon: IoCodeSlashOutline, value: '8+', label: 'Technologies' },
             { icon: IoPeopleOutline, value: '2+', label: 'Team Projects' },
             { icon: IoFlashOutline, value: '100+', label: 'Hours Coding' }

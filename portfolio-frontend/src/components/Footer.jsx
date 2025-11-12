@@ -13,7 +13,9 @@ import {
   IoCafeOutline,
   IoCodeSlashOutline,
   IoBugOutline,
-  IoHappyOutline
+  IoHappyOutline,
+  IoCloseOutline,
+  IoCheckmarkCircleOutline
 } from 'react-icons/io5';
 import { BiCodeAlt } from "react-icons/bi";
 
@@ -21,6 +23,7 @@ function Footer() {
   const { isDark, cardBg, textColor, textMuted, neumorph, neumorphInset } = useDarkMode();
   
   const [email, setEmail] = useState('');
+  const [showEasterEggModal, setShowEasterEggModal] = useState(false);
 
   const handleNewsletterSubmit = (e) => {
     e.preventDefault();
@@ -28,8 +31,57 @@ function Footer() {
     setEmail('');
   };
 
+  const handleEasterEggClick = () => {
+    setShowEasterEggModal(true);
+  };
+
+  // Modal Component for Easter Egg
+  const EasterEggModal = () => {
+    if (!showEasterEggModal) return null;
+
+    return (
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center px-4">
+        <div 
+          className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+          onClick={() => setShowEasterEggModal(false)}
+        />
+        
+        <div className={`relative ${cardBg} ${neumorph} rounded-3xl p-8 max-w-md w-full mx-4 transform transition-all duration-300 animate-bounce-in`}>
+          <button
+            onClick={() => setShowEasterEggModal(false)}
+            className={`absolute top-4 right-4 w-10 h-10 ${cardBg} ${neumorph} rounded-full flex items-center justify-center hover:scale-110 transition-all duration-300`}
+          >
+            <IoCloseOutline className={`w-6 h-6 ${textColor}`} />
+          </button>
+
+          <div className="flex justify-center mb-6">
+            <div className={`w-20 h-20 ${cardBg} ${neumorphInset} rounded-full flex items-center justify-center`}>
+              <IoCheckmarkCircleOutline className="w-12 h-12 text-orange-500 animate-scale-in" />
+            </div>
+          </div>
+
+          <h3 className={`text-2xl font-bold ${textColor} text-center mb-4`}>
+            🎉 You Found the Easter Egg! 🥚
+          </h3>
+          <p className={`${textMuted} text-center mb-6 leading-relaxed`}>
+            Thanks for exploring my portfolio! Your curiosity is appreciated. Keep being awesome! 🚀
+          </p>
+
+          <button
+            onClick={() => setShowEasterEggModal(false)}
+            className={`w-full ${cardBg} ${neumorph} rounded-xl py-4 ${textColor} font-bold text-lg hover:scale-105 transition-all duration-300`}
+          >
+            Awesome! 🎊
+          </button>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <footer className="py-16 relative overflow-hidden transition-all duration-500">
+      <EasterEggModal />
+
       <div className="max-w-7xl mx-auto px-8 relative z-10">
         {/* Newsletter Section */}
         <div className={`${cardBg} ${neumorph} rounded-3xl p-8 md:p-12 mb-16`}>
@@ -219,15 +271,35 @@ function Footer() {
           })}
         </div>
 
-        {/* Easter Egg */}
+        {/* Easter Egg - Updated with Modal */}
         <div className="text-center">
           <button
-            onClick={() => alert('🎉 You found the easter egg! Thanks for exploring!')}
-            className={`text-xs ${textMuted} hover:text-orange-500 transition-colors duration-300`}>
+            onClick={handleEasterEggClick}
+            className={`text-xs ${textMuted} hover:text-orange-500 transition-colors duration-300 cursor-pointer`}
+          >
             Click here for a surprise 🥚
           </button>
         </div>
       </div>
+
+      <style jsx>{`
+        @keyframes bounce-in {
+          0% { transform: scale(0.9); opacity: 0; }
+          50% { transform: scale(1.05); }
+          100% { transform: scale(1); opacity: 1; }
+        }
+        @keyframes scale-in {
+          0% { transform: scale(0); }
+          50% { transform: scale(1.2); }
+          100% { transform: scale(1); }
+        }
+        .animate-bounce-in {
+          animation: bounce-in 0.4s ease-out;
+        }
+        .animate-scale-in {
+          animation: scale-in 0.5s ease-out;
+        }
+      `}</style>
     </footer>
   );
 }
