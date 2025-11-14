@@ -81,7 +81,7 @@ const SkillCard = memo(function SkillCard({
   );
 });
 
-// Memoize MilestoneCard component
+// Memoize MilestoneCard component - UPDATED WITH RESPONSIVE FIX
 const MilestoneCard = memo(function MilestoneCard({ 
   milestone, 
   cardBg, 
@@ -98,13 +98,13 @@ const MilestoneCard = memo(function MilestoneCard({
         <div className={`${cardBg} ${neumorphInset} rounded-full w-12 h-12 flex items-center justify-center flex-shrink-0`}>
           <Icon className={`w-6 h-6 ${textColor}`} />
         </div>
-        <div className="flex-1">
-          <div className="flex items-center justify-between mb-2">
-            <div>
-              <span className={`text-sm font-bold text-orange-500`}>{milestone.year}</span>
-              <h4 className={`text-lg font-bold ${textColor}`}>{milestone.title}</h4>
+        <div className="flex-1 min-w-0">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-2">
+            <div className="flex-1 min-w-0">
+              <span className={`text-sm font-bold text-orange-500 block`}>{milestone.year}</span>
+              <h4 className={`text-lg font-bold ${textColor} break-words`}>{milestone.title}</h4>
             </div>
-            <span className={`text-xs ${textMuted} ${cardBg} ${neumorphInset} px-3 py-1 rounded-full flex items-center gap-1`}>
+            <span className={`text-xs ${textMuted} ${cardBg} ${neumorphInset} px-3 py-1 rounded-full flex items-center gap-1 self-start sm:self-auto whitespace-nowrap`}>
               {milestone.status === 'Completed' ? (
                 <IoCheckmarkCircleOutline className="w-4 h-4 text-green-500" />
               ) : (
@@ -113,7 +113,7 @@ const MilestoneCard = memo(function MilestoneCard({
               {milestone.status}
             </span>
           </div>
-          <p className={`${textMuted} text-sm`}>{milestone.desc}</p>
+          <p className={`${textMuted} text-sm break-words`}>{milestone.desc}</p>
         </div>
       </div>
     </div>
