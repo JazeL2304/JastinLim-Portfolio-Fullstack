@@ -17,8 +17,20 @@ function Hero() {
   const { isDark, toggleDarkMode, cardBg, textColor, textMuted, neumorph, neumorphInset } = useDarkMode();
   
   const [displayText, setDisplayText] = useState('');
-  const [downloadStatus, setDownloadStatus] = useState('idle'); // idle, downloading, success, error
+  const [downloadStatus, setDownloadStatus] = useState('idle');
+  const [isMobile, setIsMobile] = useState(false);
   const fullText = "Learning, Building, Growing";
+  
+  // Check screen size untuk responsive
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
   
   useEffect(() => {
     let index = 0;
@@ -33,41 +45,29 @@ function Hero() {
     return () => clearInterval(timer);
   }, []);
 
-  // Function untuk download CV
   const handleDownloadCV = async () => {
     try {
       setDownloadStatus('downloading');
       
-      // Fetch file CV dari assets
       const response = await fetch(cvFile);
       
       if (!response.ok) {
         throw new Error('CV file not found');
       }
       
-      // Convert response ke blob
       const blob = await response.blob();
-      
-      // Buat URL dari blob
       const url = window.URL.createObjectURL(blob);
-      
-      // Buat element anchor untuk download
       const link = document.createElement('a');
       link.href = url;
       link.download = 'Jastin_Lim_CV.pdf';
       
-      // Trigger download
       document.body.appendChild(link);
       link.click();
-      
-      // Cleanup
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
       
-      // Set status success
       setDownloadStatus('success');
       
-      // Reset status setelah 3 detik
       setTimeout(() => {
         setDownloadStatus('idle');
       }, 3000);
@@ -76,7 +76,6 @@ function Hero() {
       console.error('Error downloading CV:', error);
       setDownloadStatus('error');
       
-      // Reset status setelah 3 detik
       setTimeout(() => {
         setDownloadStatus('idle');
       }, 3000);
@@ -84,24 +83,26 @@ function Hero() {
   };
 
   return (
-    <div className="min-h-screen transition-all duration-500 relative" style={{ position: 'relative', overflow: 'hidden' }}>
-      {/* Canvas Background - Full Hero Section, bisa interact */}
-      <div className="absolute inset-0 top-0 pointer-events-auto" style={{ zIndex: 1 }}>
-        <Lanyard
-          name="Jastin Lim"
-          role="CS Student | Web Developer"
-          location="Tangerang, Indonesia"
-          status="Student"
-          focus="Full-Stack Dev"
-          photo={myPhoto}
-          isDark={isDark}
-          cardBg={cardBg}
-          textColor={textColor}
-          textMuted={textMuted}
-          neumorph={neumorph}
-          neumorphInset={neumorphInset}
-        />
-      </div>
+    <div className="min-h-screen transition-all duration-500 relative">
+      {/* Canvas Background - Responsive positioning */}
+      {!isMobile && (
+        <div className="absolute inset-0 top-0 pointer-events-auto" style={{ zIndex: 1 }}>
+          <Lanyard
+            name="Jastin Lim"
+            role="CS Student | Web Developer"
+            location="Tangerang, Indonesia"
+            status="Student"
+            focus="Full-Stack Dev"
+            photo={myPhoto}
+            isDark={isDark}
+            cardBg={cardBg}
+            textColor={textColor}
+            textMuted={textMuted}
+            neumorph={neumorph}
+            neumorphInset={neumorphInset}
+          />
+        </div>
+      )}
 
       {/* Floating Particles */}
       <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 5 }}>
@@ -124,8 +125,7 @@ function Hero() {
       {/* Dark Mode Toggle */}
       <button
         onClick={toggleDarkMode}
-        className={`fixed top-20 right-8 w-14 h-14 rounded-full ${cardBg} ${neumorph} flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-2xl`}
-        style={{ zIndex: 100 }}
+        className={`fixed top-20 right-8 w-14 h-14 rounded-full ${cardBg} ${neumorph} flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-2xl z-[100]`}
         aria-label="Toggle Dark Mode"
         title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
       >
@@ -136,11 +136,11 @@ function Hero() {
         )}
       </button>
 
-      {/* Main Content - pointer-events hanya untuk elemen yang perlu diklik */}
+      {/* Main Content */}
       <div className="max-w-7xl mx-auto px-8 py-24 relative pointer-events-none" style={{ zIndex: 10 }}>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center min-h-[calc(100vh-6rem)]">
+        <div className={`grid grid-cols-1 ${isMobile ? '' : 'lg:grid-cols-2'} gap-16 items-center min-h-[calc(100vh-6rem)]`}>
           
-          {/* Left Content - Aktifkan pointer events hanya untuk konten ini */}
+          {/* Left Content */}
           <div className="space-y-6 relative pointer-events-auto">
             {/* Status Badge */}
             <div className={`inline-flex items-center gap-2 ${cardBg} ${neumorph} rounded-full px-5 py-2.5`}>
@@ -186,7 +186,7 @@ function Hero() {
               </div>
             </div>
 
-            {/* CTA Button - Download CV dengan Status */}
+            {/* CTA Button */}
             <div className="flex gap-4 pt-4">
               <button 
                 onClick={handleDownloadCV}
@@ -227,11 +227,35 @@ function Hero() {
             </div>
           </div>
 
-          {/* Right Content - Hanya glow effects, tidak blocking canvas */}
-          <div className="relative h-[700px] pointer-events-none">
-            {/* Background Glow Effects */}
-            <div className="absolute -top-10 -right-10 w-64 h-64 bg-gradient-to-br from-orange-500/20 to-red-600/20 rounded-full blur-3xl animate-pulse" />
-            <div className="absolute -bottom-10 -left-10 w-64 h-64 bg-gradient-to-br from-red-600/20 to-orange-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+          {/* Right Content - Mobile Lanyard atau Desktop Glow */}
+          <div className="relative pointer-events-none">
+            {isMobile ? (
+              // Mobile: Lanyard di bawah - CENTERED
+              <div className="relative h-[500px] w-full pointer-events-auto" style={{ zIndex: 1 }}>
+                <Lanyard
+                  name="Jastin Lim"
+                  role="CS Student | Web Developer"
+                  location="Tangerang, Indonesia"
+                  status="Student"
+                  focus="Full-Stack Dev"
+                  photo={myPhoto}
+                  isDark={isDark}
+                  cardBg={cardBg}
+                  textColor={textColor}
+                  textMuted={textMuted}
+                  neumorph={neumorph}
+                  neumorphInset={neumorphInset}
+                  position={[-1, 2, 18]}
+                  fov={30}
+                />
+              </div>
+            ) : (
+              // Desktop: Glow effects
+              <div className="h-[700px]">
+                <div className="absolute -top-10 -right-10 w-64 h-64 bg-gradient-to-br from-orange-500/20 to-red-600/20 rounded-full blur-3xl animate-pulse" />
+                <div className="absolute -bottom-10 -left-10 w-64 h-64 bg-gradient-to-br from-red-600/20 to-orange-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+              </div>
+            )}
           </div>
         </div>
       </div>
