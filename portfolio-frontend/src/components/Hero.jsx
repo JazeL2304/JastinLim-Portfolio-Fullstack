@@ -137,7 +137,7 @@ function Hero() {
       </button>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-8 py-24 relative pointer-events-none" style={{ zIndex: 10 }}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 relative pointer-events-none" style={{ zIndex: 10 }}>
         <div className={`grid grid-cols-1 ${isMobile ? '' : 'lg:grid-cols-2'} gap-16 items-center min-h-[calc(100vh-6rem)]`}>
           
           {/* Left Content */}
@@ -230,24 +230,27 @@ function Hero() {
           {/* Right Content - Mobile Lanyard atau Desktop Glow */}
           <div className="relative pointer-events-none">
             {isMobile ? (
-              // Mobile: Lanyard di bawah - CENTERED
-              <div className="relative h-[500px] w-full pointer-events-auto" style={{ zIndex: 1 }}>
-                <Lanyard
-                  name="Jastin Lim"
-                  role="CS Student | Web Developer"
-                  location="Tangerang, Indonesia"
-                  status="Student"
-                  focus="Full-Stack Dev"
-                  photo={myPhoto}
-                  isDark={isDark}
-                  cardBg={cardBg}
-                  textColor={textColor}
-                  textMuted={textMuted}
-                  neumorph={neumorph}
-                  neumorphInset={neumorphInset}
-                  position={[-1, 2, 18]}
-                  fov={30}
-                />
+              // Mobile: Lanyard di bawah - CENTERED with RESPONSIVE positioning
+              <div className="relative w-full flex items-center justify-center pointer-events-auto" style={{ height: '500px' }}>
+                <div className="w-full h-full">
+                  <Lanyard
+                    name="Jastin Lim"
+                    role="CS Student | Web Developer"
+                    location="Tangerang, Indonesia"
+                    status="Student"
+                    focus="Full-Stack Dev"
+                    photo={myPhoto}
+                    isDark={isDark}
+                    cardBg={cardBg}
+                    textColor={textColor}
+                    textMuted={textMuted}
+                    neumorph={neumorph}
+                    neumorphInset={neumorphInset}
+                    position={[0, 0, 22]}
+                    gravity={[0, -30, 0]}
+                    fov={25}
+                  />
+                </div>
               </div>
             ) : (
               // Desktop: Glow effects

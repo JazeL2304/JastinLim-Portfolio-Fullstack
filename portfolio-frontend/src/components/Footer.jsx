@@ -26,6 +26,28 @@ function Footer() {
     setShowEasterEggModal(true);
   };
 
+  // Contact info with proper links
+  const contactInfo = [
+    {
+      icon: IoMailOutline,
+      title: 'Email',
+      value: 'jastinlim2304@gmail.com',
+      link: 'https://mail.google.com/mail/?view=cm&fs=1&to=jastinlim2304@gmail.com'
+    },
+    {
+      icon: IoCallOutline,
+      title: 'Phone',
+      value: '+62 812-3913-3300',
+      link: 'https://wa.me/6281239133300'
+    },
+    {
+      icon: IoLocationOutline,
+      title: 'Location',
+      value: 'Tangerang, Indonesia',
+      link: 'https://www.google.com/maps/place/Tangerang,+Banten,+Indonesia'
+    }
+  ];
+
   // Modal Component for Easter Egg
   const EasterEggModal = () => {
     if (!showEasterEggModal) return null;
@@ -151,43 +173,36 @@ function Footer() {
             </ul>
           </div>
 
-          {/* Contact Info */}
+          {/* Contact Info - WITH CLICKABLE LINKS */}
           <div>
             <h4 className={`text-lg font-bold ${textColor} mb-6`}>Get in Touch</h4>
             <ul className="space-y-4">
-              <li className="flex items-start gap-3">
-                <div className={`w-10 h-10 ${cardBg} ${neumorph} rounded-full flex items-center justify-center flex-shrink-0`}>
-                  <IoMailOutline className="w-4 h-4 text-orange-500" />
-                </div>
-                <div>
-                  <p className={`text-xs ${textMuted} mb-1`}>Email</p>
-                  <a href="mailto:jastinlim2304@gmail.com" className={`text-sm ${textColor} hover:text-orange-500 transition-colors duration-300 break-all`}>
-                    jastinlim2304@gmail.com
-                  </a>
-                </div>
-              </li>
-              <li className="flex items-start gap-3">
-                <div className={`w-10 h-10 ${cardBg} ${neumorph} rounded-full flex items-center justify-center flex-shrink-0`}>
-                  <IoCallOutline className="w-4 h-4 text-orange-500" />
-                </div>
-                <div>
-                  <p className={`text-xs ${textMuted} mb-1`}>Phone</p>
-                  <a href="tel:+6281239133300" className={`text-sm ${textColor} hover:text-orange-500 transition-colors duration-300`}>
-                    +62 812-3913-3300
-                  </a>
-                </div>
-              </li>
-              <li className="flex items-start gap-3">
-                <div className={`w-10 h-10 ${cardBg} ${neumorph} rounded-full flex items-center justify-center flex-shrink-0`}>
-                  <IoLocationOutline className="w-4 h-4 text-orange-500" />
-                </div>
-                <div>
-                  <p className={`text-xs ${textMuted} mb-1`}>Location</p>
-                  <span className={`text-sm ${textColor}`}>
-                    Tangerang, Indonesia
-                  </span>
-                </div>
-              </li>
+              {contactInfo.map((contact, i) => {
+                const Icon = contact.icon;
+                return (
+                  <li key={i} className="flex items-start gap-3">
+                    <a
+                      href={contact.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`w-10 h-10 ${cardBg} ${neumorph} rounded-full flex items-center justify-center flex-shrink-0 hover:scale-110 transition-all duration-300`}
+                    >
+                      <Icon className="w-4 h-4 text-orange-500" />
+                    </a>
+                    <div>
+                      <p className={`text-xs ${textMuted} mb-1`}>{contact.title}</p>
+                      <a 
+                        href={contact.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={`text-sm ${textColor} hover:text-orange-500 transition-colors duration-300 break-all`}
+                      >
+                        {contact.value}
+                      </a>
+                    </div>
+                  </li>
+                );
+              })}
             </ul>
           </div>
         </div>

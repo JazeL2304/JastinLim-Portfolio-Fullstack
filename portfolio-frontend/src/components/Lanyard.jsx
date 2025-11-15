@@ -12,7 +12,7 @@ const cardGLB = '/models/card.glb';
 const lanyardTexture = '/models/lanyard.png';
 
 // Optimized Band component
-const Band = memo(function Band({ maxSpeed = 80, minSpeed = 20 }) {
+const Band = memo(function Band({ maxSpeed = 80, minSpeed = 20, isMobile = false }) {
   const band = useRef();
   const fixed = useRef();
   const j1 = useRef();
@@ -49,7 +49,12 @@ const Band = memo(function Band({ maxSpeed = 80, minSpeed = 20 }) {
   
   const [dragged, setDrag] = useState(false);
   const [hovered, setHover] = useState(false);
-  const [isSmall, setIsSmall] = useState(() => typeof window !== 'undefined' && window.innerWidth < 1024);
+
+  // Adjusted fixed point position for mobile centering
+  const fixedPosition = useMemo(() => 
+    isMobile ? [0, 4, 0] : [3, 4, 0],
+    [isMobile]
+  );
 
   useRopeJoint(fixed, j1, [[0, 0, 0], [0, 0, 0], 1.5]);
   useRopeJoint(j1, j2, [[0, 0, 0], [0, 0, 0], 1.5]);
@@ -63,15 +68,7 @@ const Band = memo(function Band({ maxSpeed = 80, minSpeed = 20 }) {
     }
   }, [hovered, dragged]);
 
-  useEffect(() => {
-    const handleResize = () => {
-      setIsSmall(window.innerWidth < 1024);
-    };
-    window.addEventListener('resize', handleResize, { passive: true });
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  // Optimized frame update - No throttling for smooth motion
+  // Optimized frame update
   useFrame((state, delta) => {
     if (dragged && card.current) {
       const x = (state.pointer.x * viewport.width) / 2;
@@ -87,7 +84,6 @@ const Band = memo(function Band({ maxSpeed = 80, minSpeed = 20 }) {
     }
     
     if (fixed.current) {
-      // Smoother lerping with adaptive speed
       [j1, j2].forEach(ref => {
         if (!ref.current.lerped) {
           ref.current.lerped = new THREE.Vector3().copy(ref.current.translation());
@@ -95,7 +91,6 @@ const Band = memo(function Band({ maxSpeed = 80, minSpeed = 20 }) {
         const currentPos = ref.current.translation();
         const distance = ref.current.lerped.distanceTo(currentPos);
         
-        // Adaptive lerp speed based on distance - faster response
         const lerpSpeed = THREE.MathUtils.clamp(
           delta * (minSpeed + distance * maxSpeed), 
           0.01, 
@@ -112,7 +107,6 @@ const Band = memo(function Band({ maxSpeed = 80, minSpeed = 20 }) {
         curve.points[3].copy(fixed.current.translation());
         
         try {
-          // Use more points for smoother curve
           band.current.geometry.setPoints(curve.getPoints(64));
         } catch (error) {
           console.warn('Error updating band geometry:', error);
@@ -123,7 +117,6 @@ const Band = memo(function Band({ maxSpeed = 80, minSpeed = 20 }) {
         ang.copy(card.current.angvel());
         rot.copy(card.current.rotation());
         
-        // Smoother angular velocity damping
         card.current.setAngvel({ 
           x: ang.x * 0.97, 
           y: ang.y - rot.y * 0.2,
@@ -152,7 +145,7 @@ const Band = memo(function Band({ maxSpeed = 80, minSpeed = 20 }) {
 
   return (
     <>
-      <group position={[3, 4, 0]}>
+      <group position={fixedPosition}>
         <RigidBody ref={fixed} {...segmentProps} type="fixed" />
         <RigidBody position={[0.5, 0, 0]} ref={j1} {...segmentProps}>
           <BallCollider args={[0.1]} />
@@ -197,7 +190,7 @@ const Band = memo(function Band({ maxSpeed = 80, minSpeed = 20 }) {
         <meshLineMaterial
           color="white"
           depthTest={true}
-          resolution={isSmall ? [1000, 2000] : [1000, 1000]}
+          resolution={[1000, isMobile ? 2000 : 1000]}
           useMap
           map={texture}
           repeat={[-4, 1]}
@@ -217,8 +210,17 @@ export default function Lanyard({
   transparent = true 
 }) {
   const [isVisible, setIsVisible] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
+    // Check if mobile
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         setIsVisible(entry.isIntersecting);
@@ -229,7 +231,10 @@ export default function Lanyard({
     const canvas = document.querySelector('canvas');
     if (canvas) observer.observe(canvas);
 
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('resize', checkMobile);
+    };
   }, []);
 
   return (
@@ -267,7 +272,7 @@ export default function Lanyard({
         colliders="hull"
         paused={!isVisible}
       >
-        <Band />
+        <Band isMobile={isMobile} />
       </Physics>
       <Environment blur={0.75}>
         <Lightformer

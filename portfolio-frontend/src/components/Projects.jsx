@@ -55,13 +55,6 @@ const ProjectCard = memo(function ProjectCard({
       className={`project-card ${cardBg} ${neumorph} rounded-3xl overflow-hidden transition-all duration-500 hover:scale-105 cursor-pointer flex-shrink-0 flex flex-col ${
         isScrolling ? (swipeDirection === 'right' ? 'swipe-out-left' : 'swipe-out-right') : ''
       }`}
-      style={{
-        width: 'calc((100% - 32px) / 2)',
-        minWidth: 'calc((100% - 32px) / 2)',
-        height: '652px',
-        scrollSnapAlign: 'start',
-        animationDelay: `${index * 0.1}s`
-      }}
     >
       {/* Project Image */}
       <div className="relative h-72 overflow-hidden bg-gradient-to-br from-gray-800 to-gray-900 flex-shrink-0">
@@ -426,7 +419,7 @@ function Projects() {
         <div className="absolute bottom-20 right-20 w-96 h-96 bg-red-500/10 rounded-full blur-3xl" />
       </div>
 
-      <div className="max-w-7xl mx-auto px-8 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div 
           ref={headerRef}
           className={`text-center mb-16 scroll-hidden ${headerVisible ? 'animate-slide-down' : ''}`}
@@ -455,7 +448,7 @@ function Projects() {
             <button
               key={filter}
               onClick={() => setSelectedFilter(filter)}
-              className={`${cardBg} ${selectedFilter === filter ? neumorphInset : neumorph} px-8 py-4 rounded-full ${textColor} font-semibold transition-all duration-300 hover:scale-105 ${
+              className={`${cardBg} ${selectedFilter === filter ? neumorphInset : neumorph} px-6 sm:px-8 py-3 sm:py-4 rounded-full ${textColor} font-semibold text-sm sm:text-base transition-all duration-300 hover:scale-105 ${
                 selectedFilter === filter ? 'text-orange-500' : ''
               }`}
             >
@@ -468,40 +461,34 @@ function Projects() {
           ref={projectsRef}
           className={`relative scroll-hidden ${projectsVisible ? 'animate-slide-up' : ''}`}
         >
+          {/* Navigation Buttons - Now Visible on All Screens */}
           <button
             onClick={() => scrollCarousel('left')}
             disabled={isScrolling}
-            className={`absolute left-0 top-1/2 -translate-y-1/2 z-20 ${cardBg} ${neumorph} w-14 h-14 rounded-full flex items-center justify-center transition-all duration-300 -ml-7 ${
-              isScrolling ? 'opacity-50 cursor-not-allowed' : 'hover:scale-110'
+            className={`absolute left-2 sm:left-4 lg:-ml-7 lg:left-0 top-1/2 -translate-y-1/2 z-20 ${cardBg} ${neumorph} w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center transition-all duration-300 shadow-xl ${
+              isScrolling ? 'opacity-50 cursor-not-allowed' : 'hover:scale-110 active:scale-95'
             }`}
             aria-label="Scroll Left"
           >
-            <IoChevronBackOutline className={`w-7 h-7 ${textColor}`} />
+            <IoChevronBackOutline className={`w-6 h-6 sm:w-7 sm:h-7 ${textColor}`} />
           </button>
 
           <button
             onClick={() => scrollCarousel('right')}
             disabled={isScrolling}
-            className={`absolute right-0 top-1/2 -translate-y-1/2 z-20 ${cardBg} ${neumorph} w-14 h-14 rounded-full flex items-center justify-center transition-all duration-300 -mr-7 ${
-              isScrolling ? 'opacity-50 cursor-not-allowed' : 'hover:scale-110'
+            className={`absolute right-2 sm:right-4 lg:-mr-7 lg:right-0 top-1/2 -translate-y-1/2 z-20 ${cardBg} ${neumorph} w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center transition-all duration-300 shadow-xl ${
+              isScrolling ? 'opacity-50 cursor-not-allowed' : 'hover:scale-110 active:scale-95'
             }`}
             aria-label="Scroll Right"
           >
-            <IoChevronForwardOutline className={`w-7 h-7 ${textColor}`} />
+            <IoChevronForwardOutline className={`w-6 h-6 sm:w-7 sm:h-7 ${textColor}`} />
           </button>
 
           <div
             ref={carouselRef}
-            className={`flex overflow-x-auto scroll-smooth scrollbar-hide pb-8 ${
+            className={`projects-carousel flex overflow-x-auto scroll-smooth scrollbar-hide pb-8 ${
               swipeDirection === 'left' ? 'swipe-left' : swipeDirection === 'right' ? 'swipe-right' : ''
             }`}
-            style={{ 
-              scrollbarWidth: 'none', 
-              msOverflowStyle: 'none',
-              gap: '32px',
-              scrollSnapType: 'x mandatory',
-              scrollPaddingLeft: '0px'
-            }}
           >
             {filteredProjects.map((project, index) => (
               <ProjectCard
@@ -525,7 +512,7 @@ function Projects() {
 
         <div 
           ref={statsRef}
-          className={`grid grid-cols-2 md:grid-cols-4 gap-6 mt-24 scroll-hidden ${statsVisible ? 'animate-zoom-in' : ''}`}
+          className={`grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 mt-16 sm:mt-24 scroll-hidden ${statsVisible ? 'animate-zoom-in' : ''}`}
         >
           {[
             { icon: IoRocketOutline, value: '6+', label: 'Projects Built' },
@@ -537,11 +524,11 @@ function Projects() {
             return (
               <div
                 key={i}
-                className={`${cardBg} ${neumorph} rounded-2xl p-6 text-center transform hover:scale-105 transition-all duration-300`}
+                className={`${cardBg} ${neumorph} rounded-2xl p-4 sm:p-6 text-center transform hover:scale-105 transition-all duration-300`}
               >
-                <Icon className={`w-10 h-10 ${textColor} mx-auto mb-3`} />
-                <div className={`text-3xl font-bold ${textColor} mb-2`}>{stat.value}</div>
-                <div className={`text-sm ${textMuted}`}>{stat.label}</div>
+                <Icon className={`w-8 h-8 sm:w-10 sm:h-10 ${textColor} mx-auto mb-2 sm:mb-3`} />
+                <div className={`text-2xl sm:text-3xl font-bold ${textColor} mb-1 sm:mb-2`}>{stat.value}</div>
+                <div className={`text-xs sm:text-sm ${textMuted}`}>{stat.label}</div>
               </div>
             );
           })}
@@ -560,20 +547,82 @@ function Projects() {
           scroll-behavior: smooth;
           -webkit-overflow-scrolling: touch;
         }
+        
+        .projects-carousel {
+          gap: 24px;
+          scroll-snap-type: x mandatory;
+          scroll-padding: 16px;
+          padding: 0 16px;
+        }
+        
         .project-card {
           transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
                       opacity 0.3s ease,
                       box-shadow 0.3s ease;
           will-change: transform, opacity;
+          scroll-snap-align: center;
+          width: calc(50% - 12px);
+          min-width: calc(50% - 12px);
+          height: auto;
+          min-height: 652px;
         }
+        
         .project-card:hover {
           box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
         }
+        
         .project-card img {
           display: block;
           width: 100%;
           height: 100%;
           object-fit: cover;
+        }
+        
+        /* Tablet Responsive */
+        @media (max-width: 1024px) {
+          .projects-carousel {
+            gap: 20px;
+            padding: 0 12px;
+          }
+          
+          .project-card {
+            width: calc(60% - 10px);
+            min-width: calc(60% - 10px);
+          }
+        }
+        
+        /* Mobile Large Responsive */
+        @media (max-width: 768px) {
+          .projects-carousel {
+            gap: 16px;
+            padding: 0 8px;
+          }
+          
+          .project-card {
+            width: calc(85% - 8px);
+            min-width: calc(85% - 8px);
+          }
+        }
+        
+        /* Mobile Small Responsive */
+        @media (max-width: 640px) {
+          .projects-carousel {
+            gap: 12px;
+            padding: 0 4px;
+          }
+          
+          .project-card {
+            width: calc(90% - 6px);
+            min-width: calc(90% - 6px);
+          }
+        }
+        
+        /* Mobile Extra Small */
+        @media (max-width: 480px) {
+          .project-card {
+            width: calc(95% - 6px);
+            min-width: calc(95% - 6px);
+          }
         }
       `}</style>
     </div>
