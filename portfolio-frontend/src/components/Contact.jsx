@@ -1,9 +1,7 @@
 import { useState } from 'react';
-import { useDarkMode } from '../contexts/DarkModeContext';
-import { useScrollAnimation } from '../hooks/useScrollAnimation';
-import { 
+import Lanyard from './Lanyard';
+import {
   IoMailOutline,
-  IoCallOutline,
   IoLocationOutline,
   IoLogoGithub,
   IoLogoLinkedin,
@@ -11,38 +9,98 @@ import {
   IoSendOutline,
   IoCheckmarkCircleOutline,
   IoCloseCircleOutline,
-  IoCloseOutline
+  IoCloseOutline,
 } from 'react-icons/io5';
+import myPhoto from '../assets/photo/FOTO_JASTIN_1.jpg';
 
+// ─── Result Modal ──────────────────────────────────────────────────
+function ResultModal({ type, message, onClose }) {
+  if (!type) return null;
+  const isSuccess = type === 'success';
+  return (
+    <div
+      style={{
+        position: 'fixed', inset: 0, zIndex: 9999,
+        display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px',
+      }}
+    >
+      <div
+        style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.8)' }}
+        onClick={onClose}
+      />
+      <div
+        style={{
+          position: 'relative',
+          background: '#111',
+          border: '3px solid #fff',
+          boxShadow: '8px 8px 0 #FF3300',
+          padding: '40px 32px',
+          maxWidth: '420px',
+          width: '100%',
+          textAlign: 'center',
+        }}
+      >
+        <button
+          onClick={onClose}
+          style={{
+            position: 'absolute', top: '12px', right: '12px',
+            background: 'none', border: 'none', cursor: 'pointer', padding: '4px',
+          }}
+        >
+          <IoCloseOutline size={24} color="#fff" />
+        </button>
+        <div style={{ marginBottom: '16px' }}>
+          {isSuccess
+            ? <IoCheckmarkCircleOutline size={56} color="#22c55e" />
+            : <IoCloseCircleOutline size={56} color="#FF3300" />}
+        </div>
+        <h3 style={{
+          fontFamily: "'Space Grotesk', sans-serif",
+          fontWeight: 900, fontSize: '22px', color: '#fff',
+          marginBottom: '12px', marginTop: 0,
+        }}>
+          {isSuccess ? 'MESSAGE SENT!' : 'OOPS!'}
+        </h3>
+        <p style={{
+          fontSize: '14px', color: '#888', lineHeight: 1.6,
+          marginBottom: '24px', fontFamily: "'Space Grotesk', sans-serif",
+        }}>
+          {message}
+        </p>
+        <button className="nb-btn" style={{ width: '100%', justifyContent: 'center' }} onClick={onClose}>
+          GOT IT
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ─── Main Component ────────────────────────────────────────────────
 function Contact() {
-  const { isDark, cardBg, textColor, textMuted, neumorph, neumorphInset } = useDarkMode();
-  
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: ''
-  });
-
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [loading, setLoading] = useState(false);
-  const [showModal, setShowModal] = useState(false);
-  const [modalType, setModalType] = useState('success');
-  const [modalMessage, setModalMessage] = useState('');
+  const [modal, setModal] = useState(null); // { type: 'success'|'error', message: '' }
 
-  // Animation hooks
-  const [headerRef, headerVisible] = useScrollAnimation(0.1);
-  const [cardsRef, cardsVisible] = useScrollAnimation(0.1);
-  const [formRef, formVisible] = useScrollAnimation(0.1);
+  const socialLinks = [
+    { label: 'LINKEDIN',  link: 'https://www.linkedin.com/in/jastin-lim-30a20228a/', Icon: IoLogoLinkedin },
+    { label: 'GITHUB',    link: 'https://github.com/JazeL2304',                       Icon: IoLogoGithub   },
+    { label: 'INSTAGRAM', link: 'https://www.instagram.com/jast.lim/',               Icon: IoLogoInstagram },
+  ];
+
+  const contactItems = [
+    { Icon: IoMailOutline,     value: 'jastinlim2304@gmail.com',  link: 'https://mail.google.com/mail/?view=cm&fs=1&to=jastinlim2304@gmail.com' },
+    { Icon: IoLocationOutline, value: 'Tangerang, Indonesia',      link: 'https://www.google.com/maps/place/Tangerang,+Banten,+Indonesia' },
+  ];
+
+  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const sendEmail = async (e) => {
     e.preventDefault();
     setLoading(true);
-
     try {
       const response = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           access_key: 'e5e8d917-86ed-4390-98ce-15d309750dec',
           name: formData.name,
@@ -52,342 +110,302 @@ function Contact() {
           subject: `New Portfolio Message from ${formData.name}`,
         }),
       });
-
       const result = await response.json();
-
       if (result.success) {
-        setModalType('success');
-        setModalMessage('Thank you! Your message has been sent successfully. I will get back to you soon! 🎉');
-        setShowModal(true);
+        setModal({ type: 'success', message: 'Thank you! Your message has been sent. I\'ll get back to you soon!' });
         setFormData({ name: '', email: '', message: '' });
       } else {
-        throw new Error('Failed to send message');
+        throw new Error('Failed');
       }
-    } catch (error) {
-      console.error('Error sending email:', error);
-      setModalType('error');
-      setModalMessage('Oops! Something went wrong. Please try again or contact me directly via email at jastinlim2304@gmail.com');
-      setShowModal(true);
+    } catch {
+      setModal({ type: 'error', message: 'Something went wrong. Please email me directly at jastinlim2304@gmail.com' });
     } finally {
       setLoading(false);
     }
   };
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
-
-  const contactInfo = [
-    {
-      icon: IoMailOutline,
-      title: 'Email',
-      value: 'jastinlim2304@gmail.com',
-      link: 'https://mail.google.com/mail/?view=cm&fs=1&to=jastinlim2304@gmail.com'
-    },
-    {
-      icon: IoCallOutline,
-      title: 'Phone',
-      value: '+62 812-3913-3300',
-      link: 'https://wa.me/6281239133300'
-    },
-    {
-      icon: IoLocationOutline,
-      title: 'Location',
-      value: 'Tangerang, Indonesia',
-      link: 'https://www.google.com/maps/place/Tangerang,+Banten,+Indonesia'
-    }
-  ];
-
-  const socialLinks = [
-    { 
-      icon: IoLogoGithub, 
-      link: 'https://github.com/JazeL2304', 
-      label: 'GitHub',
-      color: 'hover:text-gray-900 dark:hover:text-white'
-    },
-    { 
-      icon: IoLogoLinkedin, 
-      link: 'https://www.linkedin.com/in/jastin-lim-30a20228a/', 
-      label: 'LinkedIn',
-      color: 'hover:text-blue-600'
-    },
-    { 
-      icon: IoLogoInstagram, 
-      link: 'https://www.instagram.com/jast.lim/', 
-      label: 'Instagram',
-      color: 'hover:text-pink-600'
-    }
-  ];
-
-  const Modal = () => {
-    if (!showModal) return null;
-
-    const isSuccess = modalType === 'success';
-
-    return (
-      <div className="fixed inset-0 z-[9999] flex items-center justify-center px-4">
-        <div 
-          className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-          onClick={() => setShowModal(false)}
-        />
-        
-        <div className={`relative ${cardBg} ${neumorph} rounded-3xl p-8 max-w-md w-full mx-4 transform transition-all duration-300 animate-bounce-in`}>
-          <button
-            onClick={() => setShowModal(false)}
-            className={`absolute top-4 right-4 w-10 h-10 ${cardBg} ${neumorph} rounded-full flex items-center justify-center hover:scale-110 transition-all duration-300`}
-          >
-            <IoCloseOutline className={`w-6 h-6 ${textColor}`} />
-          </button>
-
-          <div className="flex justify-center mb-6">
-            <div className={`w-20 h-20 ${cardBg} ${neumorphInset} rounded-full flex items-center justify-center`}>
-              {isSuccess ? (
-                <IoCheckmarkCircleOutline className="w-12 h-12 text-green-500 animate-scale-in" />
-              ) : (
-                <IoCloseCircleOutline className="w-12 h-12 text-red-500 animate-shake" />
-              )}
-            </div>
-          </div>
-
-          <h3 className={`text-2xl font-bold ${textColor} text-center mb-4`}>
-            {isSuccess ? 'Message Sent! ✨' : 'Oops! 😞'}
-          </h3>
-          <p className={`${textMuted} text-center mb-6 leading-relaxed`}>
-            {modalMessage}
-          </p>
-
-          <button
-            onClick={() => setShowModal(false)}
-            className={`w-full ${cardBg} ${neumorph} rounded-xl py-4 ${textColor} font-bold text-lg hover:scale-105 transition-all duration-300`}
-          >
-            Got it!
-          </button>
-        </div>
-      </div>
-    );
+  // Input style
+  const inputStyle = {
+    width: '100%',
+    background: '#111',
+    border: '2px solid #333',
+    color: '#fff',
+    padding: '12px 16px',
+    fontFamily: "'Space Grotesk', sans-serif",
+    fontSize: '14px',
+    outline: 'none',
+    transition: 'border-color 0.15s',
+    boxSizing: 'border-box',
   };
 
   return (
-    <div className="py-32 transition-all duration-500 relative overflow-hidden">
-      <Modal />
+    <div style={{ background: '#000', padding: '100px 40px', overflow: 'hidden' }}>
+      <ResultModal
+        type={modal?.type}
+        message={modal?.message}
+        onClose={() => setModal(null)}
+      />
 
-      {/* Background Effects */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 right-20 w-80 h-80 bg-orange-500/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-20 left-20 w-80 h-80 bg-red-500/10 rounded-full blur-3xl" />
-      </div>
+      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
 
-      <div className="max-w-7xl mx-auto px-8 relative z-10">
-        <section>
-          {/* Header - Slide Down */}
-          <div 
-            ref={headerRef}
-            className={`text-center mb-16 scroll-hidden ${headerVisible ? 'animate-slide-down' : ''}`}
-          >
-            <div className={`inline-flex items-center gap-2 ${cardBg} ${neumorph} rounded-full px-5 py-2.5 mb-6`}>
-              <IoMailOutline className="w-5 h-5 text-orange-500" />
-              <span className={`text-sm font-medium ${textColor}`}>Let's Connect</span>
-            </div>
-            
-            <h2 className={`text-5xl md:text-6xl font-extrabold ${textColor} mb-6`}>
-              Get In{' '}
-              <span className="bg-gradient-to-r from-orange-500 to-red-600 bg-clip-text text-transparent">
-                Touch
-              </span>
+        {/* ── TOP SECTION: Info + Lanyard ── */}
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+            gap: '60px',
+            alignItems: 'center',
+            marginBottom: '80px',
+          }}
+        >
+          {/* LEFT: Contact info */}
+          <div>
+            <div className="section-label" style={{ marginBottom: '16px' }}>/ CONTACT</div>
+            <h2
+              style={{
+                fontFamily: "'Space Grotesk', sans-serif",
+                fontWeight: 900,
+                fontSize: 'clamp(40px, 7vw, 64px)',
+                color: '#fff',
+                letterSpacing: '-0.04em',
+                lineHeight: 0.95,
+                margin: 0,
+                marginBottom: '24px',
+              }}
+            >
+              LET&apos;S <span style={{ color: '#FF3300' }}>TALK.</span>
             </h2>
-            <p className={`text-lg ${textMuted} max-w-2xl mx-auto`}>
-              Feel free to reach out for collaborations, internship opportunities, or just to say hi!
+            <p style={{
+              fontSize: '14px', color: '#888', maxWidth: '360px',
+              marginBottom: '32px', lineHeight: 1.7,
+              fontFamily: "'Space Grotesk', sans-serif",
+            }}>
+              Open to internship opportunities, collaborations, or just a conversation about design and code.
             </p>
+
+            {/* Contact items */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '32px' }}>
+              {contactItems.map((item, i) => (
+                <a
+                  key={i}
+                  href={item.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none' }}
+                  onMouseEnter={(e) => e.currentTarget.style.opacity = '0.7'}
+                  onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                >
+                  <item.Icon style={{ color: '#FF3300', width: '16px', height: '16px', flexShrink: 0 }} />
+                  <span style={{ color: '#fff', fontSize: '13px', fontWeight: 500, fontFamily: "'Space Grotesk', sans-serif" }}>
+                    {item.value}
+                  </span>
+                </a>
+              ))}
+            </div>
+
+            {/* Social links */}
+            <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+              {socialLinks.map((social) => (
+                <a
+                  key={social.label}
+                  href={social.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: 'flex', alignItems: 'center', gap: '6px',
+                    color: '#fff', textDecoration: 'none', fontSize: '12px',
+                    fontWeight: 700, fontFamily: "'Space Grotesk', sans-serif",
+                    letterSpacing: '0.05em', transition: 'color 0.15s',
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.color = '#FF3300'}
+                  onMouseLeave={(e) => e.currentTarget.style.color = '#fff'}
+                >
+                  <social.Icon size={14} />
+                  {social.label}
+                </a>
+              ))}
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Contact Info Cards - Slide Left */}
-            <div 
-              ref={cardsRef}
-              className={`space-y-6 scroll-hidden ${cardsVisible ? 'animate-slide-left' : ''}`}
+          {/* RIGHT: 3D Lanyard — bigger container */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <div
+              style={{
+                width: '100%',
+                maxWidth: '500px',
+                height: '650px',
+                background: 'transparent',
+                position: 'relative',
+              }}
             >
-              {contactInfo.map((contact, i) => {
-                const Icon = contact.icon;
-                return (
-                  <a
-                    key={i}
-                    href={contact.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`block ${cardBg} ${neumorph} rounded-2xl p-6 hover:scale-105 transition-all duration-300 cursor-pointer`}
-                    style={{ animationDelay: `${i * 0.1}s` }}
-                  >
-                    <div className="mb-3">
-                      <Icon className={`w-10 h-10 ${textColor}`} />
-                    </div>
-                    <h4 className={`text-lg font-bold ${textColor} mb-2`}>{contact.title}</h4>
-                    <p className={`${textMuted} text-sm break-words`}>{contact.value}</p>
-                  </a>
-                );
-              })}
+              <Lanyard
+                name="Jastin Lim"
+                role="CS Student | Web Developer"
+                location="Tangerang, Indonesia"
+                status="Student"
+                focus="Full-Stack Dev"
+                photo={myPhoto}
+                isDark={true}
+                cardBg="bg-gray-800"
+                textColor="text-white"
+                textMuted="text-gray-400"
+                neumorph="shadow-[8px_8px_16px_#0a0a0a,-8px_-8px_16px_#2a2a2a]"
+                neumorphInset="shadow-[inset_8px_8px_16px_#0a0a0a,inset_-8px_-8px_16px_#2a2a2a]"
+                position={[0, 0, 20]} 
+                fov={22}
+              />
+            </div>
+            <p style={{
+              textAlign: 'center', fontSize: '11px', color: '#444',
+              marginTop: '16px', fontFamily: "'Space Grotesk', sans-serif",
+              letterSpacing: '0.05em',
+            }}>
+              / drag to interact
+            </p>
+          </div>
+        </div>
 
-              {/* Social Links */}
-              <div className={`${cardBg} ${neumorph} rounded-2xl p-6`}>
-                <h4 className={`text-lg font-bold ${textColor} mb-4`}>Connect With Me</h4>
-                <div className="flex gap-3">
-                  {socialLinks.map((social, i) => {
-                    const Icon = social.icon;
-                    return (
-                      <a
-                        key={i}
-                        href={social.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={`flex-1 ${cardBg} ${neumorph} rounded-xl h-14 flex items-center justify-center hover:scale-110 transition-all duration-300 group`}
-                        title={social.label}
-                      >
-                        <Icon className={`w-6 h-6 ${textColor} transition-colors ${social.color}`} />
-                      </a>
-                    );
-                  })}
-                </div>
+        {/* ── BOTTOM SECTION: Contact Form ── */}
+        <div
+          style={{
+            border: '3px solid #222',
+            boxShadow: '5px 5px 0 #FF3300',
+            padding: '48px',
+            background: '#0a0a0a',
+          }}
+        >
+          <div style={{ marginBottom: '32px' }}>
+            <div className="section-label" style={{ marginBottom: '8px' }}>/ SEND A MESSAGE</div>
+            <h3 style={{
+              fontFamily: "'Space Grotesk', sans-serif",
+              fontWeight: 900, fontSize: '32px',
+              color: '#fff', margin: 0, letterSpacing: '-0.02em',
+            }}>
+              START A CONVERSATION.
+            </h3>
+          </div>
+
+          <form onSubmit={sendEmail}>
+            {/* Row: Name + Email */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+              gap: '16px',
+              marginBottom: '16px',
+            }}>
+              <div>
+                <label style={{
+                  display: 'block', fontSize: '11px', fontWeight: 700,
+                  color: '#555', letterSpacing: '0.08em',
+                  fontFamily: "'Space Grotesk', sans-serif", marginBottom: '6px',
+                }}>
+                  FULL NAME *
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                  disabled={loading}
+                  placeholder="Your name"
+                  style={inputStyle}
+                  onFocus={(e) => e.target.style.borderColor = '#FF3300'}
+                  onBlur={(e) => e.target.style.borderColor = '#333'}
+                />
+              </div>
+              <div>
+                <label style={{
+                  display: 'block', fontSize: '11px', fontWeight: 700,
+                  color: '#555', letterSpacing: '0.08em',
+                  fontFamily: "'Space Grotesk', sans-serif", marginBottom: '6px',
+                }}>
+                  EMAIL ADDRESS *
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                  disabled={loading}
+                  placeholder="your@email.com"
+                  style={inputStyle}
+                  onFocus={(e) => e.target.style.borderColor = '#FF3300'}
+                  onBlur={(e) => e.target.style.borderColor = '#333'}
+                />
               </div>
             </div>
 
-            {/* Contact Form - Slide Right */}
-            <div 
-              ref={formRef}
-              className={`lg:col-span-2 ${cardBg} ${neumorph} rounded-3xl p-8 scroll-hidden ${formVisible ? 'animate-slide-right' : ''}`}
-            >
-              <form onSubmit={sendEmail} className="space-y-6">
-                <div>
-                  <label className={`block ${textColor} font-semibold mb-3 text-sm`}>
-                    Your Name *
-                  </label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    required
-                    disabled={loading}
-                    autoComplete="off"
-                    className={`w-full ${cardBg} ${neumorphInset} rounded-xl px-6 py-4 ${textColor} focus:outline-none transition-all duration-300 contact-input ${
-                      loading ? 'opacity-50 cursor-not-allowed' : ''
-                    }`}
-                    placeholder="John Doe"
-                  />
-                </div>
-
-                <div>
-                  <label className={`block ${textColor} font-semibold mb-3 text-sm`}>
-                    Email Address *
-                  </label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                    disabled={loading}
-                    autoComplete="off"
-                    className={`w-full ${cardBg} ${neumorphInset} rounded-xl px-6 py-4 ${textColor} focus:outline-none transition-all duration-300 contact-input ${
-                      loading ? 'opacity-50 cursor-not-allowed' : ''
-                    }`}
-                    placeholder="john@example.com"
-                  />
-                </div>
-
-                <div>
-                  <label className={`block ${textColor} font-semibold mb-3 text-sm`}>
-                    Message *
-                  </label>
-                  <textarea
-                    name="message"
-                    value={formData.message}
-                    onChange={handleChange}
-                    required
-                    disabled={loading}
-                    rows={6}
-                    autoComplete="off"
-                    className={`w-full ${cardBg} ${neumorphInset} rounded-xl px-6 py-4 ${textColor} focus:outline-none resize-none transition-all duration-300 contact-input ${
-                      loading ? 'opacity-50 cursor-not-allowed' : ''
-                    }`}
-                    placeholder="Your message here..."
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className={`w-full ${cardBg} ${neumorph} rounded-xl py-5 ${textColor} font-bold text-lg transition-all duration-300 flex items-center justify-center gap-3 ${
-                    loading ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105'
-                  }`}
-                >
-                  {loading ? (
-                    <>
-                      <div className="w-6 h-6 border-3 border-t-orange-500 border-r-transparent border-b-orange-500 border-l-transparent rounded-full animate-spin" />
-                      <span>Sending...</span>
-                    </>
-                  ) : (
-                    <>
-                      <IoSendOutline className="w-6 h-6" />
-                      <span>Send Message</span>
-                    </>
-                  )}
-                </button>
-              </form>
+            {/* Message */}
+            <div style={{ marginBottom: '24px' }}>
+              <label style={{
+                display: 'block', fontSize: '11px', fontWeight: 700,
+                color: '#555', letterSpacing: '0.08em',
+                fontFamily: "'Space Grotesk', sans-serif", marginBottom: '6px',
+              }}>
+                MESSAGE *
+              </label>
+              <textarea
+                name="message"
+                value={formData.message}
+                onChange={handleChange}
+                required
+                disabled={loading}
+                rows={5}
+                placeholder="Describe your project or just say hi..."
+                style={{ ...inputStyle, resize: 'vertical', minHeight: '120px' }}
+                onFocus={(e) => e.target.style.borderColor = '#FF3300'}
+                onBlur={(e) => e.target.style.borderColor = '#333'}
+              />
             </div>
-          </div>
-        </section>
+
+            {/* Submit */}
+            <button
+              type="submit"
+              disabled={loading}
+              style={{
+                background: loading ? '#333' : '#FF3300',
+                color: '#fff',
+                border: `3px solid ${loading ? '#333' : '#FF3300'}`,
+                padding: '16px 40px',
+                fontFamily: "'Space Grotesk', sans-serif",
+                fontWeight: 700,
+                fontSize: '13px',
+                letterSpacing: '0.05em',
+                cursor: loading ? 'not-allowed' : 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                transition: 'all 0.15s',
+              }}
+              onMouseEnter={(e) => { if (!loading) { e.currentTarget.style.background = '#fff'; e.currentTarget.style.color = '#FF3300'; e.currentTarget.style.borderColor = '#FF3300'; } }}
+              onMouseLeave={(e) => { if (!loading) { e.currentTarget.style.background = '#FF3300'; e.currentTarget.style.color = '#fff'; e.currentTarget.style.borderColor = '#FF3300'; } }}
+            >
+              {loading ? (
+                <>
+                  <div style={{
+                    width: '14px', height: '14px', border: '2px solid #fff',
+                    borderTopColor: 'transparent', animation: 'spin 0.6s linear infinite',
+                  }} />
+                  SENDING...
+                </>
+              ) : (
+                <>
+                  <IoSendOutline size={14} />
+                  SEND MESSAGE
+                </>
+              )}
+            </button>
+          </form>
+        </div>
       </div>
 
-      <style jsx>{`
-        @keyframes bounce-in {
-          0% { transform: scale(0.9); opacity: 0; }
-          50% { transform: scale(1.05); }
-          100% { transform: scale(1); opacity: 1; }
-        }
-        @keyframes scale-in {
-          0% { transform: scale(0); }
-          50% { transform: scale(1.2); }
-          100% { transform: scale(1); }
-        }
-        @keyframes shake {
-          0%, 100% { transform: translateX(0); }
-          25% { transform: translateX(-10px); }
-          75% { transform: translateX(10px); }
-        }
-        .animate-bounce-in {
-          animation: bounce-in 0.4s ease-out;
-        }
-        .animate-scale-in {
-          animation: scale-in 0.5s ease-out;
-        }
-        .animate-shake {
-          animation: shake 0.5s ease-out;
-        }
-
-        /* FIX AUTOCOMPLETE STYLING - Prevent style changes */
-        .contact-input:-webkit-autofill,
-        .contact-input:-webkit-autofill:hover,
-        .contact-input:-webkit-autofill:focus,
-        .contact-input:-webkit-autofill:active {
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: ${isDark ? '#ffffff' : '#111827'} !important;
-          transition: background-color 5000s ease-in-out 0s !important;
-          box-shadow: inset 8px 8px 16px ${isDark ? '#0a0a0a' : '#bebebe'}, inset -8px -8px 16px ${isDark ? '#2a2a2a' : '#ffffff'} !important;
-          background-color: ${isDark ? '#1f2937' : '#e5e7eb'} !important;
-          caret-color: ${isDark ? '#ffffff' : '#111827'} !important;
-          color: ${isDark ? '#ffffff' : '#111827'} !important;
-        }
-        
-        .contact-input::placeholder {
-          color: ${isDark ? '#9ca3af' : '#6b7280'} !important;
-          opacity: 1 !important;
-        }
-        
-        /* Force background color consistency */
-        .contact-input {
-          background-color: ${isDark ? '#1f2937' : '#e5e7eb'} !important;
+      <style>{`
+        @keyframes spin { to { transform: rotate(360deg); } }
+        input:-webkit-autofill, textarea:-webkit-autofill {
+          -webkit-box-shadow: 0 0 0 1000px #111 inset !important;
+          -webkit-text-fill-color: #fff !important;
         }
       `}</style>
     </div>

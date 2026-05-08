@@ -1,276 +1,225 @@
-import { useState, useEffect } from 'react';
-import { useDarkMode } from '../contexts/DarkModeContext';
-import Lanyard from './Lanyard';
+import { useState } from 'react';
 import { 
-  IoMoonOutline, 
-  IoSunnyOutline,
   IoDownloadOutline,
   IoCheckmarkCircleOutline,
   IoAlertCircleOutline
 } from 'react-icons/io5';
-import reactIcon from '../assets/photo/react.png';
-import tailwindIcon from '../assets/photo/tailwind.png';
-import myPhoto from '../assets/photo/FOTO_JASTIN_1.jpg';
+import myPhoto from '../assets/photo/FOTO_JASTIN_2.png';
 import cvFile from '../assets/cv/Jastin Lim-resume.pdf';
 
+// Tech icon assets
+import reactIcon from '../assets/photo/react.png';
+import tailwindIcon from '../assets/photo/tailwind.png';
+import phpIcon from '../assets/photo/php.png';
+import laravelIcon from '../assets/photo/laravel.png';
+import pythonIcon from '../assets/photo/python.png';
+import mysqlIcon from '../assets/photo/mysql.png';
+import javascriptIcon from '../assets/photo/javascript.png';
+import kotlinIcon from '../assets/photo/kotlin.png';
+import unityIcon from '../assets/photo/unity.png';
+import figmaIcon from '../assets/photo/figma.png';
+
+// Scattered across the entire hero — positions in % of viewport
+// Left side: 5 icons, Right side: 5 icons, spread top-to-bottom
+const FLOATING_ICONS = [
+  // LEFT column (top to bottom)
+  { name: 'React',      icon: reactIcon,      top: '14%', left: '4%',   animName: 'floatA', delay: '0s'   },
+  { name: 'Python',     icon: pythonIcon,     top: '28%', left: '12%',  animName: 'floatE', delay: '0.5s' },
+  { name: 'Tailwind',   icon: tailwindIcon,   top: '45%', left: '5%',   animName: 'floatB', delay: '1.0s' },
+  { name: 'PHP',        icon: phpIcon,        top: '62%', left: '14%',  animName: 'floatC', delay: '0.3s' },
+  { name: 'Laravel',    icon: laravelIcon,    top: '78%', left: '6%',   animName: 'floatD', delay: '0.8s' },
+
+  // RIGHT column (top to bottom)
+  { name: 'MySQL',      icon: mysqlIcon,      top: '14%', left: '84%',  animName: 'floatF', delay: '0.6s' },
+  { name: 'JavaScript', icon: javascriptIcon, top: '28%', left: '88%',  animName: 'floatA', delay: '0.2s' },
+  { name: 'Figma',      icon: figmaIcon,      top: '45%', left: '82%',  animName: 'floatD', delay: '1.1s' },
+  { name: 'Kotlin',     icon: kotlinIcon,     top: '62%', left: '88%',  animName: 'floatB', delay: '0.4s' },
+  { name: 'Unity',      icon: unityIcon,      top: '78%', left: '83%',  animName: 'floatC', delay: '0.9s' },
+];
+
 function Hero() {
-  const { isDark, toggleDarkMode, cardBg, textColor, textMuted, neumorph, neumorphInset } = useDarkMode();
-  
-  const [displayText, setDisplayText] = useState('');
   const [downloadStatus, setDownloadStatus] = useState('idle');
-  const [isMobile, setIsMobile] = useState(false);
-  const fullText = "Learning, Building, Growing";
-  
-  // Check screen size untuk responsive
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 1024);
-    };
-    
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-  
-  useEffect(() => {
-    let index = 0;
-    const timer = setInterval(() => {
-      if (index <= fullText.length) {
-        setDisplayText(fullText.slice(0, index));
-        index++;
-      } else {
-        clearInterval(timer);
-      }
-    }, 80);
-    return () => clearInterval(timer);
-  }, []);
 
   const handleDownloadCV = async () => {
     try {
       setDownloadStatus('downloading');
-      
       const response = await fetch(cvFile);
-      
-      if (!response.ok) {
-        throw new Error('CV file not found');
-      }
-      
+      if (!response.ok) throw new Error('CV file not found');
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
       link.download = 'Jastin_Lim_CV.pdf';
-      
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
-      
       setDownloadStatus('success');
-      
-      setTimeout(() => {
-        setDownloadStatus('idle');
-      }, 3000);
-      
+      setTimeout(() => setDownloadStatus('idle'), 3000);
     } catch (error) {
       console.error('Error downloading CV:', error);
       setDownloadStatus('error');
-      
-      setTimeout(() => {
-        setDownloadStatus('idle');
-      }, 3000);
+      setTimeout(() => setDownloadStatus('idle'), 3000);
     }
   };
 
+  const scrollToProjects = () => {
+    document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
-    <div className="min-h-screen transition-all duration-500 relative">
-      {/* Canvas Background - Responsive positioning */}
-      {!isMobile && (
-        <div className="absolute inset-0 top-0 pointer-events-auto" style={{ zIndex: 1 }}>
-          <Lanyard
-            name="Jastin Lim"
-            role="CS Student | Web Developer"
-            location="Tangerang, Indonesia"
-            status="Student"
-            focus="Full-Stack Dev"
-            photo={myPhoto}
-            isDark={isDark}
-            cardBg={cardBg}
-            textColor={textColor}
-            textMuted={textMuted}
-            neumorph={neumorph}
-            neumorphInset={neumorphInset}
+    <div
+      style={{
+        background: '#000',
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '100px 20px 60px',
+        textAlign: 'center',
+        position: 'relative',
+        overflow: 'hidden',
+      }}
+    >
+      {/* ── Scattered floating circular icons (absolute, full page width) ── */}
+      {FLOATING_ICONS.map((tech) => (
+        <div
+        className="nb-circle"
+          key={tech.name}
+          title={tech.name}
+          style={{
+            position: 'absolute',
+            top: tech.top,
+            left: tech.left,
+            width: '60px',
+            height: '60px',
+            background: '#fff',
+            border: '2px solid #333',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1,
+            animation: `${tech.animName} 3s ease-in-out ${tech.delay} infinite alternate`,
+            boxShadow: '0 4px 20px rgba(255,51,0,0.08)',
+            transition: 'box-shadow 0.2s, border-color 0.2s',
+            cursor: 'default',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.boxShadow = '0 0 0 3px #FF3300, 0 4px 24px rgba(255,51,0,0.3)';
+            e.currentTarget.style.borderColor = '#FF3300';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.boxShadow = '0 4px 20px rgba(255,51,0,0.08)';
+            e.currentTarget.style.borderColor = '#333';
+          }}
+        >
+          <img
+            src={tech.icon}
+            alt={tech.name}
+            style={{ width: '32px', height: '32px', objectFit: 'contain' }}
           />
         </div>
-      )}
+      ))}
 
-      {/* Floating Particles */}
-      <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 5 }}>
-        {[...Array(8)].map((_, i) => (
-          <div
-            key={i}
-            className={`absolute rounded-full ${isDark ? 'bg-orange-500' : 'bg-orange-400'} opacity-20 animate-float`}
+      {/* ── Main content (z-index above icons) ── */}
+      <div style={{ position: 'relative', zIndex: 2 }}>
+        {/* Availability badge */}
+        <div
+          className="nb-tag"
+          style={{ marginBottom: '24px', fontSize: '11px', letterSpacing: '0.08em', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+        >
+          <span style={{ color: '#22c55e', fontSize: '10px' }}>●</span>
+          AVAILABLE FOR INTERNSHIP
+        </div>
+
+        {/* Heading */}
+        <h1
+          style={{
+            fontFamily: "'Space Grotesk', sans-serif",
+            fontWeight: 900,
+            fontSize: 'clamp(56px, 10vw, 96px)',
+            letterSpacing: '-0.04em',
+            color: '#fff',
+            lineHeight: 0.95,
+            margin: 0,
+            marginBottom: '32px',
+          }}
+        >
+          JASTIN
+          <br />
+          <span style={{ color: '#FF3300' }}>LIM.</span>
+        </h1>
+
+        {/* Photo */}
+        <div style={{ marginBottom: '32px' }}>
+          <img
+            src={myPhoto}
+            alt="Jastin Lim"
             style={{
-              width: Math.random() * 8 + 4 + 'px',
-              height: Math.random() * 8 + 4 + 'px',
-              left: Math.random() * 100 + '%',
-              top: Math.random() * 100 + '%',
-              animationDelay: Math.random() * 5 + 's',
-              animationDuration: Math.random() * 15 + 15 + 's'
+              width: '280px',
+              objectFit: 'contain',
+              filter: 'grayscale(20%) contrast(1.1)',
+              display: 'block',
+              margin: '0 auto',
             }}
           />
-        ))}
-      </div>
+        </div>
 
-      {/* Dark Mode Toggle */}
-      <button
-        onClick={toggleDarkMode}
-        className={`fixed top-20 right-8 w-14 h-14 rounded-full ${cardBg} ${neumorph} flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-2xl z-[100]`}
-        aria-label="Toggle Dark Mode"
-        title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-      >
-        {isDark ? (
-          <IoMoonOutline className={`w-7 h-7 ${textColor}`} />
-        ) : (
-          <IoSunnyOutline className={`w-7 h-7 ${textColor}`} />
-        )}
-      </button>
+        {/* Description */}
+        <p
+          style={{
+            color: '#888',
+            fontSize: '14px',
+            maxWidth: '400px',
+            margin: '0 auto 32px',
+            lineHeight: 1.7,
+            fontFamily: "'Space Grotesk', sans-serif",
+          }}
+        >
+          Computer Science Student based in Tangerang, Indonesia.
+          Crafting interfaces with structural integrity and raw aesthetics.
+        </p>
 
-      {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 relative pointer-events-none" style={{ zIndex: 10 }}>
-        <div className={`grid grid-cols-1 ${isMobile ? '' : 'lg:grid-cols-2'} gap-16 items-center min-h-[calc(100vh-6rem)]`}>
-          
-          {/* Left Content */}
-          <div className="space-y-6 relative pointer-events-auto">
-            {/* Status Badge */}
-            <div className={`inline-flex items-center gap-2 ${cardBg} ${neumorph} rounded-full px-5 py-2.5`}>
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-              <span className={`text-sm font-medium ${textColor}`}>Open to Internship</span>
-            </div>
-
-            {/* Main Heading */}
-            <div>
-              <h1 className={`text-5xl md:text-6xl font-black ${textColor} mb-4 leading-tight font-inter`}>
-                Hi, I'm{' '}
-                <span className="bg-gradient-to-r from-orange-500 via-red-600 to-orange-700 bg-clip-text text-transparent">
-                  Jastin Lim
-                </span>
-              </h1>
-              <div className={`${cardBg} ${neumorphInset} rounded-2xl p-5 mb-4`}>
-                <h2 className={`text-xl md:text-2xl font-bold ${textColor} mb-2`}>
-                  Computer Science Student
-                </h2>
-                <p className={`text-base ${textMuted} font-mono min-h-[30px]`}>
-                  {displayText}
-                  <span className="animate-pulse">|</span>
-                </p>
-              </div>
-            </div>
-
-            {/* Tech Stack */}
-            <div>
-              <p className={`${textMuted} text-sm mb-3 font-semibold`}>Built with modern technologies:</p>
-              <div className="flex flex-wrap gap-3">
-                {[
-                  { name: 'React', icon: reactIcon },
-                  { name: 'Tailwind CSS', icon: tailwindIcon }
-                ].map((tech, i) => (
-                  <div
-                    key={i}
-                    className={`${cardBg} ${neumorph} rounded-xl px-4 py-3 flex items-center gap-3 hover:scale-105 transition-transform duration-300`}
-                  >
-                    <img src={tech.icon} alt={tech.name} className="w-6 h-6 object-contain" />
-                    <span className={`text-sm font-semibold ${textColor}`}>{tech.name}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* CTA Button */}
-            <div className="flex gap-4 pt-4">
-              <button 
-                onClick={handleDownloadCV}
-                disabled={downloadStatus === 'downloading'}
-                className={`${cardBg} ${neumorph} hover:shadow-2xl px-7 py-3.5 rounded-xl ${textColor} font-bold text-base transition-all duration-300 flex items-center gap-2 ${
-                  downloadStatus === 'downloading' ? 'opacity-70 cursor-wait' : 'hover:scale-105'
-                } ${
-                  downloadStatus === 'success' ? 'bg-green-500/10' : ''
-                } ${
-                  downloadStatus === 'error' ? 'bg-red-500/10' : ''
-                }`}
-              >
-                {downloadStatus === 'downloading' && (
-                  <>
-                    <div className="w-5 h-5 border-2 border-t-orange-500 border-r-transparent border-b-orange-500 border-l-transparent rounded-full animate-spin" />
-                    Downloading...
-                  </>
-                )}
-                {downloadStatus === 'success' && (
-                  <>
-                    <IoCheckmarkCircleOutline className="w-5 h-5 text-green-500" />
-                    Downloaded!
-                  </>
-                )}
-                {downloadStatus === 'error' && (
-                  <>
-                    <IoAlertCircleOutline className="w-5 h-5 text-red-500" />
-                    File Not Found
-                  </>
-                )}
-                {downloadStatus === 'idle' && (
-                  <>
-                    <IoDownloadOutline className="w-5 h-5" />
-                    Download CV
-                  </>
-                )}
-              </button>
-            </div>
-          </div>
-
-          {/* Right Content - Mobile Lanyard atau Desktop Glow */}
-          <div className="relative pointer-events-none">
-            {isMobile ? (
-              // Mobile: Lanyard di bawah - CENTERED with RESPONSIVE positioning
-              <div className="relative w-full flex items-center justify-center pointer-events-auto" style={{ height: '500px' }}>
-                <div className="w-full h-full">
-                  <Lanyard
-                    name="Jastin Lim"
-                    role="CS Student | Web Developer"
-                    location="Tangerang, Indonesia"
-                    status="Student"
-                    focus="Full-Stack Dev"
-                    photo={myPhoto}
-                    isDark={isDark}
-                    cardBg={cardBg}
-                    textColor={textColor}
-                    textMuted={textMuted}
-                    neumorph={neumorph}
-                    neumorphInset={neumorphInset}
-                    position={[0, 0, 22]}
-                    gravity={[0, -30, 0]}
-                    fov={25}
-                  />
-                </div>
-              </div>
-            ) : (
-              // Desktop: Glow effects
-              <div className="h-[700px]">
-                <div className="absolute -top-10 -right-10 w-64 h-64 bg-gradient-to-br from-orange-500/20 to-red-600/20 rounded-full blur-3xl animate-pulse" />
-                <div className="absolute -bottom-10 -left-10 w-64 h-64 bg-gradient-to-br from-red-600/20 to-orange-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-              </div>
+        {/* CTA Buttons */}
+        <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', justifyContent: 'center' }}>
+          <button
+            className="nb-btn nb-shadow"
+            onClick={handleDownloadCV}
+            disabled={downloadStatus === 'downloading'}
+            style={{
+              opacity: downloadStatus === 'downloading' ? 0.7 : 1,
+              cursor: downloadStatus === 'downloading' ? 'wait' : 'pointer',
+            }}
+          >
+            {downloadStatus === 'downloading' && (
+              <>
+                <div
+                  style={{
+                    width: '14px', height: '14px',
+                    border: '2px solid #fff', borderTopColor: '#FF3300',
+                    borderRadius: '50%', animation: 'spin 0.6s linear infinite',
+                  }}
+                />
+                DOWNLOADING...
+              </>
             )}
-          </div>
+            {downloadStatus === 'success' && (<><IoCheckmarkCircleOutline size={16} />DOWNLOADED!</>)}
+            {downloadStatus === 'error' && (<><IoAlertCircleOutline size={16} />FILE NOT FOUND</>)}
+            {downloadStatus === 'idle' && (<><IoDownloadOutline size={16} />DOWNLOAD CV</>)}
+          </button>
+
+          <button
+            className="nb-btn nb-btn-outline nb-border"
+            onClick={scrollToProjects}
+          >
+            VIEW PROJECTS
+          </button>
         </div>
       </div>
 
-      <style jsx>{`
-        @keyframes float {
-          0%, 100% { transform: translateY(0px) rotate(0deg); }
-          50% { transform: translateY(-20px) rotate(180deg); }
-        }
-        .animate-float {
-          animation: float linear infinite;
-        }
+      <style>{`
+        @keyframes spin { to { transform: rotate(360deg); } }
       `}</style>
     </div>
   );

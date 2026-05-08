@@ -1,30 +1,17 @@
 import { useState, useEffect } from 'react';
-import { useDarkMode } from '../contexts/DarkModeContext';
-import { 
-  IoHome, 
-  IoPersonOutline, 
-  IoBriefcaseOutline, 
-  IoFlashOutline, 
-  IoMailOutline,
-  IoMenuOutline,
-  IoCloseOutline,
-  IoArrowUpOutline
-} from 'react-icons/io5';
-import { BiCodeAlt } from "react-icons/bi";
+import { IoLogoGithub } from 'react-icons/io5';
 
-function NavbarFooter() {
+function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
-
-  const { isDark, bgClass, cardBg, textColor, textMuted, neumorph, neumorphInset } = useDarkMode();
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+
     const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-      
-      const sections = ['home', 'about', 'projects', 'skills', 'contact'];
-      const current = sections.find(section => {
+      const sections = ['home', 'about', 'skills', 'certificate', 'projects', 'contact'];
+      const current = sections.find((section) => {
         const element = document.getElementById(section);
         if (element) {
           const rect = element.getBoundingClientRect();
@@ -36,7 +23,11 @@ function NavbarFooter() {
     };
 
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleResize);
+    };
   }, []);
 
   const scrollToSection = (id) => {
@@ -48,118 +39,222 @@ function NavbarFooter() {
   };
 
   const navItems = [
-    { id: 'home', label: 'Home', icon: IoHome },
-    { id: 'about', label: 'About', icon: IoPersonOutline },
-    { id: 'projects', label: 'Projects', icon: IoBriefcaseOutline },
-    { id: 'skills', label: 'Skills', icon: IoFlashOutline },
-    { id: 'contact', label: 'Contact', icon: IoMailOutline }
+    { id: 'home',    label: 'Work' },
+    { id: 'about',   label: 'About' },
+    { id: 'skills',  label: 'Skills' },
+    { id: 'contact', label: 'Contact' },
   ];
-
-  const navBg = scrolled 
-    ? (isDark ? 'bg-gray-800/95' : 'bg-gray-200/95')
-    : 'bg-transparent';
 
   return (
     <>
-      {/* NAVBAR */}
       <nav
-        className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 backdrop-blur-md ${navBg} ${scrolled ? neumorph : ''}`}
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 1000,
+          background: '#000',
+        }}
       >
-        <div className="max-w-7xl mx-auto px-8 py-4">
-          <div className="flex items-center justify-between">
-            {/* Logo */}
-            <button
-              onClick={() => scrollToSection('home')}
-              className={`text-2xl font-bold ${textColor} hover:scale-105 transition-transform duration-300 flex items-center gap-2`}
-            >
-   <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-600 rounded-lg flex items-center justify-center text-white font-bold">
-  <BiCodeAlt size={28} />
-</div>
-             <span className="hidden md:block font-inter font-bold tracking-tight">
-              JazeL<span className="text-orange-500">Portfolio</span>
-            </span>
-            </button>
-
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center gap-2">
-              {navItems.map((item) => {
-                const Icon = item.icon;
-                return (
-                  <button
-                    key={item.id}
-                    onClick={() => scrollToSection(item.id)}
-                    className={`${cardBg} ${
-                      activeSection === item.id ? neumorphInset : neumorph
-                    } px-5 py-2.5 rounded-full ${textColor} font-medium transition-all duration-300 hover:scale-105 flex items-center gap-2 ${
-                      activeSection === item.id ? 'text-orange-500' : ''
-                    }`}
-                  >
-                    <Icon className="w-4 h-4" />
-                    <span className="text-sm">{item.label}</span>
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* Mobile Menu Toggle */}
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className={`md:hidden w-11 h-11 ${cardBg} ${neumorph} rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 ${textColor}`}
-            >
-              {isMenuOpen ? <IoCloseOutline className="w-6 h-6" /> : <IoMenuOutline className="w-6 h-6" />}
-            </button>
-          </div>
-
-          {/* Mobile Menu */}
-          <div
-            className={`md:hidden overflow-hidden transition-all duration-500 ${
-              isMenuOpen ? 'max-h-96 opacity-100 mt-4' : 'max-h-0 opacity-0'
-            }`}
-          >
-            <div className={`${cardBg} ${neumorph} rounded-2xl p-4 space-y-2`}>
-              {navItems.map((item) => {
-                const Icon = item.icon;
-                return (
-                  <button
-                    key={item.id}
-                    onClick={() => scrollToSection(item.id)}
-                    className={`w-full ${cardBg} ${
-                      activeSection === item.id ? neumorphInset : neumorph
-                    } px-5 py-3 rounded-xl ${textColor} font-medium transition-all duration-300 hover:scale-105 flex items-center gap-3 ${
-                      activeSection === item.id ? 'text-orange-500' : ''
-                    }`}
-                  >
-                    <Icon className="w-5 h-5" />
-                    <span>{item.label}</span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-
-        {/* Progress Bar */}
-        <div className={`h-1 ${isDark ? 'bg-gray-800/30' : 'bg-gray-300/30'} ${scrolled ? 'opacity-100' : 'opacity-0'} transition-opacity`}>
-          <div 
-            className="h-full bg-gradient-to-r from-orange-500 to-red-600 transition-all duration-300"
+        <div
+          style={{
+            maxWidth: '1200px',
+            margin: '0 auto',
+            padding: '0 40px',
+            height: '64px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
+          {/* Logo */}
+          <button
+            onClick={() => scrollToSection('home')}
             style={{
-              width: `${Math.min((window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100, 100)}%`
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              padding: 0,
+              fontFamily: "'Space Grotesk', sans-serif",
+              fontWeight: 900,
+              fontSize: '28px',
+              color: '#fff',
+              letterSpacing: '-0.03em',
+              lineHeight: 1,
             }}
-          />
-        </div>
-      </nav>
+          >
+            JL<span style={{ color: '#FF3300' }}>.</span>
+          </button>
 
-      {/* Scroll to Top Button */}
-      <button
-        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-        className={`fixed bottom-8 right-8 w-12 h-12 ${cardBg} ${neumorph} rounded-full flex items-center justify-center hover:scale-110 transition-all duration-300 ${
-          scrolled ? 'opacity-100' : 'opacity-0 pointer-events-none'
-        } z-50`}
-      >
-        <IoArrowUpOutline className={`w-6 h-6 ${textColor}`} />
-      </button>
+          {/* Desktop Nav Links */}
+          <div style={{ display: isMobile ? 'none' : 'flex', alignItems: 'center', gap: '32px' }}>
+            {navItems.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => scrollToSection(item.id)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontFamily: "'Space Grotesk', sans-serif",
+                  fontWeight: 500,
+                  fontSize: '13px',
+                  color: activeSection === item.id ? '#FF3300' : '#fff',
+                  letterSpacing: '0.02em',
+                  padding: '4px 0',
+                  transition: 'color 0.15s',
+                }}
+                onMouseEnter={(e) => { if (activeSection !== item.id) e.target.style.color = '#FF3300'; }}
+                onMouseLeave={(e) => { if (activeSection !== item.id) e.target.style.color = '#fff'; }}
+              >
+                {item.label}
+              </button>
+            ))}
+
+            {/* GitHub icon link */}
+            <a
+              href="https://github.com/JazeL2304"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: 'flex', alignItems: 'center',
+                color: '#fff', transition: 'color 0.15s',
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.color = '#FF3300'}
+              onMouseLeave={(e) => e.currentTarget.style.color = '#fff'}
+            >
+              <IoLogoGithub size={22} />
+            </a>
+
+            {/* Resume Button */}
+            <button
+              onClick={() => scrollToSection('contact')}
+              style={{
+                background: '#FF3300',
+                color: '#fff',
+                border: '2px solid #FF3300',
+                padding: '8px 20px',
+                fontFamily: "'Space Grotesk', sans-serif",
+                fontWeight: 700,
+                fontSize: '12px',
+                letterSpacing: '0.05em',
+                cursor: 'pointer',
+                transition: 'all 0.15s',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = '#fff';
+                e.currentTarget.style.color = '#FF3300';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = '#FF3300';
+                e.currentTarget.style.color = '#fff';
+              }}
+            >
+              RESUME
+            </button>
+          </div>
+
+          {/* Mobile Hamburger */}
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            style={{
+              display: isMobile ? 'flex' : 'none',
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              padding: '4px',
+              flexDirection: 'column',
+              gap: '5px',
+            }}
+          >
+            <span
+              style={{
+                display: 'block',
+                width: '24px',
+                height: '2px',
+                background: '#fff',
+                transition: 'all 0.2s',
+                transform: isMenuOpen ? 'rotate(45deg) translate(5px, 5px)' : 'none',
+              }}
+            />
+            <span
+              style={{
+                display: 'block',
+                width: '24px',
+                height: '2px',
+                background: '#fff',
+                transition: 'all 0.2s',
+                opacity: isMenuOpen ? 0 : 1,
+              }}
+            />
+            <span
+              style={{
+                display: 'block',
+                width: '24px',
+                height: '2px',
+                background: '#fff',
+                transition: 'all 0.2s',
+                transform: isMenuOpen ? 'rotate(-45deg) translate(5px, -5px)' : 'none',
+              }}
+            />
+          </button>
+        </div>
+
+        {/* Mobile Menu */}
+        {isMenuOpen && (
+          <div
+            style={{
+              background: '#000',
+              borderTop: '1px solid #222',
+              padding: '16px 40px 24px',
+            }}
+          >
+            {navItems.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => scrollToSection(item.id)}
+                style={{
+                  display: 'block',
+                  width: '100%',
+                  textAlign: 'left',
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontFamily: "'Space Grotesk', sans-serif",
+                  fontWeight: 500,
+                  fontSize: '16px',
+                  color: activeSection === item.id ? '#FF3300' : '#fff',
+                  padding: '10px 0',
+                  borderBottom: '1px solid #222',
+                  letterSpacing: '0.02em',
+                }}
+              >
+                {item.label}
+              </button>
+            ))}
+            <button
+              onClick={() => scrollToSection('contact')}
+              style={{
+                marginTop: '16px',
+                background: '#FF3300',
+                color: '#fff',
+                border: '2px solid #FF3300',
+                padding: '10px 24px',
+                fontFamily: "'Space Grotesk', sans-serif",
+                fontWeight: 700,
+                fontSize: '12px',
+                letterSpacing: '0.05em',
+                cursor: 'pointer',
+              }}
+            >
+              RESUME
+            </button>
+          </div>
+        )}
+      </nav>
     </>
   );
 }
 
-export default NavbarFooter;
+export default Navbar;

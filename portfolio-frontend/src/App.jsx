@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { DarkModeProvider, useDarkMode } from './contexts/DarkModeContext';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import About from './components/About';
@@ -8,17 +7,17 @@ import Projects from './components/Projects';
 import Certificate from './components/Certificate';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
+import MarqueeTicker from './components/MarqueeTicker';
 import LoadingAnimation from './components/LoadingAnimation';
+import CustomCursor from './components/CustomCursor';
 
-function AppContent() {
+function App() {
   const [loading, setLoading] = useState(true);
-  const { bgClass } = useDarkMode();
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 3000);
-
+    }, 2000);
     return () => clearTimeout(timer);
   }, []);
 
@@ -27,11 +26,13 @@ function AppContent() {
   }
 
   return (
-    <div className={`${bgClass} transition-all duration-500`}>
+    <div style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+      <CustomCursor />
       <Navbar />
       <div id="home">
         <Hero />
       </div>
+      <MarqueeTicker />
       <div id="about">
         <About />
       </div>
@@ -49,14 +50,6 @@ function AppContent() {
       </div>
       <Footer />
     </div>
-  );
-}
-
-function App() {
-  return (
-    <DarkModeProvider>
-      <AppContent />
-    </DarkModeProvider>
   );
 }
 

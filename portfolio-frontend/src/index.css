@@ -1,183 +1,225 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700;900&display=swap');
 
-@theme {
-  --font-sans: "Inter", system-ui, sans-serif;
-  --font-playfair: "Playfair Display", serif;
-  --font-inter: "Inter", sans-serif;
-  
-  /* Custom Color Palette */
-  --color-dark: #000000;
-  --color-red: #CF0A0A;
-  --color-orange: #DC5F00;
-  --color-light: #EEEEEE;
+/* ============================================ */
+/* NEUBRUTALISM RESET                           */
+/* ============================================ */
+
+* {
+  border-radius: 0 !important;
+  box-sizing: border-box;
+}
+
+/* Exception: circular elements */
+.nb-circle {
+  border-radius: 50% !important;
 }
 
 body, html, #root {
   margin: 0;
   padding: 0;
-  font-family: "Inter", sans-serif;
+  font-family: 'Space Grotesk', sans-serif;
+  background: #fff;
+  color: #000;
   overflow-x: hidden;
 }
 
-/* Playfair Display Font Class */
-.font-playfair {
-  font-family: "Playfair Display", serif !important;
+/* ============================================ */
+/* NEUBRUTALISM UTILITY CLASSES                 */
+/* ============================================ */
+
+.nb-border {
+  border: 3px solid #000;
 }
 
-/* Inter Font Class */
-.font-inter {
-  font-family: "Inter", sans-serif !important;
-  letter-spacing: -0.02em;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+.nb-shadow {
+  box-shadow: 5px 5px 0 #000;
 }
 
-/* Floating Animation untuk Tags */
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
+.nb-shadow-red {
+  box-shadow: 5px 5px 0 #FF3300;
 }
 
-.animate-float {
-  animation: float 3s ease-in-out infinite;
+.nb-shadow-sm {
+  box-shadow: 3px 3px 0 #000;
 }
 
-/* Swinging Animation untuk Lanyard */
-@keyframes swing {
-  0%, 100% {
-    transform: translateX(-50%) rotate(-2deg);
-  }
-  50% {
-    transform: translateX(-50%) rotate(2deg);
-  }
+.nb-btn {
+  background: #000;
+  color: #fff;
+  border: 3px solid #000;
+  padding: 12px 24px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  letter-spacing: 0.03em;
+  transition: all 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
 }
 
-.animate-swing {
-  animation: swing 2s ease-in-out infinite;
+.nb-btn:hover {
+  background: #FF3300;
+  border-color: #FF3300;
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 #000;
 }
 
-/* Slow Swing untuk Card */
-@keyframes swing-slow {
-  0%, 100% {
-    transform: rotate(-1deg);
-  }
-  50% {
-    transform: rotate(1deg);
-  }
+.nb-btn:active {
+  transform: translate(4px, 4px);
+  box-shadow: none;
 }
 
-.animate-swing-slow {
-  animation: swing-slow 4s ease-in-out infinite;
+.nb-btn-outline {
+  background: #fff;
+  color: #000;
 }
 
-/* ========================================= */
-/* SCROLL ANIMATION EFFECTS - TAMBAHAN BARU */
-/* ========================================= */
+.nb-btn-outline:hover {
+  background: #FF3300;
+  color: #fff;
+  border-color: #FF3300;
+}
 
-/* Scroll Animation Keyframes */
+.nb-btn-white {
+  background: #fff;
+  color: #000;
+  border: 3px solid #fff;
+}
+
+.nb-btn-white:hover {
+  background: #FF3300;
+  color: #fff;
+  border-color: #FF3300;
+}
+
+.nb-tag {
+  display: inline-block;
+  background: #000;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  letter-spacing: 0.05em;
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+.nb-tag-outline {
+  display: inline-block;
+  background: transparent;
+  color: #000;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  letter-spacing: 0.05em;
+  border: 1.5px solid #000;
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+.section-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #FF3300;
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+/* ============================================ */
+/* FLOATING ANIMATION (Hero icons)              */
+/* ============================================ */
+
+@keyframes floatA {
+  from { transform: translateY(0px); }
+  to   { transform: translateY(-12px); }
+}
+@keyframes floatB {
+  from { transform: translateY(0px) translateX(3px); }
+  to   { transform: translateY(-10px) translateX(3px); }
+}
+@keyframes floatC {
+  from { transform: translateY(0px) translateX(-3px); }
+  to   { transform: translateY(-14px) translateX(-3px); }
+}
+@keyframes floatD {
+  from { transform: translateY(0px); }
+  to   { transform: translateY(-8px); }
+}
+@keyframes floatE {
+  from { transform: translateY(0px) translateX(2px); }
+  to   { transform: translateY(-11px) translateX(2px); }
+}
+@keyframes floatF {
+  from { transform: translateY(0px) translateX(-2px); }
+  to   { transform: translateY(-13px) translateX(-2px); }
+}
+
+/* ============================================ */
+/* MARQUEE TICKER                               */
+/* ============================================ */
+
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 30s linear infinite;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+/* ============================================ */
+/* SCROLL ANIMATIONS                            */
+/* ============================================ */
+
 @keyframes slideInLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-100px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+  from { opacity: 0; transform: translateX(-100px); }
+  to   { opacity: 1; transform: translateX(0); }
 }
 
 @keyframes slideInRight {
-  from {
-    opacity: 0;
-    transform: translateX(100px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+  from { opacity: 0; transform: translateX(100px); }
+  to   { opacity: 1; transform: translateX(0); }
 }
 
 @keyframes slideInUp {
-  from {
-    opacity: 0;
-    transform: translateY(50px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(50px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes slideInDown {
-  from {
-    opacity: 0;
-    transform: translateY(-50px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(-50px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
 }
 
 @keyframes zoomIn {
-  from {
-    opacity: 0;
-    transform: scale(0.8);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+  from { opacity: 0; transform: scale(0.8); }
+  to   { opacity: 1; transform: scale(1); }
 }
 
-/* Animation Classes */
-.animate-slide-left {
-  animation: slideInLeft 0.8s ease-out forwards;
-}
+.animate-slide-left  { animation: slideInLeft  0.8s ease-out forwards; }
+.animate-slide-right { animation: slideInRight 0.8s ease-out forwards; }
+.animate-slide-up    { animation: slideInUp    0.8s ease-out forwards; }
+.animate-slide-down  { animation: slideInDown  0.8s ease-out forwards; }
+.animate-fade-in     { animation: fadeIn       0.8s ease-out forwards; }
+.animate-zoom-in     { animation: zoomIn       0.8s ease-out forwards; }
 
-.animate-slide-right {
-  animation: slideInRight 0.8s ease-out forwards;
-}
+.scroll-hidden { opacity: 0; }
 
-.animate-slide-up {
-  animation: slideInUp 0.8s ease-out forwards;
-}
-
-.animate-slide-down {
-  animation: slideInDown 0.8s ease-out forwards;
-}
-
-.animate-fade-in {
-  animation: fadeIn 0.8s ease-out forwards;
-}
-
-.animate-zoom-in {
-  animation: zoomIn 0.8s ease-out forwards;
-}
-
-/* Initial Hidden State */
-.scroll-hidden {
-  opacity: 0;
-}
-
-/* Stagger Delays */
+/* Stagger delays */
 .delay-100 { animation-delay: 0.1s; }
 .delay-200 { animation-delay: 0.2s; }
 .delay-300 { animation-delay: 0.3s; }
@@ -186,3 +228,41 @@ body, html, #root {
 .delay-600 { animation-delay: 0.6s; }
 .delay-700 { animation-delay: 0.7s; }
 .delay-800 { animation-delay: 0.8s; }
+
+/* ============================================ */
+/* LOADING SCREEN                               */
+/* ============================================ */
+
+@keyframes loadingProgress {
+  from { width: 0%; }
+  to   { width: 100%; }
+}
+
+/* ============================================ */
+/* SKILLS PROGRESS BAR                          */
+/* ============================================ */
+
+.skill-bar-fill {
+  height: 4px;
+  background: #FF3300;
+  transition: width 0.8s ease-out;
+}
+
+/* ============================================ */
+/* LANYARD CANVAS FIX                           */
+/* ============================================ */
+
+canvas {
+  display: block;
+  outline: none;
+}
+
+/* ============================================ */
+/* SCROLLBAR HIDE                               */
+/* ============================================ */
+
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

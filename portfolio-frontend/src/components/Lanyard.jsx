@@ -50,10 +50,10 @@ const Band = memo(function Band({ maxSpeed = 80, minSpeed = 20, isMobile = false
   const [dragged, setDrag] = useState(false);
   const [hovered, setHover] = useState(false);
 
-  // Adjusted fixed point position for mobile centering
+  // Centered fixed point position for all devices
   const fixedPosition = useMemo(() => 
-    isMobile ? [0, 4, 0] : [3, 4, 0],
-    [isMobile]
+    [0, 4, 0],
+    []
   );
 
   useRopeJoint(fixed, j1, [[0, 0, 0], [0, 0, 0], 1.5]);

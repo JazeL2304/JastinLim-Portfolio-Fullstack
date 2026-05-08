@@ -1,8 +1,7 @@
-import { useState, useRef, useMemo, useCallback, memo } from 'react';
-import { useDarkMode } from '../contexts/DarkModeContext';
+import { useState, useMemo, useCallback, memo } from 'react';
+import { IoChevronBackOutline, IoChevronForwardOutline } from 'react-icons/io5';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
-import { 
-  IoLayersOutline,
+import {
   IoLogoGithub,
   IoOpenOutline,
   IoCodeSlashOutline,
@@ -10,14 +9,11 @@ import {
   IoGlobeOutline,
   IoBrushOutline,
   IoGameControllerOutline,
-  IoRocketOutline,
-  IoPeopleOutline,
+  IoMedicalOutline,
+  IoListOutline,
   IoCloseOutline,
   IoAlertCircleOutline,
-  IoChevronBackOutline,
-  IoChevronForwardOutline,
-  IoMedicalOutline,
-  IoListOutline
+  IoLayersOutline,
 } from 'react-icons/io5';
 import { SiFigma } from 'react-icons/si';
 import SumateraUtaraImg from '../assets/photo/project/SumateraUtaraProject.png';
@@ -27,203 +23,344 @@ import TheLazyJannahImg from '../assets/photo/project/TheLazyJannahProject.png';
 import AplikasiRSRJProjectImg from '../assets/photo/project/AplikasiRSRJProject.png';
 import TodolistProjectImg from '../assets/photo/project/TodolistProject.png';
 
-// Memoize ProjectCard component
-const ProjectCard = memo(function ProjectCard({ 
-  project, 
-  index, 
-  isScrolling, 
-  swipeDirection, 
-  hoveredProject, 
-  setHoveredProject, 
-  handleLinkClick,
-  cardBg,
-  textColor,
-  textMuted,
-  neumorph,
-  neumorphInset
-}) {
-  const Icon = project.icon;
-  
-  const handlers = useMemo(() => ({
-    onMouseEnter: () => setHoveredProject(project.id),
-    onMouseLeave: () => setHoveredProject(null),
-  }), [project.id, setHoveredProject]);
-
+// Modal
+const Modal = memo(({ show, onClose, message }) => {
+  if (!show) return null;
   return (
     <div
-      {...handlers}
-      className={`project-card ${cardBg} ${neumorph} rounded-3xl overflow-hidden transition-all duration-500 hover:scale-105 cursor-pointer flex-shrink-0 flex flex-col ${
-        isScrolling ? (swipeDirection === 'right' ? 'swipe-out-left' : 'swipe-out-right') : ''
-      }`}
+      style={{
+        position: 'fixed',
+        inset: 0,
+        zIndex: 9999,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '16px',
+      }}
     >
-      {/* Project Image */}
-      <div className="relative h-72 overflow-hidden bg-gradient-to-br from-gray-800 to-gray-900 flex-shrink-0">
-        {project.image ? (
-          <img 
-            src={project.image} 
-            alt={project.title}
-            loading="lazy" 
-            decoding="async"
-            className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
-            style={{
-              objectPosition: project.id === 4 
-                ? 'center 30%'
-                : project.id === 6 
-                ? 'center top'
-                : 'center center'
-            }}
-          />
-        ) : (
-          <div className={`h-full bg-gradient-to-br ${project.gradient} flex items-center justify-center`}>
-            <Icon className="w-32 h-32 text-white" />
+      <div
+        style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.7)' }}
+        onClick={onClose}
+      />
+      <div
+        style={{
+          position: 'relative',
+          background: '#fff',
+          border: '3px solid #000',
+          boxShadow: '8px 8px 0 #000',
+          padding: '40px 32px',
+          maxWidth: '400px',
+          width: '100%',
+        }}
+      >
+        <button
+          onClick={onClose}
+          style={{
+            position: 'absolute',
+            top: '12px',
+            right: '12px',
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            padding: '4px',
+            display: 'flex',
+          }}
+        >
+          <IoCloseOutline size={24} />
+        </button>
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
+          <IoAlertCircleOutline size={48} color="#FF3300" />
+        </div>
+        <h3
+          style={{
+            fontFamily: "'Space Grotesk', sans-serif",
+            fontWeight: 900,
+            fontSize: '20px',
+            textAlign: 'center',
+            marginBottom: '12px',
+            color: '#000',
+          }}
+        >
+          NOTICE
+        </h3>
+        <p
+          style={{
+            fontSize: '14px',
+            color: '#555',
+            textAlign: 'center',
+            marginBottom: '24px',
+            lineHeight: 1.6,
+            fontFamily: "'Space Grotesk', sans-serif",
+          }}
+        >
+          {message}
+        </p>
+        <button className="nb-btn" style={{ width: '100%', justifyContent: 'center' }} onClick={onClose}>
+          GOT IT
+        </button>
+      </div>
+    </div>
+  );
+});
+
+// ─── Project Detail Modal ────────────────────────────────────────
+const ProjectDetailModal = memo(function ProjectDetailModal({ project, onClose, handleLinkClick }) {
+  if (!project) return null;
+  return (
+    <div
+      style={{
+        position: 'fixed', inset: 0, zIndex: 9999,
+        background: 'rgba(0,0,0,0.75)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        padding: '20px',
+      }}
+      onClick={onClose}
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          background: '#fff',
+          border: '3px solid #000',
+          boxShadow: '8px 8px 0 #000',
+          width: '100%',
+          maxWidth: '600px',
+          maxHeight: '90vh',
+          overflowY: 'auto',
+          position: 'relative',
+        }}
+      >
+        {/* Header */}
+        <div style={{
+          padding: '20px 24px 16px',
+          borderBottom: '2px solid #f0f0f0',
+          display: 'flex', alignItems: 'flex-start', gap: '12px',
+        }}>
+          <IoLayersOutline size={22} color="#FF3300" style={{ flexShrink: 0, marginTop: '3px' }} />
+          <div style={{ flex: 1 }}>
+            <h3 style={{
+              fontFamily: "'Space Grotesk', sans-serif",
+              fontWeight: 900, fontSize: '18px',
+              color: '#000', margin: 0, marginBottom: '4px',
+            }}>
+              {project.title}
+            </h3>
+            <span style={{
+              display: 'inline-block',
+              background: '#000', color: '#fff',
+              fontSize: '10px', fontWeight: 700, padding: '2px 8px',
+              fontFamily: "'Space Grotesk', sans-serif", letterSpacing: '0.05em',
+            }}>
+              {project.status.toUpperCase()}
+            </span>
           </div>
-        )}
-        
-        {/* Overlay on Hover */}
-        <div className={`absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center gap-4 transition-opacity duration-300 ${
-          hoveredProject === project.id ? 'opacity-100' : 'opacity-0'
-        }`}>
-          {project.isFigma ? (
-            <>
-              <button 
-                onClick={() => handleLinkClick(project.figmaLink, 'Figma Design')}
-                className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/30 transition-all duration-300 hover:scale-110"
-                title="View Figma Design"
-              >
-                <SiFigma className="w-6 h-6 text-white" />
-              </button>
-              <button 
-                onClick={() => handleLinkClick(project.demoLink, 'Prototype Demo')}
-                className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/30 transition-all duration-300 hover:scale-110"
-                title="View Prototype"
-              >
-                <IoOpenOutline className="w-6 h-6 text-white" />
-              </button>
-            </>
+          <button
+            onClick={onClose}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '4px', display: 'flex' }}
+          >
+            <IoCloseOutline size={22} color="#000" />
+          </button>
+        </div>
+
+        {/* Image */}
+        <div style={{ borderBottom: '2px solid #f0f0f0', overflow: 'hidden', height: '260px' }}>
+          {project.image ? (
+            <img
+              src={project.image}
+              alt={project.title}
+              style={{
+                width: '100%', height: '100%', objectFit: 'cover', display: 'block',
+                objectPosition: project.id === 4 ? 'center 30%' : project.id === 6 ? 'center top' : 'center center',
+              }}
+            />
           ) : (
-            <>
-              <button 
-                onClick={() => handleLinkClick(project.githubLink, 'GitHub Repository')}
-                className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/30 transition-all duration-300 hover:scale-110"
-                title="View GitHub Repository"
-              >
-                <IoLogoGithub className="w-6 h-6 text-white" />
-              </button>
-              <button 
-                onClick={() => handleLinkClick(project.demoLink, 'Live Demo')}
-                className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/30 transition-all duration-300 hover:scale-110"
-                title="View Live Demo"
-              >
-                <IoOpenOutline className="w-6 h-6 text-white" />
-              </button>
-            </>
+            <div style={{
+              height: '100%', background: '#111',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>
+              <project.icon size={64} color="#FF3300" />
+            </div>
           )}
         </div>
 
-        {/* Status Badge */}
-        <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-full px-4 py-2 text-xs font-bold text-gray-900">
-          {project.status}
-        </div>
-      </div>
-
-      {/* Project Info */}
-      <div className="p-6 flex flex-col flex-grow">
-        <div className="flex items-start justify-between mb-3" style={{ minHeight: '64px' }}>
-          <h3 
-            className={`text-xl font-bold ${textColor} flex-1 pr-2`}
-            style={{ 
-              display: '-webkit-box',
-              WebkitLineClamp: 2,
-              WebkitBoxOrient: 'vertical',
-              overflow: 'hidden',
-              lineHeight: '1.4'
-            }}
-          >
-            {project.title}
-          </h3>
-        </div>
-
-        <p 
-          className={`${textMuted} text-sm mb-4`}
-          style={{ 
-            minHeight: '63px',
-            maxHeight: '63px',
-            display: '-webkit-box',
-            WebkitLineClamp: 3,
-            WebkitBoxOrient: 'vertical',
-            overflow: 'hidden',
-            lineHeight: '1.5'
-          }}
-        >
-          {project.description}
-        </p>
-
-        <div className="flex flex-wrap gap-2 mb-4" style={{ minHeight: '76px' }}>
+        {/* Tech stack */}
+        <div style={{ padding: '16px 24px', borderBottom: '2px solid #f0f0f0', display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
           {project.techStack.map((tech, i) => (
-            <span
-              key={i}
-              className={`${cardBg} ${neumorphInset} rounded-full px-3 py-1 text-xs font-semibold ${textColor} h-fit`}
-            >
-              {tech}
-            </span>
+            <span key={i} className="nb-tag-outline" style={{ fontSize: '11px' }}>{tech}</span>
           ))}
         </div>
 
-        <div className="flex gap-3 mt-auto">
-          {project.isFigma ? (
-            <>
-              <button 
-                onClick={() => handleLinkClick(project.figmaLink, 'Figma Design')}
-                className={`flex-1 ${cardBg} ${neumorph} rounded-xl py-3 ${textColor} font-semibold text-sm hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2`}
-              >
-                <SiFigma className="w-4 h-4" />
-                View Design
-              </button>
-              <button 
-                onClick={() => handleLinkClick(project.demoLink, 'Prototype Demo')}
-                className={`flex-1 ${cardBg} ${neumorph} rounded-xl py-3 ${textColor} font-semibold text-sm hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2`}
-              >
-                <IoFlashOutline className="w-4 h-4" />
-                Prototype
-              </button>
-            </>
-          ) : (
-            <>
-              <button 
-                onClick={() => handleLinkClick(project.githubLink, 'GitHub Repository')}
-                className={`flex-1 ${cardBg} ${neumorph} rounded-xl py-3 ${textColor} font-semibold text-sm hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2`}
-              >
-                <IoCodeSlashOutline className="w-4 h-4" />
-                View Code
-              </button>
-              <button 
-                onClick={() => handleLinkClick(project.demoLink, 'Live Demo')}
-                className={`flex-1 ${cardBg} ${neumorph} rounded-xl py-3 ${textColor} font-semibold text-sm hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2`}
-              >
-                <IoFlashOutline className="w-4 h-4" />
-                Live Demo
-              </button>
-            </>
-          )}
+        {/* About this project */}
+        <div style={{ padding: '16px 24px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
+            <IoLayersOutline size={16} color="#000" />
+            <span style={{
+              fontFamily: "'Space Grotesk', sans-serif",
+              fontWeight: 700, fontSize: '14px', color: '#000',
+            }}>About this project</span>
+          </div>
+          <p style={{
+            fontFamily: "'Space Grotesk', sans-serif",
+            fontSize: '13px', color: '#555', lineHeight: 1.7, margin: '0 0 20px',
+          }}>
+            {project.description}
+          </p>
+
+          {/* Action buttons */}
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+            {project.isFigma ? (
+              <>
+                <button
+                  onClick={() => handleLinkClick(project.figmaLink, 'Figma Design')}
+                  className="nb-btn"
+                  style={{ fontSize: '12px', padding: '10px 20px' }}
+                >
+                  <SiFigma size={12} /> VIEW DESIGN
+                </button>
+                <button
+                  onClick={() => handleLinkClick(project.demoLink, 'Prototype Demo')}
+                  className="nb-btn nb-btn-outline nb-border"
+                  style={{ fontSize: '12px', padding: '10px 20px' }}
+                >
+                  <IoFlashOutline size={12} /> PROTOTYPE
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  onClick={() => handleLinkClick(project.demoLink, 'Live Demo')}
+                  className="nb-btn"
+                  style={{ fontSize: '12px', padding: '10px 20px' }}
+                >
+                  <IoOpenOutline size={12} /> LIVE DEMO
+                </button>
+                <button
+                  onClick={() => handleLinkClick(project.githubLink, 'GitHub Repository')}
+                  className="nb-btn nb-btn-outline nb-border"
+                  style={{ fontSize: '12px', padding: '10px 20px' }}
+                >
+                  <IoCodeSlashOutline size={12} /> VIEW CODE
+                </button>
+              </>
+            )}
+          </div>
         </div>
       </div>
     </div>
   );
 });
 
+// ─── Project Card ─────────────────────────────────────────────────
+const ProjectCard = memo(function ProjectCard({ project, onCardClick }) {
+  const [hovered, setHovered] = useState(false);
+
+  return (
+    <div
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      onClick={() => onCardClick(project)}
+      style={{
+        border: `3px solid ${hovered ? '#FF3300' : '#000'}`,
+        boxShadow: hovered ? '2px 2px 0 #000' : '5px 5px 0 #000',
+        transform: hovered ? 'translate(3px, 3px)' : 'none',
+        transition: 'all 0.18s ease',
+        background: '#fff',
+        display: 'flex',
+        flexDirection: 'column',
+        overflow: 'hidden',
+        cursor: 'pointer',
+      }}
+    >
+      {/* Image */}
+      <div style={{ position: 'relative', height: '220px', overflow: 'hidden', borderBottom: '3px solid #000' }}>
+        {project.image ? (
+          <img
+            src={project.image}
+            alt={project.title}
+            loading="lazy"
+            style={{
+              width: '100%', height: '100%', objectFit: 'cover', display: 'block',
+              objectPosition:
+                project.id === 4 ? 'center 30%'
+                : project.id === 6 ? 'center top'
+                : 'center center',
+              transition: 'transform 0.4s ease',
+              transform: hovered ? 'scale(1.05)' : 'scale(1)',
+            }}
+          />
+        ) : (
+          <div style={{ height: '100%', background: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <project.icon size={64} color="#FF3300" />
+          </div>
+        )}
+
+        {/* Status badge */}
+        <div style={{
+          position: 'absolute', top: '12px', right: '12px',
+          background: '#000', color: '#fff', fontSize: '10px',
+          fontWeight: 700, padding: '4px 10px',
+          fontFamily: "'Space Grotesk', sans-serif", letterSpacing: '0.05em',
+        }}>
+          {project.status.toUpperCase()}
+        </div>
+
+        {/* Hover overlay — slides up from bottom */}
+        <div style={{
+          position: 'absolute', bottom: 0, left: 0, right: 0,
+          background: 'rgba(0,0,0,0.82)', padding: '12px 14px',
+          transform: hovered ? 'translateY(0)' : 'translateY(100%)',
+          transition: 'transform 0.3s ease',
+          display: 'flex', alignItems: 'center', gap: '8px',
+        }}>
+          <IoLayersOutline size={13} color="#FF3300" />
+          <span style={{
+            fontFamily: "'Space Grotesk', sans-serif",
+            fontSize: '11px', color: '#fff', fontWeight: 700, letterSpacing: '0.05em',
+          }}>
+            CLICK TO VIEW DETAILS
+          </span>
+        </div>
+      </div>
+
+      {/* Tech tags */}
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', padding: '12px 16px', borderBottom: '1px solid #eee' }}>
+        {project.techStack.map((tech, i) => (
+          <span key={i} className="nb-tag-outline" style={{ fontSize: '10px' }}>{tech}</span>
+        ))}
+      </div>
+
+      {/* Content */}
+      <div style={{ padding: '16px', flex: 1 }}>
+        <h3 style={{
+          fontFamily: "'Space Grotesk', sans-serif",
+          fontWeight: 700, fontSize: '15px', color: '#000',
+          marginBottom: '6px', marginTop: 0,
+        }}>
+          {project.title}
+        </h3>
+        <p style={{
+          fontSize: '13px', color: '#666', lineHeight: 1.5, margin: 0,
+          display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
+          fontFamily: "'Space Grotesk', sans-serif",
+        }}>
+          {project.description}
+        </p>
+      </div>
+    </div>
+  );
+});
+
 function Projects() {
-  const { cardBg, textColor, textMuted, neumorph, neumorphInset } = useDarkMode();
-  
   const [selectedFilter, setSelectedFilter] = useState('All');
-  const [hoveredProject, setHoveredProject] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
-  const carouselRef = useRef(null);
+  const [startIdx, setStartIdx] = useState(0);
+  const [selectedProject, setSelectedProject] = useState(null);
+
+  const PROJ_VISIBLE = 3;
 
   const [headerRef, headerVisible] = useScrollAnimation(0.1);
   const [filtersRef, filtersVisible] = useScrollAnimation(0.1);
   const [projectsRef, projectsVisible] = useScrollAnimation(0.1);
-  const [statsRef, statsVisible] = useScrollAnimation(0.2);
 
   const projects = useMemo(() => [
     {
@@ -234,98 +371,97 @@ function Projects() {
       techStack: ['React JS', 'CSS', 'JavaScript'],
       icon: IoGlobeOutline,
       image: SumateraUtaraImg,
-      gradient: 'from-blue-500 to-cyan-500',
-      stars: 0,
       status: 'Production',
       githubLink: '',
       demoLink: '',
-      isFigma: false
+      isFigma: false,
     },
     {
       id: 2,
-      title: 'PT. Sumber Cahaya Timur - Company Profile',
+      title: 'PT. Sumber Cahaya Timur — Company Profile',
       description: 'Website company profile modern dengan desain responsive dan animasi smooth menggunakan React Vite dan Tailwind CSS.',
       category: 'Web App',
       techStack: ['React Vite', 'Tailwind CSS', 'JavaScript'],
       icon: IoGlobeOutline,
       image: PTSumberCahayaImg,
-      gradient: 'from-purple-500 to-pink-500',
-      stars: 0,
       status: 'Production',
       githubLink: 'https://github.com/JazeL2304/sct-company-profile',
       demoLink: 'https://sctv1.vercel.app/',
-      isFigma: false
+      isFigma: false,
     },
     {
       id: 3,
       title: 'Todolist Website',
-      description: 'Website todo list modern dengan fitur CRUD lengkap, filter tasks, dan storage untuk menyimpan data. Dibangun dengan Php dan styled menggunakan CSS basic.',
+      description: 'Website todo list modern dengan fitur CRUD lengkap, filter tasks, dan storage untuk menyimpan data. Dibangun dengan PHP dan MySQL.',
       category: 'Web App',
-      techStack: ['Php', 'MySQL'],
+      techStack: ['PHP', 'MySQL'],
       icon: IoListOutline,
       image: TodolistProjectImg,
-      gradient: 'from-indigo-500 to-purple-500',
-      stars: 0,
       status: 'Production',
       githubLink: 'https://github.com/JazeL2304/TODOLIST_PROJECT',
       demoLink: '',
-      isFigma: false
+      isFigma: false,
     },
     {
       id: 4,
-      title: 'HarbourMind - Prototype Aplikasi',
+      title: 'HarbourMind — Prototype Aplikasi',
       description: 'Prototype aplikasi mobile untuk manajemen kesehatan mental dengan UI/UX yang user-friendly dan modern, dibuat menggunakan Figma.',
       category: 'Design',
       techStack: ['Figma', 'UI/UX Design', 'Prototyping'],
       icon: IoBrushOutline,
       image: HarbourMindImg,
-      gradient: 'from-green-500 to-emerald-500',
-      stars: 0,
       status: 'Prototype',
       figmaLink: 'https://www.figma.com/design/UgzaPg9hD6fEnlUj8VcX4G/Mockup-aplikasi-kesehatan-mental--HarbourMind-?node-id=0-1&t=x3kAft9AbiLnmJaO-1',
       demoLink: 'https://www.figma.com/proto/UgzaPg9hD6fEnlUj8VcX4G/Mockup-aplikasi-kesehatan-mental--HarbourMind-?node-id=27-6866&t=LdzlayKvKEIlHaUz-1&starting-point-node-id=27%3A6853',
-      isFigma: true
+      isFigma: true,
     },
     {
       id: 5,
-      title: 'The Lazy Jannah - Game',
+      title: 'The Lazy Jannah — Game',
       description: 'Game interaktif yang dikembangkan menggunakan Unity dan C# dengan gameplay menarik dan grafis yang memukau.',
       category: 'Game',
       techStack: ['Unity', 'C#', 'Game Development'],
       icon: IoGameControllerOutline,
       image: TheLazyJannahImg,
-      gradient: 'from-orange-500 to-red-500',
-      stars: 0,
       status: 'Production',
       githubLink: 'https://github.com/JazeL2304/TheLazyJannah',
       demoLink: '',
-      isFigma: false
+      isFigma: false,
     },
     {
       id: 6,
       title: 'Aplikasi Rumah Sakit Rawat Jalan',
-      description: 'Aplikasi mobile untuk manajemen rawat jalan rumah sakit dengan fitur pendaftaran pasien, jadwal dokter, dan riwayat medis menggunakan Kotlin dan Android Studio.',
+      description: 'Aplikasi mobile untuk manajemen rawat jalan rumah sakit dengan fitur pendaftaran pasien, jadwal dokter, dan riwayat medis.',
       category: 'Mobile App',
       techStack: ['Kotlin', 'Android Studio', 'Firebase'],
       icon: IoMedicalOutline,
       image: AplikasiRSRJProjectImg,
-      gradient: 'from-teal-500 to-cyan-500',
-      stars: 0,
       status: 'Development',
       githubLink: 'https://github.com/JazeL2304/PROJECT_ANTRIAN_RSRJ_KELOMPOK_2',
       demoLink: '',
-      isFigma: false
-    }
+      isFigma: false,
+    },
   ], []);
 
-  const filters = useMemo(() => ['All', 'Web App', 'Mobile App', 'Design', 'Game'], []);
-  
-  const filteredProjects = useMemo(() => 
-    selectedFilter === 'All' 
-      ? projects 
-      : projects.filter(p => p.category === selectedFilter),
+  const filters = ['All', 'Web App', 'Mobile App', 'Design', 'Game'];
+
+  const filteredProjects = useMemo(() =>
+    selectedFilter === 'All' ? projects : projects.filter((p) => p.category === selectedFilter),
     [selectedFilter, projects]
   );
+
+  // Reset carousel when filter changes
+  const handleFilterChange = (filter) => {
+    setSelectedFilter(filter);
+    setStartIdx(0);
+  };
+
+  const maxStart = Math.max(0, filteredProjects.length - PROJ_VISIBLE);
+  const canPrev = startIdx > 0;
+  const canNext = startIdx < maxStart;
+  const visibleProjects = filteredProjects.slice(startIdx, startIdx + PROJ_VISIBLE);
+  const goPrev = () => setStartIdx((i) => Math.max(0, i - 1));
+  const goNext = () => setStartIdx((i) => Math.min(maxStart, i + 1));
 
   const handleLinkClick = useCallback((link, type) => {
     if (!link || link.trim() === '') {
@@ -336,295 +472,171 @@ function Projects() {
     }
   }, []);
 
-  const [isScrolling, setIsScrolling] = useState(false);
-  const [swipeDirection, setSwipeDirection] = useState(null);
-
-  const scrollCarousel = useCallback((direction) => {
-    if (carouselRef.current && !isScrolling) {
-      setIsScrolling(true);
-      setSwipeDirection(direction);
-      
-      const container = carouselRef.current;
-      const containerWidth = container.offsetWidth;
-      const scrollAmount = containerWidth + 32;
-      
-      const targetScroll = direction === 'left' 
-        ? container.scrollLeft - scrollAmount
-        : container.scrollLeft + scrollAmount;
-      
-      container.scrollTo({
-        left: targetScroll,
-        behavior: 'smooth'
-      });
-
-      setTimeout(() => {
-        setIsScrolling(false);
-        setSwipeDirection(null);
-      }, 600);
-    }
-  }, [isScrolling]);
-
-  const Modal = memo(({ show, onClose, message }) => {
-    if (!show) return null;
-
-    return (
-      <div className="fixed inset-0 z-[9999] flex items-center justify-center">
-        <div 
-          className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-          onClick={onClose}
-        />
-        
-        <div className={`relative ${cardBg} ${neumorph} rounded-3xl p-8 max-w-md w-full mx-4 transform transition-all duration-300 scale-100`}>
-          <button
-            onClick={onClose}
-            className={`absolute top-4 right-4 w-10 h-10 ${cardBg} ${neumorph} rounded-full flex items-center justify-center hover:scale-110 transition-all duration-300`}
-          >
-            <IoCloseOutline className={`w-6 h-6 ${textColor}`} />
-          </button>
-
-          <div className="flex justify-center mb-6">
-            <div className={`w-20 h-20 ${cardBg} ${neumorphInset} rounded-full flex items-center justify-center`}>
-              <IoAlertCircleOutline className="w-10 h-10 text-orange-500" />
-            </div>
-          </div>
-
-          <h3 className={`text-2xl font-bold ${textColor} text-center mb-4`}>
-            Pemberitahuan
-          </h3>
-          <p className={`${textMuted} text-center mb-6`}>
-            {message}
-          </p>
-
-          <button
-            onClick={onClose}
-            className={`w-full ${cardBg} ${neumorph} rounded-xl py-4 ${textColor} font-bold text-lg hover:scale-105 transition-all duration-300`}
-          >
-            Mengerti
-          </button>
-        </div>
-      </div>
-    );
-  });
-
   return (
-    <div className="py-32 relative overflow-hidden transition-all duration-500">
-      <Modal 
-        show={showModal} 
-        onClose={() => setShowModal(false)} 
-        message={modalMessage}
+    <div
+      style={{
+        background: '#fff',
+        padding: '100px 40px',
+        overflow: 'hidden',
+      }}
+    >
+      <Modal show={showModal} onClose={() => setShowModal(false)} message={modalMessage} />
+      <ProjectDetailModal
+        project={selectedProject}
+        onClose={() => setSelectedProject(null)}
+        handleLinkClick={handleLinkClick}
       />
 
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-20 w-96 h-96 bg-orange-500/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-20 right-20 w-96 h-96 bg-red-500/10 rounded-full blur-3xl" />
-      </div>
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div 
+      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+        {/* Header */}
+        <div
           ref={headerRef}
-          className={`text-center mb-16 scroll-hidden ${headerVisible ? 'animate-slide-down' : ''}`}
+          className={`scroll-hidden ${headerVisible ? 'animate-slide-down' : ''}`}
+          style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '16px', marginBottom: '32px' }}
         >
-          <div className={`inline-flex items-center gap-2 ${cardBg} ${neumorph} rounded-full px-6 py-3 mb-6`}>
-            <IoLayersOutline className="w-5 h-5 text-orange-500" />
-            <span className={`text-sm font-medium ${textColor}`}>My Work</span>
+          <div>
+            <div className="section-label" style={{ marginBottom: '12px' }}>/ PROJECT</div>
+            <h2
+              style={{
+                fontFamily: "'Space Grotesk', sans-serif",
+                fontWeight: 900,
+                fontSize: 'clamp(32px, 5vw, 48px)',
+                color: '#000',
+                margin: 0,
+                letterSpacing: '-0.02em',
+              }}
+            >
+              SELECTED WORKS.
+            </h2>
           </div>
-          
-          <h2 className={`text-5xl md:text-6xl font-extrabold ${textColor} mb-6`}>
-            Featured{' '}
-            <span className="bg-gradient-to-r from-orange-500 to-red-600 bg-clip-text text-transparent">
-              Projects
+
+          {/* Carousel nav buttons */}
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+            <span style={{ fontSize: '12px', color: '#888', fontFamily: "'Space Grotesk', sans-serif", fontWeight: 500, marginRight: '8px' }}>
+              {Math.min(startIdx + 1, filteredProjects.length)} – {Math.min(startIdx + PROJ_VISIBLE, filteredProjects.length)} / {filteredProjects.length}
             </span>
-          </h2>
-          <p className={`text-xl ${textMuted} max-w-2xl mx-auto`}>
-            Explore my latest work and creative solutions
-          </p>
+            <button
+              onClick={goPrev}
+              disabled={!canPrev}
+              style={{
+                width: '44px', height: '44px',
+                background: canPrev ? '#000' : '#ddd',
+                border: `3px solid ${canPrev ? '#000' : '#ccc'}`,
+                boxShadow: canPrev ? '3px 3px 0 #000' : 'none',
+                cursor: canPrev ? 'pointer' : 'not-allowed',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                transition: 'all 0.15s',
+              }}
+              onMouseEnter={(e) => { if (canPrev) { e.currentTarget.style.background = '#FF3300'; e.currentTarget.style.borderColor = '#FF3300'; } }}
+              onMouseLeave={(e) => { if (canPrev) { e.currentTarget.style.background = '#000'; e.currentTarget.style.borderColor = '#000'; } }}
+            >
+              <IoChevronBackOutline size={18} color={canPrev ? '#fff' : '#aaa'} />
+            </button>
+            <button
+              onClick={goNext}
+              disabled={!canNext}
+              style={{
+                width: '44px', height: '44px',
+                background: canNext ? '#000' : '#ddd',
+                border: `3px solid ${canNext ? '#000' : '#ccc'}`,
+                boxShadow: canNext ? '3px 3px 0 #000' : 'none',
+                cursor: canNext ? 'pointer' : 'not-allowed',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                transition: 'all 0.15s',
+              }}
+              onMouseEnter={(e) => { if (canNext) { e.currentTarget.style.background = '#FF3300'; e.currentTarget.style.borderColor = '#FF3300'; } }}
+              onMouseLeave={(e) => { if (canNext) { e.currentTarget.style.background = '#000'; e.currentTarget.style.borderColor = '#000'; } }}
+            >
+              <IoChevronForwardOutline size={18} color={canNext ? '#fff' : '#aaa'} />
+            </button>
+          </div>
         </div>
 
-        <div 
+        {/* Filter buttons */}
+        <div
           ref={filtersRef}
-          className={`flex flex-wrap justify-center gap-4 mb-16 scroll-hidden ${filtersVisible ? 'animate-fade-in delay-200' : ''}`}
+          className={`scroll-hidden ${filtersVisible ? 'animate-fade-in delay-200' : ''}`}
+          style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '40px' }}
         >
           {filters.map((filter) => (
             <button
               key={filter}
-              onClick={() => setSelectedFilter(filter)}
-              className={`${cardBg} ${selectedFilter === filter ? neumorphInset : neumorph} px-6 sm:px-8 py-3 sm:py-4 rounded-full ${textColor} font-semibold text-sm sm:text-base transition-all duration-300 hover:scale-105 ${
-                selectedFilter === filter ? 'text-orange-500' : ''
-              }`}
+              onClick={() => handleFilterChange(filter)}
+              style={{
+                background: selectedFilter === filter ? '#000' : '#fff',
+                color: selectedFilter === filter ? '#fff' : '#000',
+                border: '2px solid #000',
+                padding: '8px 20px',
+                fontFamily: "'Space Grotesk', sans-serif",
+                fontWeight: 700,
+                fontSize: '12px',
+                letterSpacing: '0.05em',
+                cursor: 'pointer',
+                transition: 'all 0.15s',
+              }}
+              onMouseEnter={(e) => {
+                if (selectedFilter !== filter) {
+                  e.currentTarget.style.background = '#FF3300';
+                  e.currentTarget.style.color = '#fff';
+                  e.currentTarget.style.borderColor = '#FF3300';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (selectedFilter !== filter) {
+                  e.currentTarget.style.background = '#fff';
+                  e.currentTarget.style.color = '#000';
+                  e.currentTarget.style.borderColor = '#000';
+                }
+              }}
             >
-              {filter}
+              {filter.toUpperCase()}
             </button>
           ))}
         </div>
 
-        <div 
+        {/* Projects Carousel Grid */}
+        <div
           ref={projectsRef}
-          className={`relative scroll-hidden ${projectsVisible ? 'animate-slide-up' : ''}`}
+          className={`scroll-hidden ${projectsVisible ? 'animate-slide-up' : ''}`}
         >
-          {/* Navigation Buttons - Now Visible on All Screens */}
-          <button
-            onClick={() => scrollCarousel('left')}
-            disabled={isScrolling}
-            className={`absolute left-2 sm:left-4 lg:-ml-7 lg:left-0 top-1/2 -translate-y-1/2 z-20 ${cardBg} ${neumorph} w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center transition-all duration-300 shadow-xl ${
-              isScrolling ? 'opacity-50 cursor-not-allowed' : 'hover:scale-110 active:scale-95'
-            }`}
-            aria-label="Scroll Left"
-          >
-            <IoChevronBackOutline className={`w-6 h-6 sm:w-7 sm:h-7 ${textColor}`} />
-          </button>
-
-          <button
-            onClick={() => scrollCarousel('right')}
-            disabled={isScrolling}
-            className={`absolute right-2 sm:right-4 lg:-mr-7 lg:right-0 top-1/2 -translate-y-1/2 z-20 ${cardBg} ${neumorph} w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center transition-all duration-300 shadow-xl ${
-              isScrolling ? 'opacity-50 cursor-not-allowed' : 'hover:scale-110 active:scale-95'
-            }`}
-            aria-label="Scroll Right"
-          >
-            <IoChevronForwardOutline className={`w-6 h-6 sm:w-7 sm:h-7 ${textColor}`} />
-          </button>
-
           <div
-            ref={carouselRef}
-            className={`projects-carousel flex overflow-x-auto scroll-smooth scrollbar-hide pb-8 ${
-              swipeDirection === 'left' ? 'swipe-left' : swipeDirection === 'right' ? 'swipe-right' : ''
-            }`}
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(3, 1fr)',
+              gap: '24px',
+            }}
           >
-            {filteredProjects.map((project, index) => (
+            {visibleProjects.map((project) => (
               <ProjectCard
                 key={project.id}
                 project={project}
-                index={index}
-                isScrolling={isScrolling}
-                swipeDirection={swipeDirection}
-                hoveredProject={hoveredProject}
-                setHoveredProject={setHoveredProject}
-                handleLinkClick={handleLinkClick}
-                cardBg={cardBg}
-                textColor={textColor}
-                textMuted={textMuted}
-                neumorph={neumorph}
-                neumorphInset={neumorphInset}
+                onCardClick={setSelectedProject}
               />
             ))}
           </div>
-        </div>
 
-        <div 
-          ref={statsRef}
-          className={`grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 mt-16 sm:mt-24 scroll-hidden ${statsVisible ? 'animate-zoom-in' : ''}`}
-        >
-          {[
-            { icon: IoRocketOutline, value: '6+', label: 'Projects Built' },
-            { icon: IoCodeSlashOutline, value: '8+', label: 'Technologies' },
-            { icon: IoPeopleOutline, value: '2+', label: 'Team Projects' },
-            { icon: IoFlashOutline, value: '100+', label: 'Hours Coding' }
-          ].map((stat, i) => {
-            const Icon = stat.icon;
-            return (
-              <div
-                key={i}
-                className={`${cardBg} ${neumorph} rounded-2xl p-4 sm:p-6 text-center transform hover:scale-105 transition-all duration-300`}
-              >
-                <Icon className={`w-8 h-8 sm:w-10 sm:h-10 ${textColor} mx-auto mb-2 sm:mb-3`} />
-                <div className={`text-2xl sm:text-3xl font-bold ${textColor} mb-1 sm:mb-2`}>{stat.value}</div>
-                <div className={`text-xs sm:text-sm ${textMuted}`}>{stat.label}</div>
-              </div>
-            );
-          })}
+          {/* Dot indicators */}
+          {maxStart > 0 && (
+            <div style={{ display: 'flex', gap: '6px', marginTop: '24px', justifyContent: 'center' }}>
+              {Array.from({ length: maxStart + 1 }).map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setStartIdx(i)}
+                  style={{
+                    width: i === startIdx ? '24px' : '8px',
+                    height: '8px',
+                    background: i === startIdx ? '#FF3300' : '#ccc',
+                    border: 'none',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s',
+                    padding: 0,
+                  }}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </div>
-
-      <style jsx>{`
-        .scrollbar-hide::-webkit-scrollbar {
-          display: none;
-        }
-        .scrollbar-hide {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-        .scroll-smooth {
-          scroll-behavior: smooth;
-          -webkit-overflow-scrolling: touch;
-        }
-        
-        .projects-carousel {
-          gap: 24px;
-          scroll-snap-type: x mandatory;
-          scroll-padding: 16px;
-          padding: 0 16px;
-        }
-        
-        .project-card {
-          transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
-                      opacity 0.3s ease,
-                      box-shadow 0.3s ease;
-          will-change: transform, opacity;
-          scroll-snap-align: center;
-          width: calc(50% - 12px);
-          min-width: calc(50% - 12px);
-          height: auto;
-          min-height: 652px;
-        }
-        
-        .project-card:hover {
-          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-        }
-        
-        .project-card img {
-          display: block;
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
-        
-        /* Tablet Responsive */
-        @media (max-width: 1024px) {
-          .projects-carousel {
-            gap: 20px;
-            padding: 0 12px;
-          }
-          
-          .project-card {
-            width: calc(60% - 10px);
-            min-width: calc(60% - 10px);
-          }
-        }
-        
-        /* Mobile Large Responsive */
-        @media (max-width: 768px) {
-          .projects-carousel {
-            gap: 16px;
-            padding: 0 8px;
-          }
-          
-          .project-card {
-            width: calc(85% - 8px);
-            min-width: calc(85% - 8px);
-          }
-        }
-        
-        /* Mobile Small Responsive */
-        @media (max-width: 640px) {
-          .projects-carousel {
-            gap: 12px;
-            padding: 0 4px;
-          }
-          
-          .project-card {
-            width: calc(90% - 6px);
-            min-width: calc(90% - 6px);
-          }
-        }
-        
-        /* Mobile Extra Small */
-        @media (max-width: 480px) {
-          .project-card {
-            width: calc(95% - 6px);
-            min-width: calc(95% - 6px);
-          }
-        }
-      `}</style>
     </div>
   );
 }

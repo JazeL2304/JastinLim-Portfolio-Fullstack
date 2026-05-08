@@ -1,379 +1,400 @@
 import { useState } from 'react';
-import { useDarkMode } from '../contexts/DarkModeContext';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
-import { 
-  IoRibbonOutline,
+import {
   IoCloseOutline,
-  IoCalendarOutline,
-  IoBusinessOutline,
   IoChevronBackOutline,
   IoChevronForwardOutline,
-  IoDownloadOutline,
-  IoShareSocialOutline
+  IoRibbonOutline,
 } from 'react-icons/io5';
 
-// Import gambar sertifikat
 import AIHuaweiImg from '../assets/photo/certificate/AIHuawei.jpg';
 import DatabaseHuaweiImg from '../assets/photo/certificate/DatabaseHuawei.jpg';
 import IntroductiontoPythonImg from '../assets/photo/certificate/IntroductiontoPython.jpg';
 import PythonintermediateImg from '../assets/photo/certificate/PythonIntermediate.jpg';
 
-function Certificate() {
-  const { cardBg, textColor, textMuted, neumorph, neumorphInset } = useDarkMode();
-  
-  const [selectedCert, setSelectedCert] = useState(null);
-  const [currentIndex, setCurrentIndex] = useState(0);
+const certificates = [
+  {
+    id: 1,
+    title: 'HCIA-AI V3.5 Course',
+    issuer: 'Huawei',
+    date: 'Mei 2025',
+    image: AIHuaweiImg,
+    description:
+      'Completed Huawei ICT Academy\'s HCIA-AI V3.5 certification course covering fundamentals of artificial intelligence, machine learning, deep learning, and the application of AI technology in real-world scenarios. Gained hands-on experience with Huawei\'s MindSpore AI framework and ModelArts platform.',
+  },
+  {
+    id: 2,
+    title: 'HCIA-openGauss V1.0 Course',
+    issuer: 'Huawei',
+    date: 'Desember 2024',
+    image: DatabaseHuaweiImg,
+    description:
+      'Completed the HCIA-openGauss V1.0 certification covering relational database management, SQL programming, database architecture design, and performance tuning using Huawei\'s openGauss open-source database system. Acquired skills in enterprise-grade database administration and optimization.',
+  },
+  {
+    id: 3,
+    title: 'Introduction to Python',
+    issuer: 'Sololearn',
+    date: 'February 2025',
+    image: IntroductiontoPythonImg,
+    description:
+      'Completed Sololearn\'s Introduction to Python course covering core programming fundamentals including variables, data types, conditionals, loops, functions, and object-oriented programming concepts. Built a solid Python programming foundation through interactive exercises and challenges.',
+  },
+  {
+    id: 4,
+    title: 'Python Intermediate',
+    issuer: 'Sololearn',
+    date: 'Mei 2025',
+    image: PythonintermediateImg,
+    description:
+      'Completed the Python Intermediate certification covering advanced topics such as functional programming, generators, decorators, regular expressions, file handling, and threading. Strengthened ability to write efficient, Pythonic code for real-world applications.',
+  },
+];
 
-  // Animation hooks
-  const [headerRef, headerVisible] = useScrollAnimation(0.1);
-  const [certsRef, certsVisible] = useScrollAnimation(0.1);
-  const [statsRef, statsVisible] = useScrollAnimation(0.2);
+const VISIBLE = 3;
 
-  // Data sertifikat
-  const certificates = [
-    {
-      id: 1,
-      title: 'HCIA-AI V3.5 Course',
-      issuer: 'Huawei',
-      date: 'Mei 2025',
-      category: 'Artificial Intelligence',
-      description: 'Comprehensive certification covering AI fundamentals, machine learning algorithms, and deep learning frameworks.',
-      image: AIHuaweiImg,
-      skills: ['AI Fundamentals', 'Machine Learning', 'Deep Learning', 'Neural Networks']
-    },
-    {
-      id: 2,
-      title: 'HCIA-openGauss V1.0 Course',
-      issuer: 'Huawei',
-      date: 'Desember 2024',
-      category: 'Database',
-      description: 'Certification obtained through database learning focused on openGauss fundamentals, data management, and SQL operations.',
-      image: DatabaseHuaweiImg,
-      skills: ['Networking', 'TCP/IP', 'Routing', 'Switching']
-    },
-    {
-      id: 3,
-      title: 'Introduction to Python',
-      issuer: 'Sololearn',
-      date: 'February 2025',
-      category: 'Programming',
-      description: 'Basic Python learning course covering fundamental syntax, variables, loops, and functions.',
-      image: IntroductiontoPythonImg,
-      skills: ['Python', 'Data Structures', 'Algorithms', 'Data Analysis']
-    },
-    {
-      id: 4,
-      title: 'Python Intermediate',
-      issuer: 'Sololearn',
-      date: 'Mei 2025',
-      category: 'Programming',
-      description: 'Advanced Python programming concepts including OOP, decorators, generators, and advanced data structures.',
-      image: PythonintermediateImg,
-      skills: ['Python OOP', 'Decorators', 'Generators', 'Advanced Python']
-    }
-  ];
-
-  const openModal = (cert, index) => {
-    setSelectedCert(cert);
-    setCurrentIndex(index);
-  };
-
-  const closeModal = () => {
-    setSelectedCert(null);
-  };
-
-  const navigateCert = (direction) => {
-    let newIndex;
-    if (direction === 'next') {
-      newIndex = (currentIndex + 1) % certificates.length;
-    } else {
-      newIndex = currentIndex === 0 ? certificates.length - 1 : currentIndex - 1;
-    }
-    setCurrentIndex(newIndex);
-    setSelectedCert(certificates[newIndex]);
-  };
-
-  const handleDownload = (image, title) => {
-    // Create a temporary link to download
-    const link = document.createElement('a');
-    link.href = image;
-    link.download = `${title.replace(/\s+/g, '_')}_Certificate.jpg`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
-  const handleShare = async (cert) => {
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: cert.title,
-          text: `Check out my ${cert.title} certificate from ${cert.issuer}!`,
-          url: window.location.href
-        });
-      } catch (error) {
-        console.log('Error sharing:', error);
-      }
-    } else {
-      // Fallback: copy link to clipboard
-      navigator.clipboard.writeText(window.location.href);
-      alert('Link copied to clipboard!');
-    }
-  };
-
-  // Stats calculation
-  const totalCerts = certificates.length;
-  const uniqueIssuers = [...new Set(certificates.map(c => c.issuer))].length;
-  const categories = [...new Set(certificates.map(c => c.category))].length;
-
-  // Modal Component
-  const CertificateModal = () => {
-    if (!selectedCert) return null;
-
-    return (
-      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
-        <div 
-          className="absolute inset-0 bg-black/80 backdrop-blur-md"
-          onClick={closeModal}
-        />
-        
-        <div className={`relative ${cardBg} ${neumorph} rounded-3xl max-w-5xl w-full mx-4 overflow-hidden transform transition-all duration-300`}>
-          {/* Header */}
-          <div className="flex items-center justify-between p-6 border-b border-gray-700/50">
-            <h3 className={`text-2xl font-bold ${textColor}`}>
-              {selectedCert.title}
-            </h3>
-            <div className="flex items-center gap-3">
-              <button
-                onClick={() => handleDownload(selectedCert.image, selectedCert.title)}
-                className={`w-10 h-10 ${cardBg} ${neumorph} rounded-full flex items-center justify-center hover:scale-110 transition-all duration-300`}
-                title="Download Certificate"
-              >
-                <IoDownloadOutline className={`w-5 h-5 ${textColor}`} />
-              </button>
-              <button
-                onClick={() => handleShare(selectedCert)}
-                className={`w-10 h-10 ${cardBg} ${neumorph} rounded-full flex items-center justify-center hover:scale-110 transition-all duration-300`}
-                title="Share Certificate"
-              >
-                <IoShareSocialOutline className={`w-5 h-5 ${textColor}`} />
-              </button>
-              <button
-                onClick={closeModal}
-                className={`w-10 h-10 ${cardBg} ${neumorph} rounded-full flex items-center justify-center hover:scale-110 transition-all duration-300`}
-              >
-                <IoCloseOutline className={`w-6 h-6 ${textColor}`} />
-              </button>
-            </div>
-          </div>
-
-          {/* Content */}
-          <div className="p-6 max-h-[70vh] overflow-y-auto">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Certificate Image */}
-              <div className="relative">
-                <img 
-                  src={selectedCert.image} 
-                  alt={selectedCert.title}
-                  className="w-full h-auto rounded-2xl shadow-2xl"
-                />
-                
-                {/* Navigation Arrows */}
-                <button
-                  onClick={() => navigateCert('prev')}
-                  className={`absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 ${cardBg} ${neumorph} rounded-full flex items-center justify-center hover:scale-110 transition-all duration-300`}
-                >
-                  <IoChevronBackOutline className={`w-6 h-6 ${textColor}`} />
-                </button>
-                <button
-                  onClick={() => navigateCert('next')}
-                  className={`absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 ${cardBg} ${neumorph} rounded-full flex items-center justify-center hover:scale-110 transition-all duration-300`}
-                >
-                  <IoChevronForwardOutline className={`w-6 h-6 ${textColor}`} />
-                </button>
-              </div>
-
-              {/* Certificate Details */}
-              <div className="space-y-6">
-                <div>
-                  <span className={`inline-block ${cardBg} ${neumorphInset} rounded-full px-4 py-2 text-sm font-semibold ${textColor} mb-4`}>
-                    {selectedCert.category}
-                  </span>
-                  <p className={`${textMuted} leading-relaxed`}>
-                    {selectedCert.description}
-                  </p>
-                </div>
-
-                {/* Info Cards */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div className={`${cardBg} ${neumorphInset} rounded-xl p-4`}>
-                    <IoBusinessOutline className={`w-6 h-6 ${textColor} mb-2`} />
-                    <p className={`text-xs ${textMuted} mb-1`}>Issued By</p>
-                    <p className={`text-sm font-bold ${textColor}`}>{selectedCert.issuer}</p>
-                  </div>
-                  <div className={`${cardBg} ${neumorphInset} rounded-xl p-4`}>
-                    <IoCalendarOutline className={`w-6 h-6 ${textColor} mb-2`} />
-                    <p className={`text-xs ${textMuted} mb-1`}>Issued Date</p>
-                    <p className={`text-sm font-bold ${textColor}`}>{selectedCert.date}</p>
-                  </div>
-                </div>
-
-                {/* Skills */}
-                <div>
-                  <h4 className={`text-lg font-bold ${textColor} mb-3`}>Skills Covered</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {selectedCert.skills.map((skill, i) => (
-                      <span
-                        key={i}
-                        className={`${cardBg} ${neumorph} rounded-full px-4 py-2 text-sm font-semibold ${textColor}`}
-                      >
-                        {skill}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Certificate Counter */}
-                <div className={`${cardBg} ${neumorphInset} rounded-xl p-4 text-center`}>
-                  <p className={`text-sm ${textMuted}`}>
-                    Certificate {currentIndex + 1} of {certificates.length}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
+// ─── Detail Modal (reference style) ──────────────────────────────
+function CertModal({ cert, onClose }) {
+  if (!cert) return null;
   return (
-    <div className="py-32 transition-all duration-500 relative overflow-hidden">
-      <CertificateModal />
-
-      {/* Background Effects */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 right-20 w-80 h-80 bg-orange-500/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-20 left-20 w-80 h-80 bg-red-500/10 rounded-full blur-3xl" />
-      </div>
-
-      <div className="max-w-7xl mx-auto px-8 relative z-10">
+    <div
+      style={{
+        position: 'fixed', inset: 0, zIndex: 9999,
+        background: 'rgba(0,0,0,0.75)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        padding: '20px',
+      }}
+      onClick={onClose}
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          background: '#fff',
+          border: '3px solid #000',
+          boxShadow: '8px 8px 0 #000',
+          width: '100%',
+          maxWidth: '560px',
+          maxHeight: '90vh',
+          overflowY: 'auto',
+          position: 'relative',
+        }}
+      >
         {/* Header */}
-        <div 
-          ref={headerRef}
-          className={`text-center mb-16 scroll-hidden ${headerVisible ? 'animate-slide-down' : ''}`}
-        >
-          <div className={`inline-flex items-center gap-2 ${cardBg} ${neumorph} rounded-full px-5 py-2.5 mb-6`}>
-            <IoRibbonOutline className="w-5 h-5 text-orange-500" />
-            <span className={`text-sm font-medium ${textColor}`}>My Achievements</span>
+        <div style={{
+          padding: '24px 24px 16px',
+          borderBottom: '2px solid #f0f0f0',
+          display: 'flex', alignItems: 'flex-start', gap: '12px',
+        }}>
+          <IoRibbonOutline size={24} color="#FF3300" style={{ flexShrink: 0, marginTop: '2px' }} />
+          <div style={{ flex: 1 }}>
+            <h3 style={{
+              fontFamily: "'Space Grotesk', sans-serif",
+              fontWeight: 900, fontSize: '20px',
+              color: '#000', margin: 0, marginBottom: '4px',
+            }}>
+              {cert.title}
+            </h3>
+            <p style={{
+              fontFamily: "'Space Grotesk', sans-serif",
+              fontSize: '13px', color: '#888', margin: 0,
+            }}>
+              {cert.issuer} • {cert.date}
+            </p>
           </div>
-          
-          <h2 className={`text-5xl md:text-6xl font-extrabold ${textColor} mb-6`}>
-            Certificates &{' '}
-            <span className="bg-gradient-to-r from-orange-500 to-red-600 bg-clip-text text-transparent">
-              Credentials
+          <button
+            onClick={onClose}
+            style={{
+              background: 'none', border: 'none', cursor: 'pointer', padding: '4px',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+            }}
+          >
+            <IoCloseOutline size={22} color="#000" />
+          </button>
+        </div>
+
+        {/* Certificate image */}
+        <div style={{ padding: '16px 24px', borderBottom: '2px solid #f0f0f0' }}>
+          <img
+            src={cert.image}
+            alt={cert.title}
+            style={{
+              width: '100%',
+              display: 'block',
+              border: '2px solid #eee',
+              boxShadow: '4px 4px 0 #FF3300',
+            }}
+          />
+        </div>
+
+        {/* About this certification */}
+        <div style={{ padding: '20px 24px 28px' }}>
+          <div style={{
+            display: 'flex', alignItems: 'center', gap: '8px',
+            marginBottom: '12px',
+          }}>
+            <IoRibbonOutline size={18} color="#000" />
+            <span style={{
+              fontFamily: "'Space Grotesk', sans-serif",
+              fontWeight: 700, fontSize: '15px', color: '#000',
+            }}>
+              About this certification
             </span>
-          </h2>
-          <p className={`text-lg ${textMuted} max-w-2xl mx-auto`}>
-            Professional certifications and achievements that validate my technical expertise
+          </div>
+          <p style={{
+            fontFamily: "'Space Grotesk', sans-serif",
+            fontSize: '14px', color: '#555', lineHeight: 1.7, margin: 0,
+          }}>
+            {cert.description}
           </p>
         </div>
+      </div>
+    </div>
+  );
+}
 
-        {/* Certificates Grid */}
-        <div 
-          ref={certsRef}
-          className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 mb-16 scroll-hidden ${certsVisible ? 'animate-zoom-in' : ''}`}
+// ─── Nav Button ────────────────────────────────────────────────────
+function NavBtn({ onClick, disabled, children }) {
+  return (
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      style={{
+        width: '44px', height: '44px',
+        background: disabled ? '#ddd' : '#000',
+        border: `3px solid ${disabled ? '#ccc' : '#000'}`,
+        boxShadow: disabled ? 'none' : '3px 3px 0 #000',
+        cursor: disabled ? 'not-allowed' : 'pointer',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        transition: 'all 0.15s', flexShrink: 0,
+      }}
+      onMouseEnter={(e) => { if (!disabled) { e.currentTarget.style.background = '#FF3300'; e.currentTarget.style.borderColor = '#FF3300'; } }}
+      onMouseLeave={(e) => { if (!disabled) { e.currentTarget.style.background = '#000'; e.currentTarget.style.borderColor = '#000'; } }}
+    >
+      {children}
+    </button>
+  );
+}
+
+// ─── Certificate Card ───────────────────────────────────────────────
+function CertCard({ cert, onClick }) {
+  const [hovered, setHovered] = useState(false);
+
+  return (
+    <div
+      onClick={() => onClick(cert)}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        border: `3px solid ${hovered ? '#FF3300' : '#000'}`,
+        boxShadow: hovered ? '2px 2px 0 #000' : '5px 5px 0 #000',
+        transform: hovered ? 'translate(3px, 3px)' : 'none',
+        cursor: 'pointer',
+        overflow: 'hidden',
+        background: '#fff',
+        transition: 'all 0.18s ease',
+        position: 'relative',
+      }}
+    >
+      {/* Image container */}
+      <div style={{ position: 'relative', borderBottom: '3px solid #000', overflow: 'hidden' }}>
+        <img
+          src={cert.image}
+          alt={cert.title}
+          style={{
+            width: '100%',
+            display: 'block',
+            objectFit: 'cover',
+            height: '200px',
+            transition: 'transform 0.4s ease',
+            transform: hovered ? 'scale(1.04)' : 'scale(1)',
+          }}
+        />
+
+        {/* Hover overlay — slides up from bottom */}
+        <div
+          style={{
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            background: 'rgba(0,0,0,0.82)',
+            padding: '12px 14px',
+            transform: hovered ? 'translateY(0)' : 'translateY(100%)',
+            transition: 'transform 0.3s ease',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+          }}
         >
-          {certificates.map((cert, index) => (
-            <div
-              key={cert.id}
-              onClick={() => openModal(cert, index)}
-              className={`${cardBg} ${neumorph} rounded-3xl overflow-hidden cursor-pointer transform transition-all duration-500 hover:scale-105 group`}
-              style={{ animationDelay: `${index * 0.1}s` }}
-            >
-              {/* Certificate Image */}
-              <div className="relative h-80 overflow-hidden">
-                <img 
-                  src={cert.image} 
-                  alt={cert.title}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+          <IoRibbonOutline size={14} color="#FF3300" />
+          <span style={{
+            fontFamily: "'Space Grotesk', sans-serif",
+            fontSize: '12px', color: '#fff', fontWeight: 700,
+            letterSpacing: '0.04em',
+          }}>
+            CLICK TO VIEW DETAILS
+          </span>
+        </div>
+      </div>
+
+      {/* Info */}
+      <div style={{ padding: '16px' }}>
+        <h3 style={{
+          fontFamily: "'Space Grotesk', sans-serif",
+          fontWeight: 700, fontSize: '15px',
+          color: '#000', marginBottom: '8px', marginTop: 0,
+        }}>
+          {cert.title}
+        </h3>
+        <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+          <span style={{
+            fontSize: '12px', color: '#555',
+            fontFamily: "'Space Grotesk', sans-serif", fontWeight: 500,
+          }}>
+            {cert.issuer}
+          </span>
+          <span style={{ fontSize: '11px', color: '#888', fontFamily: "'Space Grotesk', sans-serif" }}>
+            {cert.date}
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Main Component ────────────────────────────────────────────────
+function Certificate() {
+  const [selectedCert, setSelectedCert] = useState(null);
+  const [startIdx, setStartIdx] = useState(0);
+
+  const [headerRef, headerVisible] = useScrollAnimation(0.1);
+  const [bodyRef, bodyVisible] = useScrollAnimation(0.1);
+  const [statsRef, statsVisible] = useScrollAnimation(0.2);
+
+  const totalCerts = certificates.length;
+  const uniqueIssuers = [...new Set(certificates.map((c) => c.issuer))].length;
+
+  const stats = [
+    { label: 'CERTIFICATES', value: totalCerts },
+    { label: 'ISSUERS',      value: uniqueIssuers },
+    { label: 'CATEGORIES',   value: 2 },
+  ];
+
+  const maxStart = Math.max(0, totalCerts - VISIBLE);
+  const canPrev = startIdx > 0;
+  const canNext = startIdx < maxStart;
+  const visibleCerts = certificates.slice(startIdx, startIdx + VISIBLE);
+
+  return (
+    <div style={{ background: '#F5F5F5', padding: '100px 40px', overflow: 'hidden' }}>
+      <CertModal cert={selectedCert} onClose={() => setSelectedCert(null)} />
+
+      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+
+        {/* ── Header row with nav buttons ── */}
+        <div
+          ref={headerRef}
+          className={`scroll-hidden ${headerVisible ? 'animate-slide-down' : ''}`}
+          style={{
+            display: 'flex', justifyContent: 'space-between',
+            alignItems: 'flex-end', flexWrap: 'wrap',
+            gap: '16px', marginBottom: '40px',
+          }}
+        >
+          <div>
+            <div className="section-label" style={{ marginBottom: '12px' }}>/ CREDENTIALS</div>
+            <h2 style={{
+              fontFamily: "'Space Grotesk', sans-serif",
+              fontWeight: 900, fontSize: 'clamp(32px, 5vw, 48px)',
+              color: '#000', margin: 0, letterSpacing: '-0.02em',
+            }}>
+              CREDENTIALS.
+            </h2>
+          </div>
+
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+            <span style={{
+              fontSize: '12px', color: '#888',
+              fontFamily: "'Space Grotesk', sans-serif", fontWeight: 500, marginRight: '8px',
+            }}>
+              {startIdx + 1} – {Math.min(startIdx + VISIBLE, totalCerts)} / {totalCerts}
+            </span>
+            <NavBtn onClick={() => setStartIdx((i) => Math.max(0, i - 1))} disabled={!canPrev}>
+              <IoChevronBackOutline size={18} color={canPrev ? '#fff' : '#aaa'} />
+            </NavBtn>
+            <NavBtn onClick={() => setStartIdx((i) => Math.min(maxStart, i + 1))} disabled={!canNext}>
+              <IoChevronForwardOutline size={18} color={canNext ? '#fff' : '#aaa'} />
+            </NavBtn>
+          </div>
+        </div>
+
+        {/* ── Certificates carousel ── */}
+        <div
+          ref={bodyRef}
+          className={`scroll-hidden ${bodyVisible ? 'animate-zoom-in' : ''}`}
+          style={{ marginBottom: '64px' }}
+        >
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: `repeat(${VISIBLE}, 1fr)`,
+            gap: '24px',
+          }}>
+            {visibleCerts.map((cert) => (
+              <CertCard key={cert.id} cert={cert} onClick={setSelectedCert} />
+            ))}
+            {visibleCerts.length < VISIBLE &&
+              Array.from({ length: VISIBLE - visibleCerts.length }).map((_, i) => (
+                <div key={`ghost-${i}`} style={{ border: '3px dashed #ddd', background: 'transparent' }} />
+              ))
+            }
+          </div>
+
+          {/* Dot indicators */}
+          {maxStart > 0 && (
+            <div style={{ display: 'flex', gap: '6px', marginTop: '24px', justifyContent: 'center' }}>
+              {Array.from({ length: maxStart + 1 }).map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setStartIdx(i)}
+                  style={{
+                    width: i === startIdx ? '24px' : '8px', height: '8px',
+                    background: i === startIdx ? '#FF3300' : '#ccc',
+                    border: 'none', cursor: 'pointer', transition: 'all 0.2s', padding: 0,
+                  }}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                
-                {/* Overlay Info */}
-                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <div className="text-center">
-                    <div className={`w-16 h-16 mx-auto mb-3 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center`}>
-                      <IoRibbonOutline className="w-8 h-8 text-white" />
-                    </div>
-                    <p className="text-white font-bold text-lg">View Certificate</p>
-                  </div>
-                </div>
+              ))}
+            </div>
+          )}
+        </div>
 
-                {/* Category Badge */}
-                <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-full px-4 py-2 text-xs font-bold text-gray-900">
-                  {cert.category}
-                </div>
+        {/* ── Stats row ── */}
+        <div
+          ref={statsRef}
+          className={`scroll-hidden ${statsVisible ? 'animate-fade-in delay-200' : ''}`}
+          style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}
+        >
+          {stats.map((stat) => (
+            <div key={stat.label} style={{
+              background: '#000', border: '3px solid #000',
+              padding: '32px 16px', textAlign: 'center',
+            }}>
+              <div style={{
+                fontFamily: "'Space Grotesk', sans-serif",
+                fontWeight: 900, fontSize: '48px', color: '#fff',
+                lineHeight: 1, marginBottom: '8px',
+              }}>
+                {stat.value}
               </div>
-
-              {/* Certificate Info */}
-              <div className="p-6">
-                <h3 className={`text-xl font-bold ${textColor} mb-2`}>
-                  {cert.title}
-                </h3>
-                
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="flex items-center gap-2">
-                    <IoBusinessOutline className={`w-4 h-4 ${textMuted}`} />
-                    <span className={`text-sm ${textMuted}`}>{cert.issuer}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <IoCalendarOutline className={`w-4 h-4 ${textMuted}`} />
-                    <span className={`text-sm ${textMuted}`}>{cert.date}</span>
-                  </div>
-                </div>
-
-                <p className={`${textMuted} text-sm line-clamp-2`}>
-                  {cert.description}
-                </p>
+              <div style={{
+                fontSize: '11px', fontWeight: 700, color: '#FF3300',
+                letterSpacing: '0.1em', fontFamily: "'Space Grotesk', sans-serif",
+              }}>
+                {stat.label}
               </div>
             </div>
           ))}
         </div>
-
-        {/* Stats */}
-        <div 
-          ref={statsRef}
-          className={`grid grid-cols-1 md:grid-cols-3 gap-6 scroll-hidden ${statsVisible ? 'animate-fade-in delay-200' : ''}`}
-        >
-          {[
-            { label: 'Total Certificates', value: totalCerts, icon: IoRibbonOutline },
-            { label: 'Unique Issuers', value: uniqueIssuers, icon: IoBusinessOutline },
-            { label: 'Categories', value: categories, icon: IoCalendarOutline }
-          ].map((stat, i) => {
-            const Icon = stat.icon;
-            return (
-              <div
-                key={i}
-                className={`${cardBg} ${neumorph} rounded-2xl p-6 text-center transform hover:scale-105 transition-all duration-300`}
-              >
-                <Icon className={`w-10 h-10 ${textColor} mx-auto mb-3`} />
-                <div className={`text-4xl font-bold ${textColor} mb-2`}>{stat.value}</div>
-                <div className={`text-sm ${textMuted}`}>{stat.label}</div>
-              </div>
-            );
-          })}
-        </div>
       </div>
-
-      <style jsx>{`
-        .line-clamp-2 {
-          display: -webkit-box;
-          -webkit-line-clamp: 2;
-          -webkit-box-orient: vertical;
-          overflow: hidden;
-        }
-      `}</style>
     </div>
   );
 }
