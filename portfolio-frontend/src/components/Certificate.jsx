@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 import {
   IoCloseOutline,
@@ -11,6 +11,7 @@ import AIHuaweiImg from '../assets/photo/certificate/AIHuawei.jpg';
 import DatabaseHuaweiImg from '../assets/photo/certificate/DatabaseHuawei.jpg';
 import IntroductiontoPythonImg from '../assets/photo/certificate/IntroductiontoPython.jpg';
 import PythonintermediateImg from '../assets/photo/certificate/PythonIntermediate.jpg';
+import DataScienceDicodingImg from '../assets/photo/certificate/DataScienceDicoding.png';
 
 const certificates = [
   {
@@ -49,9 +50,16 @@ const certificates = [
     description:
       'Completed the Python Intermediate certification covering advanced topics such as functional programming, generators, decorators, regular expressions, file handling, and threading. Strengthened ability to write efficient, Pythonic code for real-world applications.',
   },
+  {
+    id: 5,
+    title: 'Belajar Dasar Visualisasi Data',
+    issuer: 'Dicoding',
+    date: '2025',
+    image: DataScienceDicodingImg,
+    description:
+      'Menyelesaikan kursus Belajar Dasar Visualisasi Data dari Dicoding yang mencakup konsep dasar visualisasi data, penggunaan library Python seperti Matplotlib dan Seaborn, teknik storytelling dengan data, serta penerapan prinsip desain visual yang efektif untuk komunikasi data.',
+  },
 ];
-
-const VISIBLE = 3;
 
 // ─── Detail Modal (reference style) ──────────────────────────────
 function CertModal({ cert, onClose }) {
@@ -266,12 +274,37 @@ function CertCard({ cert, onClick }) {
 function Certificate() {
   const [selectedCert, setSelectedCert] = useState(null);
   const [startIdx, setStartIdx] = useState(0);
+  const [visibleItems, setVisibleItems] = useState(3);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) {
+        setVisibleItems(1);
+      } else if (window.innerWidth < 1024) {
+        setVisibleItems(2);
+      } else {
+        setVisibleItems(3);
+      }
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const totalCerts = certificates.length;
+  const maxStart = Math.max(0, totalCerts - visibleItems);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setStartIdx((prev) => (prev >= maxStart ? 0 : prev + 1));
+    }, 4000);
+    return () => clearInterval(timer);
+  }, [maxStart]);
 
   const [headerRef, headerVisible] = useScrollAnimation(0.1);
   const [bodyRef, bodyVisible] = useScrollAnimation(0.1);
   const [statsRef, statsVisible] = useScrollAnimation(0.2);
 
-  const totalCerts = certificates.length;
   const uniqueIssuers = [...new Set(certificates.map((c) => c.issuer))].length;
 
   const stats = [
@@ -280,10 +313,9 @@ function Certificate() {
     { label: 'CATEGORIES',   value: 2 },
   ];
 
-  const maxStart = Math.max(0, totalCerts - VISIBLE);
   const canPrev = startIdx > 0;
   const canNext = startIdx < maxStart;
-  const visibleCerts = certificates.slice(startIdx, startIdx + VISIBLE);
+  const visibleCerts = certificates.slice(startIdx, startIdx + visibleItems);
 
   return (
     <div style={{ background: '#F5F5F5', padding: '100px 40px', overflow: 'hidden' }}>
@@ -317,7 +349,7 @@ function Certificate() {
               fontSize: '12px', color: '#888',
               fontFamily: "'Space Grotesk', sans-serif", fontWeight: 500, marginRight: '8px',
             }}>
-              {startIdx + 1} – {Math.min(startIdx + VISIBLE, totalCerts)} / {totalCerts}
+              {startIdx + 1} – {Math.min(startIdx + visibleItems, totalCerts)} / {totalCerts}
             </span>
             <NavBtn onClick={() => setStartIdx((i) => Math.max(0, i - 1))} disabled={!canPrev}>
               <IoChevronBackOutline size={18} color={canPrev ? '#fff' : '#aaa'} />
@@ -336,14 +368,14 @@ function Certificate() {
         >
           <div style={{
             display: 'grid',
-            gridTemplateColumns: `repeat(${VISIBLE}, 1fr)`,
+            gridTemplateColumns: `repeat(${visibleItems}, 1fr)`,
             gap: '24px',
           }}>
             {visibleCerts.map((cert) => (
               <CertCard key={cert.id} cert={cert} onClick={setSelectedCert} />
             ))}
-            {visibleCerts.length < VISIBLE &&
-              Array.from({ length: VISIBLE - visibleCerts.length }).map((_, i) => (
+            {visibleCerts.length < visibleItems &&
+              Array.from({ length: visibleItems - visibleCerts.length }).map((_, i) => (
                 <div key={`ghost-${i}`} style={{ border: '3px dashed #ddd', background: 'transparent' }} />
               ))
             }

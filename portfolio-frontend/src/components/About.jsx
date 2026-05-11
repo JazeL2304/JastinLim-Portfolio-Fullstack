@@ -19,7 +19,7 @@ function About() {
     { label: 'COMPANY', value: 'PT. Folks Global Group' },
   ];
 
-  const interests = ['BRUTALISM', 'TYPOGRAPHY', 'UX DESIGN', 'CHESS', 'CODING'];
+  const interests = ['WEB ENTHUSIAST', 'UI/UX DESIGN', 'AI TOOLS', 'PROBLEM SOLVING', 'CODING'];
 
   const timeline = [
     {
@@ -213,7 +213,21 @@ function About() {
                 <span
                   key={tag}
                   className="nb-tag"
-                  style={{ padding: '6px 14px' }}
+                  style={{
+                    padding: '6px 14px',
+                    transition: 'all 0.15s',
+                    cursor: 'default'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = '#FF3300';
+                    e.currentTarget.style.transform = 'translate(-2px, -2px)';
+                    e.currentTarget.style.boxShadow = '2px 2px 0 #000';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = '#000';
+                    e.currentTarget.style.transform = 'none';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}
                 >
                   {tag}
                 </span>

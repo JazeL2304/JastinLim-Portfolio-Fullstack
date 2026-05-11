@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback, memo } from 'react';
+import { useState, useMemo, useCallback, memo, useEffect } from 'react';
 import { IoChevronBackOutline, IoChevronForwardOutline } from 'react-icons/io5';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 import {
@@ -22,6 +22,9 @@ import HarbourMindImg from '../assets/photo/project/HarbourMindProject.png';
 import TheLazyJannahImg from '../assets/photo/project/TheLazyJannahProject.png';
 import AplikasiRSRJProjectImg from '../assets/photo/project/AplikasiRSRJProject.png';
 import TodolistProjectImg from '../assets/photo/project/TodolistProject.png';
+import CoWasteImg from '../assets/photo/project/CoWaste.png';
+import TunasMahardikaImg from '../assets/photo/project/TunasMahardika.png';
+import FOLKSInstituteWebsiteImg from '../assets/photo/project/FOLKSInstituteWebsite.png';
 
 // Modal
 const Modal = memo(({ show, onClose, message }) => {
@@ -281,8 +284,8 @@ const ProjectCard = memo(function ProjectCard({ project, onCardClick }) {
               width: '100%', height: '100%', objectFit: 'cover', display: 'block',
               objectPosition:
                 project.id === 4 ? 'center 30%'
-                : project.id === 6 ? 'center top'
-                : 'center center',
+                  : project.id === 6 ? 'center top'
+                    : 'center center',
               transition: 'transform 0.4s ease',
               transform: hovered ? 'scale(1.05)' : 'scale(1)',
             }}
@@ -355,8 +358,22 @@ function Projects() {
   const [modalMessage, setModalMessage] = useState('');
   const [startIdx, setStartIdx] = useState(0);
   const [selectedProject, setSelectedProject] = useState(null);
+  const [visibleItems, setVisibleItems] = useState(3);
 
-  const PROJ_VISIBLE = 3;
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) {
+        setVisibleItems(1);
+      } else if (window.innerWidth < 1024) {
+        setVisibleItems(2);
+      } else {
+        setVisibleItems(3);
+      }
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const [headerRef, headerVisible] = useScrollAnimation(0.1);
   const [filtersRef, filtersVisible] = useScrollAnimation(0.1);
@@ -441,6 +458,45 @@ function Projects() {
       demoLink: '',
       isFigma: false,
     },
+    {
+      id: 7,
+      title: 'CoWaste — UI/UX Design',
+      description: 'Desain UI/UX aplikasi pengelolaan sampah berbasis komunitas dengan pendekatan gamifikasi untuk mendorong partisipasi warga dalam menjaga kebersihan lingkungan.',
+      category: 'Design',
+      techStack: ['Figma', 'UI/UX Design', 'Prototyping'],
+      icon: IoBrushOutline,
+      image: CoWasteImg,
+      status: 'Prototype',
+      figmaLink: 'https://www.figma.com/design/rgtHJHgombG6W97CAwf0XL/Co-Waste?node-id=93-6153&t=ogMbK1z56vzWF0ki-1',
+      demoLink: 'https://www.figma.com/proto/rgtHJHgombG6W97CAwf0XL/Co-Waste?node-id=291-805&p=f&viewport=95%2C236%2C0.09&t=vMIqg8VDWFgNRREi-1&scaling=scale-down&content-scaling=fixed&starting-point-node-id=256%3A3862&show-proto-sidebar=1&page-id=93%3A6153',
+      isFigma: true,
+    },
+    {
+      id: 8,
+      title: 'Tunas Mahardika — Company Profile',
+      description: 'Website company profile modern untuk Tunas Mahardika dengan sistem manajemen konten berbasis Laravel, desain responsif, dan antarmuka yang bersih dan profesional.',
+      category: 'Web App',
+      techStack: ['PHP', 'Laravel', 'MySQL', 'Bootstrap'],
+      icon: IoGlobeOutline,
+      image: TunasMahardikaImg,
+      status: 'Production',
+      githubLink: '',
+      demoLink: 'https://mahardikabsd.site/',
+      isFigma: false,
+    },
+    {
+      id: 9,
+      title: 'FOLKS Institute — Training & Certification Website',
+      description: 'Platform website untuk FOLKS Institute yang menyediakan layanan pelatihan dan sertifikasi profesional dengan sistem manajemen kursus yang terintegrasi.layanan edukasi bahasa Inggris yang menyediakan program pembelajaran interaktif, kelas profesional, dan sistem manajemen belajar terintegrasi untuk membantu pengguna meningkatkan kemampuan bahasa Inggris secara efektif.',
+      category: 'Web App',
+      techStack: ['React JS', 'Tailwind CSS', 'Node JS', 'Supabase'],
+      icon: IoGlobeOutline,
+      image: FOLKSInstituteWebsiteImg,
+      status: 'Production',
+      githubLink: '',
+      demoLink: '',
+      isFigma: false,
+    },
   ], []);
 
   const filters = ['All', 'Web App', 'Mobile App', 'Design', 'Game'];
@@ -456,10 +512,18 @@ function Projects() {
     setStartIdx(0);
   };
 
-  const maxStart = Math.max(0, filteredProjects.length - PROJ_VISIBLE);
+  const maxStart = Math.max(0, filteredProjects.length - visibleItems);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setStartIdx((prev) => (prev >= maxStart ? 0 : prev + 1));
+    }, 4000);
+    return () => clearInterval(timer);
+  }, [maxStart]);
+
   const canPrev = startIdx > 0;
   const canNext = startIdx < maxStart;
-  const visibleProjects = filteredProjects.slice(startIdx, startIdx + PROJ_VISIBLE);
+  const visibleProjects = filteredProjects.slice(startIdx, startIdx + visibleItems);
   const goPrev = () => setStartIdx((i) => Math.max(0, i - 1));
   const goNext = () => setStartIdx((i) => Math.min(maxStart, i + 1));
 
@@ -513,7 +577,7 @@ function Projects() {
           {/* Carousel nav buttons */}
           <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
             <span style={{ fontSize: '12px', color: '#888', fontFamily: "'Space Grotesk', sans-serif", fontWeight: 500, marginRight: '8px' }}>
-              {Math.min(startIdx + 1, filteredProjects.length)} – {Math.min(startIdx + PROJ_VISIBLE, filteredProjects.length)} / {filteredProjects.length}
+              {Math.min(startIdx + 1, filteredProjects.length)} – {Math.min(startIdx + visibleItems, filteredProjects.length)} / {filteredProjects.length}
             </span>
             <button
               onClick={goPrev}
@@ -602,7 +666,7 @@ function Projects() {
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(3, 1fr)',
+              gridTemplateColumns: `repeat(${visibleItems}, 1fr)`,
               gap: '24px',
             }}
           >
