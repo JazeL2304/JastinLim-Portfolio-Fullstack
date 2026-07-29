@@ -15,8 +15,8 @@ function About() {
   const facts = [
     { label: 'LOCATION', value: 'Tangerang, ID' },
     { label: 'EDUCATION', value: 'Universitas Multimedia Nusantara' },
-    { label: 'STATUS', value: 'Fullstack Developer Intern' },
-    { label: 'COMPANY', value: 'PT. Folks Global Group' },
+    { label: 'STATUS', value: 'Open for Internship' },
+    { label: 'EXPERIENCE', value: 'Ex-Fullstack Intern at PT. Folks Global Group' },
   ];
 
   const interests = ['WEB ENTHUSIAST', 'UI/UX DESIGN', 'AI TOOLS', 'PROBLEM SOLVING', 'CODING'];
@@ -26,7 +26,7 @@ function About() {
       type: 'work',
       title: 'Fullstack Developer Intern',
       org: 'PT. Folks Global Group',
-      period: '2026 – Present',
+      period: '2026',
       desc: 'Building and maintaining full-stack web applications. Collaborating with cross-functional teams to design, develop, and deploy scalable solutions for enterprise clients.',
     },
     {
@@ -164,7 +164,7 @@ function About() {
                 fontFamily: "'Space Grotesk', sans-serif",
               }}
             >
-              Currently pursuing a Computer Science degree at UMN while interning as a Fullstack Developer at PT. Folks Global Group. I specialize in bridging the gap between technical backends and raw, impactful frontends — building things that are functional, accessible, and aesthetically uncompromising.
+              Currently pursuing a Computer Science degree at UMN with fullstack development experience from PT. Folks Global Group. Currently open for new internship opportunities — specializing in bridging technical backends and impactful frontends to build scalable, accessible, and aesthetically uncompromising web applications.
             </p>
 
             {/* Core Facts */}

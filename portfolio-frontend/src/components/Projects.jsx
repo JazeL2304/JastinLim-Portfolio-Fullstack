@@ -25,6 +25,9 @@ import TodolistProjectImg from '../assets/photo/project/TodolistProject.png';
 import CoWasteImg from '../assets/photo/project/CoWaste.png';
 import TunasMahardikaImg from '../assets/photo/project/TunasMahardika.png';
 import FOLKSInstituteWebsiteImg from '../assets/photo/project/FOLKSInstituteWebsite.png';
+import CretivoxEDURANCETESTImg from '../assets/photo/project/CretivoxEDURANCETEST.png';
+import SuaraEksporXPIDIImg from '../assets/photo/project/SuaraEksporXPIDI.png';
+import UangkuImg from '../assets/photo/project/Uangku.png';
 
 // Modal
 const Modal = memo(({ show, onClose, message }) => {
@@ -34,7 +37,7 @@ const Modal = memo(({ show, onClose, message }) => {
       style={{
         position: 'fixed',
         inset: 0,
-        zIndex: 9999,
+        zIndex: 10000,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -357,7 +360,7 @@ function Projects() {
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
   const [startIdx, setStartIdx] = useState(0);
-  const [selectedProject, setSelectedProject] = useState(null);
+  const [selectedProjectId, setSelectedProjectId] = useState(null);
   const [visibleItems, setVisibleItems] = useState(3);
 
   useEffect(() => {
@@ -442,7 +445,7 @@ function Projects() {
       image: TheLazyJannahImg,
       status: 'Production',
       githubLink: 'https://github.com/JazeL2304/TheLazyJannah',
-      demoLink: '',
+      demoLink: 'https://jazel2304.itch.io/the-lazy-jannah',
       isFigma: false,
     },
     {
@@ -487,17 +490,61 @@ function Projects() {
     {
       id: 9,
       title: 'FOLKS Institute — Training & Certification Website',
-      description: 'Platform website untuk FOLKS Institute yang menyediakan layanan pelatihan dan sertifikasi profesional dengan sistem manajemen kursus yang terintegrasi.layanan edukasi bahasa Inggris yang menyediakan program pembelajaran interaktif, kelas profesional, dan sistem manajemen belajar terintegrasi untuk membantu pengguna meningkatkan kemampuan bahasa Inggris secara efektif.',
+      description: 'Platform website untuk FOLKS Institute yang menyediakan layanan pelatihan dan sertifikasi profesional dengan sistem manajemen kursus yang terintegrasi. Layanan edukasi yang menyediakan program pembelajaran interaktif dan kelas profesional.',
       category: 'Web App',
       techStack: ['React JS', 'Tailwind CSS', 'Node JS', 'Supabase'],
       icon: IoGlobeOutline,
       image: FOLKSInstituteWebsiteImg,
       status: 'Production',
-      githubLink: '',
+      githubLink: 'https://github.com/JazeL2304/FOLKSCompanyProfile',
+      demoLink: 'https://folks-company-profile.vercel.app/',
+      isFigma: false,
+    },
+    {
+      id: 10,
+      title: 'Cretivox Endurance Test',
+      description: 'Website interaktif tantangan endurance untuk Cretivox dengan antarmuka yang modern, sistem penilaian real-time, dan performa tinggi.',
+      category: 'Web App',
+      techStack: ['React JS', 'Tailwind CSS', 'JavaScript'],
+      icon: IoGlobeOutline,
+      image: CretivoxEDURANCETESTImg,
+      status: 'Production',
+      githubLink: 'https://github.com/JazeL2304/cretivox-endurance-test-jastinlim',
+      demoLink: 'https://cretivox-endurance-test-jastinlim.vercel.app/',
+      isFigma: false,
+    },
+    {
+      id: 11,
+      title: 'SuaraEkspor x PIDI',
+      description: 'Platform ekosistem digital ekspor terintegrasi untuk menghubungkan eksportir UMKM Indonesia dengan pembeli global, dilengkapi fitur manajemen transaksi, rekaman suara, dan katalog produk terverifikasi.',
+      category: 'Web App',
+      techStack: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Prisma', 'PostgreSQL'],
+      icon: IoGlobeOutline,
+      image: SuaraEksporXPIDIImg,
+      status: 'Production',
+      githubLink: 'https://github.com/feliciaannabelruri/SuaraEkspor',
+      demoLink: 'https://suara-ekspor.vercel.app/',
+      isFigma: false,
+    },
+    {
+      id: 12,
+      title: 'Uangku — Financial Tracker',
+      description: 'Website manajemen dan pencatatan keuangan pribadi untuk pelacakan anggaran bulanan, analisis pengeluaran & pemasukan, serta visualisasi arus kas.',
+      category: 'Web App',
+      techStack: ['React JS', 'Tailwind CSS', 'JavaScript'],
+      icon: IoGlobeOutline,
+      image: UangkuImg,
+      status: 'Production',
+      githubLink: 'https://github.com/JazeL2304/Uangku',
       demoLink: '',
       isFigma: false,
     },
   ], []);
+
+  const selectedProject = useMemo(
+    () => projects.find((p) => p.id === selectedProjectId) || null,
+    [projects, selectedProjectId]
+  );
 
   const filters = ['All', 'Web App', 'Mobile App', 'Design', 'Game'];
 
@@ -529,10 +576,11 @@ function Projects() {
 
   const handleLinkClick = useCallback((link, type) => {
     if (!link || link.trim() === '') {
+      setSelectedProjectId(null);
       setModalMessage(`Untuk sementara bagian ${type} belum tersedia`);
       setShowModal(true);
     } else {
-      window.open(link, '_blank');
+      window.open(link, '_blank', 'noopener,noreferrer');
     }
   }, []);
 
@@ -547,7 +595,7 @@ function Projects() {
       <Modal show={showModal} onClose={() => setShowModal(false)} message={modalMessage} />
       <ProjectDetailModal
         project={selectedProject}
-        onClose={() => setSelectedProject(null)}
+        onClose={() => setSelectedProjectId(null)}
         handleLinkClick={handleLinkClick}
       />
 
@@ -674,7 +722,7 @@ function Projects() {
               <ProjectCard
                 key={project.id}
                 project={project}
-                onCardClick={setSelectedProject}
+                onCardClick={(p) => setSelectedProjectId(p.id)}
               />
             ))}
           </div>

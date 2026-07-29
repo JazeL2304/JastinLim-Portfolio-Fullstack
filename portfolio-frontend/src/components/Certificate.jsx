@@ -12,19 +12,17 @@ import DatabaseHuaweiImg from '../assets/photo/certificate/DatabaseHuawei.jpg';
 import IntroductiontoPythonImg from '../assets/photo/certificate/IntroductiontoPython.jpg';
 import PythonintermediateImg from '../assets/photo/certificate/PythonIntermediate.jpg';
 import DataScienceDicodingImg from '../assets/photo/certificate/DataScienceDicoding.png';
+import BelajarDasarManajemenProyekImg from '../assets/photo/certificate/Belajar Dasar Manajemen Proyek Dicoding.png';
+import BelajarDasarUXDesignImg from '../assets/photo/certificate/Belajar Dasar UX Design Dicoding.png';
+import BelajarFundamentalGenerativeAIImg from '../assets/photo/certificate/Belajar Fundamental Generative AI Dicoding.png';
+import BelajarPenerapanAIWebImg from '../assets/photo/certificate/Belajar Penerapan AI di Aplikasi Web Dicoding.png';
+import MembangunSistemMLImg from '../assets/photo/certificate/Membangun Sistem Machine Learning Dicoding.png';
+import PengembanganGenAILLMImg from '../assets/photo/certificate/Pengembangan Generative AI berbasis LLM Dicoding.png';
+import PromptEngineeringImg from '../assets/photo/certificate/Prompt Engineering untuk Software Developer Dicoding.png';
 
 const certificates = [
   {
     id: 1,
-    title: 'HCIA-AI V3.5 Course',
-    issuer: 'Huawei',
-    date: 'Mei 2025',
-    image: AIHuaweiImg,
-    description:
-      'Completed Huawei ICT Academy\'s HCIA-AI V3.5 certification course covering fundamentals of artificial intelligence, machine learning, deep learning, and the application of AI technology in real-world scenarios. Gained hands-on experience with Huawei\'s MindSpore AI framework and ModelArts platform.',
-  },
-  {
-    id: 2,
     title: 'HCIA-openGauss V1.0 Course',
     issuer: 'Huawei',
     date: 'Desember 2024',
@@ -33,13 +31,22 @@ const certificates = [
       'Completed the HCIA-openGauss V1.0 certification covering relational database management, SQL programming, database architecture design, and performance tuning using Huawei\'s openGauss open-source database system. Acquired skills in enterprise-grade database administration and optimization.',
   },
   {
-    id: 3,
+    id: 2,
     title: 'Introduction to Python',
     issuer: 'Sololearn',
-    date: 'February 2025',
+    date: 'Februari 2025',
     image: IntroductiontoPythonImg,
     description:
       'Completed Sololearn\'s Introduction to Python course covering core programming fundamentals including variables, data types, conditionals, loops, functions, and object-oriented programming concepts. Built a solid Python programming foundation through interactive exercises and challenges.',
+  },
+  {
+    id: 3,
+    title: 'HCIA-AI V3.5 Course',
+    issuer: 'Huawei',
+    date: 'Mei 2025',
+    image: AIHuaweiImg,
+    description:
+      'Completed Huawei ICT Academy\'s HCIA-AI V3.5 certification course covering fundamentals of artificial intelligence, machine learning, deep learning, and the application of AI technology in real-world scenarios. Gained hands-on experience with Huawei\'s MindSpore AI framework and ModelArts platform.',
   },
   {
     id: 4,
@@ -54,10 +61,73 @@ const certificates = [
     id: 5,
     title: 'Belajar Dasar Visualisasi Data',
     issuer: 'Dicoding',
-    date: '2025',
+    date: 'Mei 2026',
     image: DataScienceDicodingImg,
     description:
       'Menyelesaikan kursus Belajar Dasar Visualisasi Data dari Dicoding yang mencakup konsep dasar visualisasi data, penggunaan library Python seperti Matplotlib dan Seaborn, teknik storytelling dengan data, serta penerapan prinsip desain visual yang efektif untuk komunikasi data.',
+  },
+  {
+    id: 6,
+    title: 'Prompt Engineering untuk Software Developer',
+    issuer: 'Dicoding',
+    date: 'Juni 2026',
+    image: PromptEngineeringImg,
+    description:
+      'Menyelesaikan kursus Prompt Engineering untuk Software Developer dari Dicoding tentang teknik penyusunan prompt efektif untuk mempercepat pengembangan perangkat lunak, refactoring, dan debugging.',
+  },
+  {
+    id: 7,
+    title: 'Belajar Dasar Manajemen Proyek',
+    issuer: 'Dicoding',
+    date: 'Juli 2026',
+    image: BelajarDasarManajemenProyekImg,
+    description:
+      'Menyelesaikan kursus Belajar Dasar Manajemen Proyek dari Dicoding yang mempelajari prinsip dasar manajemen proyek TI, alur kerja SDLC, manajemen risiko, estimasi proyek, serta metodologi Agile/Scrum.',
+  },
+  {
+    id: 8,
+    title: 'Belajar Dasar UX Design',
+    issuer: 'Dicoding',
+    date: 'Juli 2026',
+    image: BelajarDasarUXDesignImg,
+    description:
+      'Menyelesaikan kursus Belajar Dasar UX Design dari Dicoding yang mencakup riset pengguna, analisis kebutuhan, pembuatan wireframe & prototype, serta pengujian kemudahan penggunaan (usability testing).',
+  },
+  {
+    id: 9,
+    title: 'Belajar Fundamental Generative AI',
+    issuer: 'Dicoding',
+    date: 'Juli 2026',
+    image: BelajarFundamentalGenerativeAIImg,
+    description:
+      'Menyelesaikan kursus Belajar Fundamental Generative AI dari Dicoding yang mendalami dasar-dasar AI generatif, arsitektur model Transformer, pembuatan prompt, serta etika penggunaan AI.',
+  },
+  {
+    id: 10,
+    title: 'Belajar Penerapan AI di Aplikasi Web',
+    issuer: 'Dicoding',
+    date: 'Juli 2026',
+    image: BelajarPenerapanAIWebImg,
+    description:
+      'Menyelesaikan kursus Belajar Penerapan AI di Aplikasi Web dari Dicoding yang berfokus pada teknik mengintegrasikan fitur kecerdasan buatan ke dalam web app modern melalui API dan library AI.',
+  },
+  {
+    id: 11,
+    title: 'Membangun Sistem Machine Learning',
+    issuer: 'Dicoding',
+    date: 'Juli 2026',
+    image: MembangunSistemMLImg,
+    description:
+      'Menyelesaikan kursus Membangun Sistem Machine Learning dari Dicoding yang membahas alur pipeline Machine Learning end-to-end, pra-pemrosesan data, pelatihan & evaluasi model, hingga deployment ML system.',
+  },
+  {
+    id: 12,
+    title: 'Pengembangan Generative AI Berbasis LLM',
+    issuer: 'Dicoding',
+    date: 'Juli 2026',
+    image: PengembanganGenAILLMImg,
+    description:
+      'Menyelesaikan kursus Pengembangan Generative AI Berbasis LLM dari Dicoding yang mendalami pengembangan aplikasi berbasis Large Language Models, teknik RAG (Retrieval-Augmented Generation), dan integrasi API LLM.',
   },
 ];
 

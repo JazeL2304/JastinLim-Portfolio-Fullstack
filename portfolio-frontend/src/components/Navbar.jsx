@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { IoLogoGithub } from 'react-icons/io5';
+import cvFile from '../assets/cv/Jastin Lim-resume.pdf';
 
 function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -36,6 +37,11 @@ function Navbar() {
       element.scrollIntoView({ behavior: 'smooth' });
       setIsMenuOpen(false);
     }
+  };
+
+  const handleResumeClick = () => {
+    window.open(cvFile, '_blank');
+    setIsMenuOpen(false);
   };
 
   const navItems = [
@@ -129,7 +135,7 @@ function Navbar() {
 
             {/* Resume Button */}
             <button
-              onClick={() => scrollToSection('contact')}
+              onClick={handleResumeClick}
               style={{
                 background: '#FF3300',
                 color: '#fff',
@@ -234,7 +240,7 @@ function Navbar() {
               </button>
             ))}
             <button
-              onClick={() => scrollToSection('contact')}
+              onClick={handleResumeClick}
               style={{
                 marginTop: '16px',
                 background: '#FF3300',
